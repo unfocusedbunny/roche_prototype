@@ -2,11 +2,7 @@
    Type sizes are in rem and step up at breakpoints, so browser zoom makes text bigger instead of leaving it as it was. */
 :root {
   color-scheme: light;
-  --ink: #1E2145; --red: #D9482F; --red-deep: #C53D25; --cream: #F4F1E4; --yellow: #F0E66E;
-  --haze: linear-gradient(180deg, #F4F1E4 0%, #F7DDD3 58%, #E6D8F3 100%);
-  --sans: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'Atkinson Hyperlegible Mono', ui-monospace, Menlo, monospace;
-  --hand: 'Playwrite SK', cursive;
+  /* colours and fonts are in tokens.css */
   /* type steps: word = "Sangui" in the corner, title = "Sangui" on the title page */
   --word: 2.4rem; --title: 4rem; --title-line: 1.2rem; --story: 1.05rem; --body: 1rem; --h2: 1.3rem; --big: 2.6rem; --note: 1rem; --hand-size: 1.5rem; --privacy: 1.2rem; --privacy-weight: 700;
 }

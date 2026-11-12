@@ -23,6 +23,10 @@ Every push to `main` runs `.github/workflows/deploy.yml`, which builds the page 
 | `src/content.js` | Every word on the page. Change text here. `SHOW_GAPS` at the top shows or hides the "to come" notes. |
 | `src/App.jsx` | The page: scroll, title page, step text, results column, controls. |
 | `src/app.css` | Layout, colours, type sizes. |
+| `src/tokens.css` | Colours and fonts, shared by both pages. |
+| `how-it-was-made/index.html`, `src/about/` | The second page, "How Sangui was made". Its words are in `src/about/content.js`; `[MIMI: …]` notes show in yellow until they are replaced. |
+| `src/links.js` | The Figma address and the CV's file name, used by both pages. |
+| `public/` | Files served as they are: the CV, and screenshots in `public/how-it-was-made/`. |
 | `src/sangui/` | The 3D package, copied from the 3D chat. Change it there, then copy it in again. |
 | `scripts/check.mjs` | Drives the page in headless Chrome and saves screenshots. Needs `npm run dev` running. |
 
