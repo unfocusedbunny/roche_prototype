@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 import { createSanguiScene, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 import { createSanguiLabels } from './sangui/sangui-labels.js';
 import { createSanguiBlobs, SCROLL_BUTTON_CSS, SCROLL_BUTTON_HTML } from './sangui/sangui-blobs.js';
-import { TITLE, STEPS, TUBES, RESULTS, CONTROLS, PRIVACY, PICTURE, PLAIN, SHOW_GAPS } from './content.js';
+import { TITLE, STEPS, TUBES, RESULTS, CONTROLS, LINKS, PRIVACY, PICTURE, PLAIN, SHOW_GAPS } from './content.js';
+import { FIGMA_URL, CV_FILE } from './links.js';
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* 0 before a, 1 after b, eased in between */
@@ -147,6 +148,10 @@ function Story({ onNoGL }) {
           {mode === 'model' && <button ref={back} className="pill" onClick={() => api.current.scene.back()}>{RESULTS.back}</button>}
           <button className="pill" onClick={() => setPaused(!paused)}>{paused ? CONTROLS.play : CONTROLS.pause}</button>
         </div>
+
+        <nav className="links mono" aria-label={LINKS.label}>
+          <a href="./how-it-was-made/">{LINKS.about}</a> · <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
+        </nav>
 
         <header className="head">
           <h1 ref={word} className="word">{TITLE.name}</h1>

@@ -85,6 +85,10 @@ button { font: inherit; color: inherit; }
 .pill { font-size: .875rem; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 22px; background: rgba(244, 241, 228, .7); color: var(--ink); cursor: pointer; }
 .pill[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 
+/* ---- corner link: quiet, on a cream backing so it reads over the red title page and the haze alike ---- */
+.links { position: absolute; right: 20px; top: 18px; z-index: 7; padding: 0 14px; border-radius: 22px; background: rgba(244, 241, 228, .9); }
+.links a { display: inline-block; padding: 12px 0; color: var(--ink); text-underline-offset: .15em; }
+
 .privacy { position: absolute; left: 3%; bottom: 2.5%; z-index: 7; max-width: min(34ch, 60vw); }
 .privacy button { border: 0; background: none; padding: 10px 0; min-height: 44px; cursor: pointer; font-size: var(--privacy); font-weight: var(--privacy-weight); color: color-mix(in srgb, var(--red) calc(var(--t) * 100%), var(--cream)); }
 .privacy p { background: var(--cream); border: 1px solid var(--ink); border-radius: 12px; padding: .7rem .9rem; font-size: 1rem; line-height: 1.4; }

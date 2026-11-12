@@ -77,6 +77,9 @@ export const RESULTS = {
 
 export const CONTROLS = { skip: 'Skip to the tubes', pause: 'Pause motion', play: 'Play motion' };
 
+/* The small corner link to the project page, the CV and the Figma file */
+export const LINKS = { label: 'About this project', about: 'About this project', cv: 'CV', figma: 'Figma' };
+
 /* DRAFT (Claude). Says only what the page itself does; the host keeps ordinary server logs like any website. */
 export const PRIVACY = {
   label: 'Privacy note',
