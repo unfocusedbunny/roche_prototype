@@ -1,0 +1,121 @@
+/* Sangui: page styles. Colours and fonts are Mimi's (Figma, 12 Nov 2026); positions are read off her frames.
+   Type sizes are in rem and step up at breakpoints, so browser zoom makes text bigger instead of leaving it as it was. */
+:root {
+  color-scheme: light;
+  --ink: #1E2145; --red: #D9482F; --red-deep: #C53D25; --cream: #F4F1E4; --yellow: #F0E66E;
+  --haze: linear-gradient(180deg, #F4F1E4 0%, #F7DDD3 58%, #E6D8F3 100%);
+  --sans: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Atkinson Hyperlegible Mono', ui-monospace, Menlo, monospace;
+  --hand: 'Playwrite SK', cursive;
+  /* type steps: word = "Sangui" in the corner, title = "Sangui" on the title page */
+  --word: 2.4rem; --title: 4rem; --title-line: 1.2rem; --story: 1.05rem; --body: 1rem; --h2: 1.3rem; --big: 2.6rem; --note: 1rem; --hand-size: 1.5rem; --privacy: 1.2rem; --privacy-weight: 700;
+}
+@media (min-width: 900px) and (min-height: 560px) { :root { --word: 3.5rem; --title: 6.5rem; --title-line: 1.5rem; --story: 1.4rem; --body: 1.2rem; --h2: 1.6rem; --big: 3.6rem; --hand-size: 1.9rem; } }
+@media (min-width: 1280px) and (min-height: 700px) { :root { --word: 4.75rem; --title: 9rem; --title-line: 1.9rem; --story: 1.75rem; --body: 1.5rem; --h2: 2rem; --big: 4.6rem; --note: 1.1rem; --hand-size: 2.3rem; --privacy: 1.5rem; --privacy-weight: 400; } }
+@media (min-width: 1500px) and (min-height: 820px) { :root { --word: 5.6rem; --title: 10.5rem; --title-line: 2.2rem; --story: 2rem; --body: 1.75rem; --h2: 2.25rem; --big: 5.25rem; --note: 1.15rem; --hand-size: 2.6rem; } }
+
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+html.locked { overflow: hidden; }
+html, body { margin: 0; }
+body { background: var(--cream); color: var(--ink); font-family: var(--sans); }
+p, h1, h2 { margin: 0; }
+.mono { font-family: var(--mono); font-size: .8125rem; letter-spacing: .04em; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.track { height: 700vh; height: 700svh; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--haze); --t: 1; }
+
+/* ---- the 3D ---- */
+.scene, .scene canvas, .overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene canvas { display: block; pointer-events: none; }
+.overlay { pointer-events: none; }
+.scene { pointer-events: none; }
+.scene:focus-visible { outline-offset: -4px; }
+
+/* ---- "Sangui": big and cream on the title page, small and red in the corner afterwards. --t runs 0 to 1 between the two. ---- */
+.head { position: absolute; left: 3%; top: 5%; z-index: 6; pointer-events: none; }
+.word, .slot { display: block; width: max-content; font-weight: 700; line-height: .95; }
+.word { font-size: var(--word); transform-origin: 0 0; color: var(--red); color: color-mix(in srgb, var(--red) calc(var(--t) * 100%), var(--cream)); }
+.tools { margin: .5rem 0 0 .35rem; }
+.rm .word, .rm .tools { opacity: var(--t); transition: opacity .4s; }
+
+/* ---- title page ---- */
+.title { position: absolute; inset: 0; z-index: 5; background: var(--red); color: var(--cream); display: flex; flex-direction: column; justify-content: center; padding: 8vh 9vw 14vh; }
+.title canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: -1; }
+.slot { font-size: var(--title); margin: 0 0 2vh; visibility: hidden; }
+.rm .slot { visibility: visible; }
+.rm .title { transition: opacity .4s, visibility 0s; }
+.rm .title.gone { opacity: 0; visibility: hidden; transition: opacity .4s, visibility 0s linear .4s; }
+.title-text p { font-size: var(--title-line); font-weight: 700; line-height: 1.3; max-width: 44ch; margin-bottom: .6rem; }
+.title-text .sg-scroll { position: absolute; left: 50%; bottom: 9vh; transform: translateX(-50%); }
+.title :focus-visible { outline-color: var(--cream); }
+
+/* ---- step text ---- */
+.steps { position: absolute; inset: 0; z-index: 2; pointer-events: none; transition: opacity .3s; }
+.dived .steps { opacity: 0; }
+.step { position: absolute; }
+.step p { opacity: 0; font-size: var(--story); font-weight: 700; line-height: 1.3; text-wrap: pretty; }
+.step p + p { margin-top: .9em; }
+.rm .step p { transition: opacity .4s; }
+.s1 { left: 3%; top: 27%; width: 50%; }
+.s2 { left: 15%; width: 52%; bottom: max(8%, 76px); }
+.s3 { left: 4.5%; right: 5%; bottom: max(10%, 76px); }
+.s4 { left: 53%; right: 3%; bottom: max(11%, 76px); }
+.s5 { left: 59%; width: 32%; top: 28%; }
+.s5 .plain-weight { font-weight: 400; }
+.s6a { left: 0; right: 0; top: 16%; text-align: center; }
+.s6a .hand { font-family: var(--hand); font-weight: 400; font-size: var(--hand-size); }
+.s6b { left: 25%; right: 25%; bottom: max(6%, 76px); text-align: center; }
+.s6b p { font-size: var(--note); font-weight: 400; line-height: 1.4; }
+
+/* ---- results: a column on the right that scrolls by itself ---- */
+.results { position: absolute; left: 56%; right: 3%; top: 11.5%; bottom: 84px; z-index: 3; overflow-y: auto; padding: 18px 12px 28px 4px; opacity: 0; transition: opacity .35s;
+  -webkit-mask-image: linear-gradient(transparent 0, #000 18px, #000 calc(100% - 28px), transparent 100%); mask-image: linear-gradient(transparent 0, #000 18px, #000 calc(100% - 28px), transparent 100%); }
+.results.on { opacity: 1; }
+.results h2 { font-size: var(--h2); line-height: 1.15; margin: .5rem 0 .6rem; }
+.results .body { font-size: var(--body); line-height: 1.4; }
+.results .big { font-size: var(--big); font-weight: 700; line-height: 1; margin: 2.2rem 0 1rem; font-variant-numeric: tabular-nums; }
+.results .reading { font-size: calc(var(--body) * .86); line-height: 1.45; margin-top: 1rem; }
+.results .small { margin-top: 1.4rem; font-size: .95rem; line-height: 1.4; max-width: 44ch; }
+.results .small + .small { margin-top: .5rem; }
+.switch { display: flex; flex-wrap: wrap; gap: 8px; margin: .7rem 0 .2rem; }
+.gap { border: 1px dashed var(--ink); border-radius: 12px; padding: .8rem 1rem; margin-top: 1.6rem; width: fit-content; }
+.chart.gap { width: min(100%, 27rem); aspect-ratio: 31 / 20; display: grid; place-items: center; border-radius: 18px; }
+
+/* ---- controls ---- */
+.controls { position: absolute; right: 20px; bottom: 18px; z-index: 7; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.pill { font-size: .875rem; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 22px; background: rgba(244, 241, 228, .7); color: var(--ink); cursor: pointer; }
+.pill[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
+
+.privacy { position: absolute; left: 3%; bottom: 2.5%; z-index: 7; max-width: min(34ch, 60vw); }
+.privacy button { border: 0; background: none; padding: 10px 0; min-height: 44px; cursor: pointer; font-size: var(--privacy); font-weight: var(--privacy-weight); color: color-mix(in srgb, var(--red) calc(var(--t) * 100%), var(--cream)); }
+.privacy p { background: var(--cream); border: 1px solid var(--ink); border-radius: 12px; padding: .7rem .9rem; font-size: 1rem; line-height: 1.4; }
+.rm .privacy button { transition: color .4s; }
+
+/* ---- low screens (a laptop zoomed to 200%, say): text may sit over the 3D, so it gets a backing to stay readable ---- */
+@media (max-height: 560px) {
+  .step p { width: fit-content; background: rgba(244, 241, 228, .9); border-radius: 6px; padding: 1px 6px; margin-left: -6px; }
+  .step p + p { margin-top: .45em; }
+  .s1 { top: 22%; }
+  .s6a p { margin: 0 auto; }
+  .s6b { left: 74%; right: 3%; top: 30%; bottom: auto; text-align: left; }
+  .dived .privacy { display: none; }
+}
+
+/* ---- upright screens: no phone version yet; this only keeps things from colliding. The scene switches layout at the same ratio. ---- */
+@media (max-aspect-ratio: 9/10) {
+  .s1, .s2, .s3, .s4, .s5, .s6b { left: 16px; right: 16px; width: auto; top: auto; bottom: 132px; text-align: left; }
+  .results { left: 16px; right: 16px; top: 52%; bottom: 76px; background: rgba(244, 241, 228, .88); border-radius: 12px; padding: 12px; }
+  .privacy { bottom: 68px; left: 16px; }
+}
+
+/* ---- the plain page, for browsers without WebGL ---- */
+.plain { max-width: 42rem; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+.plain h1 { font-size: 4rem; color: var(--red-deep); margin-bottom: 1rem; }
+.plain h2 { font-size: 1.6rem; margin: .3rem 0 .5rem; }
+.plain p { font-size: 1.15rem; line-height: 1.5; margin-bottom: .9rem; }
+.plain section { margin-top: 2.5rem; }
+.plain .big { font-size: 3rem; font-weight: 700; line-height: 1; margin: 1.2rem 0 .6rem; }
+.plain .mono, .plain .small { font-size: .9rem; }
