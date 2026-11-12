@@ -1,6 +1,7 @@
 /*
  * How Sangui was made: an ordinary reading page. No 3D and no animation.
  * The first screen is the red of the prototype's title page; the rest sits on Morning haze, the way the prototype turns when you scroll.
+ * The layout follows the case-study pages of Mimi's portfolio: a small line above a big title, a row of facts, numbered sections in one reading column.
  */
 import { useState } from 'react';
 import { FIGMA_URL, CV_FILE } from '../links.js';
@@ -37,19 +38,22 @@ export default function About() {
     <main>
       <header className="top">
         <div className="wrap">
-          <h1>{TOP.title}</h1>
+          <p className="eyebrow">{TOP.eyebrow}</p>
+          <h1>{TOP.title.split(TOP.accent)[0]}<em>{TOP.accent}</em>{TOP.title.split(TOP.accent)[1]}</h1>
           <p className="lead"><T>{TOP.lead}</T></p>
           <p className="buttons">
             <a className="btn" href={HOME}>{TOP.buttons.prototype}</a>
             <a className="btn" href={FIGMA_URL}>{TOP.buttons.figma}</a>
             <a className="btn" href={CV}>{TOP.buttons.cv}</a>
           </p>
-          <p className="tools">{TOP.tools}</p>
         </div>
       </header>
 
       <div className="rest">
-        <div className="wrap">
+        <dl className="wrap facts">
+          {TOP.facts.map(([k, v]) => <div key={k}><dt className="mono">{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+        <div className="wrap col">
           <section>
             <h2>{WHY.heading}</h2>
             <p><T>{WHY.story}</T></p>

@@ -7,10 +7,18 @@
  */
 
 export const TOP = {
+  /* the small line above the title, as on the case-study pages of Mimi's portfolio */
+  eyebrow: 'Prototype · Roche application · November 2026',
   title: 'How Sangui was made',
+  accent: 'Sangui', /* the word in the title that gets the highlight colour */
   lead: 'Sangui is a scroll-driven prototype that explains a blood test in plain language. I made it in four days for the Generative AI Designer internship at Roche. [MIMI: adjust]',
   buttons: { prototype: 'Open the prototype', figma: 'Figma file', cv: 'CV (PDF)' },
-  tools: 'Figma · React · three.js · Claude · Claude Code',
+  /* the row of facts under the first screen */
+  facts: [
+    ['Made by', 'Monika Zimovčáková'],
+    ['For', 'Generative AI Designer internship, Roche'],
+    ['When', '10–13 Nov 2026'],
+    ['Tools', 'Figma · React · three.js · Claude · Claude Code']],
 };
 
 export const WHY = {

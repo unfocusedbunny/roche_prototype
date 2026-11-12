@@ -3,12 +3,14 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body { background: var(--cream); color: var(--ink); font-family: var(--sans); font-size: 1.15rem; line-height: 1.5; }
-h1, h2, p, ul, ol { margin: 0; }
+h1, h2, p, ul, ol, dl, dd { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 a { color: inherit; text-underline-offset: .15em; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .mono { font-family: var(--mono); font-size: .875rem; letter-spacing: .04em; }
-.wrap { width: min(100% - 2.5rem, 54rem); margin: 0 auto; }
+/* the first screen and the facts row are wide; the reading column is narrow and centred, as on Mimi's portfolio */
+.wrap { width: min(100% - 2.5rem, 70rem); margin: 0 auto; }
+.wrap.col { width: min(100% - 2.5rem, 46rem); }
 mark { background: var(--yellow); color: var(--ink); font-family: var(--mono); font-size: .875rem; font-weight: 400; padding: .1em .35em; border-radius: 4px; }
 
 .btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.4rem; border: 1px solid var(--ink); border-radius: 24px; background: var(--cream); color: var(--ink); font: inherit; font-size: 1.1rem; font-weight: 700; text-decoration: none; cursor: pointer; }
@@ -16,17 +18,25 @@ mark { background: var(--yellow); color: var(--ink); font-family: var(--mono); f
 
 /* ---- first screen: the title page's red. Cream on this red only passes as large text, so nothing here is small. ---- */
 .top { background: var(--red); color: var(--cream); min-height: 88vh; min-height: 88svh; display: flex; align-items: center; padding: 3.5rem 0; }
-.top h1 { font-size: 3rem; line-height: 1; }
+.top .eyebrow { font-family: var(--mono); font-size: 1.2rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.4rem; }
+.top h1 { font-size: 3rem; line-height: .98; letter-spacing: -.03em; }
+.top h1 em { font-style: normal; color: var(--yellow); }
 .top .lead { font-size: 1.5rem; font-weight: 700; line-height: 1.3; max-width: 36ch; margin: 1.5rem 0 2rem; text-wrap: pretty; }
 .buttons { display: flex; flex-wrap: wrap; gap: .75rem; }
-.top .tools { font-family: var(--mono); font-size: 1.2rem; font-weight: 700; margin-top: 2rem; }
 .top :focus-visible { outline-color: var(--cream); }
-@media (min-width: 900px) { .top h1 { font-size: 5rem; } .top .lead { font-size: 1.75rem; } }
+@media (min-width: 900px) { .top h1 { font-size: 6.5rem; } .top .lead { font-size: 1.75rem; } }
 
 /* ---- the rest: Morning haze ---- */
 .rest { background: var(--haze); padding-bottom: 4rem; }
-section { padding-top: 4.5rem; }
-h2 { font-size: 2rem; line-height: 1.15; margin-bottom: 1.2rem; }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem 1.5rem; padding: 1.6rem 0; border-bottom: 1px solid var(--ink); }
+.facts dt { text-transform: uppercase; letter-spacing: .14em; margin-bottom: .3rem; }
+.facts dd { font-weight: 700; line-height: 1.35; }
+@media (max-width: 760px) { .facts { grid-template-columns: 1fr 1fr; } }
+.col { counter-reset: s; }
+section { padding-top: 4.5rem; counter-increment: s; }
+h2 { font-size: 2rem; line-height: 1.1; letter-spacing: -.02em; margin-bottom: 1.2rem; }
+h2::before { content: counter(s, decimal-leading-zero); display: block; font-family: var(--mono); font-size: .875rem; font-weight: 400; letter-spacing: .14em; margin-bottom: .7rem; }
+@media (min-width: 900px) { h2 { font-size: 2.75rem; } }
 section > p, section > ul > li, .timeline p { max-width: 62ch; }
 section > p + p { margin-top: .9rem; }
 section > ul:not([class]) > li { padding-left: 1.4rem; position: relative; }
