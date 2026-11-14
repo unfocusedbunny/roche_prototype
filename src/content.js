@@ -55,7 +55,8 @@ export const STEPS = {
              text      the line under the slider, as [bold start, rest]. Either one pair for every number,
                        or { below, in, above } to follow where the number sits. null: nothing written yet.
              textCuts  [a, b]: the three texts change at these two numbers and not at the example range
-                       (below: under a · in: from a to under b · above: b or more) */
+                       (below: under a · in: from a to under b · above: b or more)
+             pastNote  true: a small note at the right edge says how many of 100 are past the window (HbA1c only) */
 export const TUBES = [
   { owner: 'Robin · Blood fats', values: [
     { key: 'ldl', name: 'LDL cholesterol',
@@ -84,7 +85,7 @@ export const TUBES = [
          The three texts follow Mimi's zones (under 5.7 · 5.7 to 6.4 · 6.5 or more), not the example range. They come from
          "Blood test explainer: texts for review" by way of the chart handoff (14 Nov 2026). The doctor's review is not back. */
       chart: { data: 'hba1c', asked: 'an HbA1c', unitName: 'percent', window: [4.5, 8.5], range: { m: [4, 5.6], w: [4, 5.6] },
-        textCuts: [5.7, 6.5],
+        pastNote: true, textCuts: [5.7, 6.5],
         text: {
           below: ['In range:', 'a typical average blood sugar.'],
           in: ['Higher-risk range:', 'not diabetes. An early signal that changes in activity, food and weight often bring down.'],
@@ -127,7 +128,7 @@ export const CHART = {
 
   status: { in: 'In the example range', above: 'Above the example range', below: 'Below the example range' },
   range: 'EXAMPLE RANGE',
-  past: '{n} OF 100 ARE PAST {edge} →',
+  past: '{n} OF 100 ARE PAST {edge} →', pastOne: '1 OF 100 IS PAST {edge} →',
 
   /* the small print under the chart */
   demo: 'A demo: it can’t judge a real blood test, and nothing you do here is stored.',

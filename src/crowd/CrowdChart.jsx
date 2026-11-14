@@ -88,7 +88,7 @@ function Hill({ v, who, value, width, glideKey, words }) {
   /* axis numbers: whole steps, far enough apart to read, and never under one of the range's own numbers */
   const every = [1, 2, 5, 10, 20].find(st => st * perUnit >= 34) || 50, ticks = [];
   for (let t = Math.ceil(from / every) * every; t <= to + 1e-9; t += every) { if (!edges.some(([at, text]) => Math.abs(x(at) - x(t)) < String(text).length * 4 + 14)) { ticks.push(t); } }
-  const past = to < data.axis.max ? pastEdge(data, group, to) : 0;
+  const past = v.chart.pastNote ? pastEdge(data, group, to) : 0;
 
   return (
     <svg width={width} height={base + 68} viewBox={`0 -18 ${width} ${base + 68}`} role="img"
@@ -103,7 +103,7 @@ function Hill({ v, who, value, width, glideKey, words }) {
       {edges.map(([at, text]) => <text key={text} className="edge" x={x(at)} y={base + 26} textAnchor="middle">{text}</text>)}
       {range && <text className="label" x={clamp((x(lo) + x(hi)) / 2, 54, width - 54)} y={base + 44} textAnchor="middle">{CHART.range}</text>}
       <text className="tick" x={width} y={base - 14} textAnchor="end">{v.unit}</text>
-      {past > 0 && <text className="label" x={width} y={base - 46} textAnchor="end">{fill(CHART.past, { n: past, edge: to })}</text>}
+      {past > 0 && <text className="label" x={width} y={base - 46} textAnchor="end">{fill(past === 1 ? CHART.pastOne : CHART.past, { n: past, edge: to })}</text>}
       <text className="name" x={nameX} y="10" textAnchor="middle">{name}</text>
       {showB && <text className={'count' + (counts.below.inside ? ' on-red' : '')} x={b.x} y={b.y} textAnchor="middle">{below}</text>}
       {showA && <text className="count" x={a.x} y={a.y} textAnchor="middle">{100 - below}</text>}
