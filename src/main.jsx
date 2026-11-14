@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource/atkinson-hyperlegible/400.css';
 import '@fontsource/atkinson-hyperlegible/700.css';
 import '@fontsource/atkinson-hyperlegible-mono/400.css';
+import '@fontsource/atkinson-hyperlegible-mono/700.css';
 import '@fontsource/playwrite-sk/400.css';
 import './tokens.css';
 import './app.css';

@@ -27,6 +27,8 @@ Every push to `main` runs `.github/workflows/deploy.yml`, which builds the page 
 | `how-it-was-made/index.html`, `src/about/` | The second page, "How Sangui was made". Its words are in `src/about/content.js`; `[MIMI: …]` notes show in yellow until they are replaced. |
 | `src/links.js` | The Figma address and the CV's file name, used by both pages. |
 | `public/` | Files served as they are: the CV, and screenshots in `public/how-it-was-made/`. |
+| `src/crowd/` | The crowd chart ("the hill") and the sums behind it. Each value's chart settings and Robin's number are in `src/content.js`. |
+| `src/data/crowds.json` | The survey data the chart draws: CDC NHANES 2015–2016, six groups for six values. |
 | `src/sangui/` | The 3D package, copied from the 3D chat. Change it there, then copy it in again. |
 | `scripts/check.mjs` | Drives the page in headless Chrome and saves screenshots. Needs `npm run dev` running. |
 

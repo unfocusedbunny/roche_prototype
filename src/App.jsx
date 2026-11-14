@@ -7,12 +7,15 @@ import { useEffect, useRef, useState } from 'react';
 import { createSanguiScene, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 import { createSanguiLabels } from './sangui/sangui-labels.js';
 import { createSanguiBlobs, SCROLL_BUTTON_CSS, SCROLL_BUTTON_HTML } from './sangui/sangui-blobs.js';
+import CrowdChart from './crowd/CrowdChart.jsx';
 import { TITLE, STEPS, TUBES, RESULTS, CONTROLS, LINKS, PRIVACY, PICTURE, PLAIN, SHOW_GAPS } from './content.js';
 import { FIGMA_URL, CV_FILE } from './links.js';
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* 0 before a, 1 after b, eased in between */
 const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+/* Who Robin is compared with, until the switch on the chart says otherwise: men aged 40 to 59 */
+const WHO = { sex: 'm', age: 'b' };
 const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 
 export default function App() {
@@ -20,11 +23,18 @@ export default function App() {
   return noGL ? <PlainPage /> : <Story onNoGL={() => setNoGL(true)} />;
 }
 
-/* One value: what it is, Robin's number, and where it sits */
-function Value({ v }) {
+/* One value: what it is, Robin's number, and where it sits. With a number and chart settings it gets the crowd chart. */
+function Value({ v, who, setWho }) {
   return (<>
     <h2>{v.name}</h2>
     <p className="body">{v.lead}{v.body && <><br />{v.body}</>}</p>
+    {v.value && v.chart ? <CrowdChart v={v} who={who} setWho={setWho} /> : <ValueText v={v} />}
+  </>);
+}
+
+/* A value without a chart yet: the number if there is one, and the plain sentence */
+function ValueText({ v }) {
+  return (<>
     {v.value ? <p className="big">{v.value} {v.unit}</p> : SHOW_GAPS && <p className="gap mono">{RESULTS.valueGap}</p>}
     {(v.value || v.crowd) && <p className="reading">
       {v.value && <>{v.value} {v.unit}{v.status && ' · ' + v.status}<br /></>}
@@ -46,6 +56,7 @@ function Story({ onNoGL }) {
   const [paused, setPaused] = useState(false);
   const [step, setStep] = useState(0);
   const [privacy, setPrivacy] = useState(false);
+  const [who, setWho] = useState(WHO);
 
   useEffect(() => {
     const el = stage.current, blocks = [...el.querySelectorAll('[data-step]')];
@@ -184,7 +195,7 @@ function Story({ onNoGL }) {
           {t.values.length > 1 && <div className="switch" role="group" aria-label="Values in this tube">
             {t.values.map((v, i) => <button key={v.key} className="pill" aria-pressed={i === valueIdx} onClick={() => setValueIdx(i)}>{v.name}</button>)}
           </div>}
-          <Value v={t.values[valueIdx]} />
+          <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
           <p className="small mono">{RESULTS.aiNote}</p>
           <p className="small">{RESULTS.disclaimer}</p>
         </section>
@@ -200,6 +211,7 @@ function Story({ onNoGL }) {
 
 /* Without WebGL there is no scene to scroll through, so the same words become an ordinary page */
 function PlainPage() {
+  const [who, setWho] = useState(WHO);
   return (
     <main className="plain">
       <h1>{TITLE.name}</h1>
@@ -208,7 +220,7 @@ function PlainPage() {
       {[1, 2, 3, 4].flatMap(n => STEPS[n]).map(l => <p key={l}>{l}</p>)}
       <p><b>{STEPS[5].heading}</b> {STEPS[5].body}</p>
       <p>{STEPS[6].note}</p>
-      {TUBES.map(t => t.values.map(v => <section key={v.key}><p className="mono">{t.owner}</p><Value v={v} /></section>))}
+      {TUBES.map(t => t.values.map(v => <section key={v.key}><p className="mono">{t.owner}</p><Value v={v} who={who} setWho={setWho} /></section>))}
       <p className="small mono">{RESULTS.aiNote}</p>
       <p className="small">{RESULTS.disclaimer}</p>
       <p className="small">{PRIVACY.text}</p>
