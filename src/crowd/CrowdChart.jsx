@@ -52,7 +52,7 @@ function Segment({ label, options, value, onPick }) {
 }
 
 /* The picture: band, hill, line, counts, axis. `value` is the number the line stands on; `words` fill the description. */
-function Hill({ v, who, value, atStart, width, glideKey, words }) {
+function Hill({ v, who, value, width, glideKey, words }) {
   const data = crowds.values[v.chart.data], group = who.sex + who.age, [from, to] = v.chart.window, range = v.chart.range && v.chart.range[who.sex];
   const s = clamp(width / FULL, .62, 1), base = BAND_TOP + 240 * s, perUnit = (width - 2 * PAD) / (to - from), dx = (width - 2 * PAD) / (SAMPLES - 1);
   const heights = useMemo(() => hillHeights(data, group, scaleFor(data, 215 * s), from, to, SAMPLES), [data, group, s, from, to]);
@@ -63,7 +63,7 @@ function Hill({ v, who, value, atStart, width, glideKey, words }) {
   const paths = hillPaths(m.heights, PAD, dx, base, lineX), below = Math.round(m.below);
   const counts = placeCounts(m.heights, PAD, dx, lineX, width, { insideTop: base - 58 });
   /* The name on the line, kept inside the picture. Its width is judged from its length, since the wording is Mimi's to change. */
-  const name = atStart ? CHART.robin.start : CHART.robin.other, nameX = clamp(lineX, 36, width - 36), nameHalf = name.length * 5 + 2;
+  const name = CHART.robin.name, nameX = clamp(lineX, 36, width - 36), nameHalf = name.length * 5 + 2;
   /* A count that doesn't fit inside its half of the hill sits beside the line, on its own side while its digits fit there
      (60 px from the line, closer near the picture's edge), otherwise on the other side. It stays at the prototype's height
      unless the hill under it is taller than that: then it sits just above the hill, and moves sideways clear of the name. */
@@ -113,9 +113,9 @@ function Hill({ v, who, value, atStart, width, glideKey, words }) {
 
 /* v: one value from content.js, with its starting number and chart settings. who: the crowd, { sex: 'm' | 'w', age: 'a' | 'b' | 'c' }. */
 export default function CrowdChart({ v, who, setWho }) {
-  const data = crowds.values[v.chart.data], [from, to] = v.chart.window, start = +v.value;
+  const data = crowds.values[v.chart.data], [from, to] = v.chart.window;
   const digits = (String(data.step).split('.')[1] || '').length;
-  const [value, setValue] = useState(start);
+  const [value, setValue] = useState(+v.value);
   const box = useRef(null), [width, setWidth] = useState(0);
   useLayoutEffect(() => {
     const measure = () => setWidth(Math.min(FULL, Math.floor(box.current.clientWidth)));
@@ -124,7 +124,6 @@ export default function CrowdChart({ v, who, setWho }) {
   }, []);
 
   const group = who.sex + who.age, range = v.chart.range && v.chart.range[who.sex], number = value.toFixed(digits);
-  const atStart = Math.abs(value - start) < 1e-9;
   const status = range ? rangeStatus(value, range[0], range[1]) : null, cuts = v.chart.textCuts;
   const zone = cuts ? (value < cuts[0] - 1e-9 ? 'below' : value < cuts[1] - 1e-9 ? 'in' : 'above') : status;
   const text = v.chart.text && (Array.isArray(v.chart.text) ? v.chart.text : v.chart.text[zone]);
@@ -151,7 +150,7 @@ export default function CrowdChart({ v, who, setWho }) {
 
       <div ref={box} className="hill">
         {width > 0 && <>
-          <Hill v={v} who={who} value={value} atStart={atStart} width={width} glideKey={group}
+          <Hill v={v} who={who} value={value} width={width} glideKey={group}
             words={{ name: v.name, group: people, value: number, unit: v.chart.unitName }} />
           {/* as wide as the axis plus one knob, so the knob's centre sits exactly under the line */}
           <input type="range" min={from} max={to} step={data.step} value={value} onChange={e => setValue(+(+e.target.value).toFixed(digits))}

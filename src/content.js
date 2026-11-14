@@ -107,11 +107,11 @@ export const RESULTS = {
 };
 
 /* The crowd chart's words. {…} parts are filled in by the chart.
-   MIMI: how Robin is framed is still open. The three labels that name Robin are together under "robin" below, so they are easy to rewrite:
-   the name on the line at the starting number, the name anywhere else, and the hint under the slider.
+   MIMI: how Robin is framed is still open. Robin can be anyone, with any number: the line is always "Robin".
+   The name on the line, the hint under the slider and the crowd the chart starts on are together under "robin" below, so they are easy to rewrite.
    Example ranges: ABIM laboratory reference ranges, January 2026. That table says its ranges are not targets for one person, hence "example range". */
 export const CHART = {
-  robin: { start: 'Robin', other: 'what if?', hint: 'Drag to try another number. It starts on Robin’s.',
+  robin: { name: 'Robin', hint: 'Drag to try another number.',
     /* the crowd every chart starts on: men (m) or women (w), aged 20–39 (a), 40–59 (b) or 60+ (c) */
     crowd: { sex: 'm', age: 'b' } },
 
