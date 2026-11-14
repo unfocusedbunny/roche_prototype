@@ -2,7 +2,7 @@
  * Sangui crowd chart: "the hill". Try a number, try a crowd.
  * The crowd is one filled shape; the number is a line with a dot on it. A slider under the axis moves the number,
  * the buttons in the question change the crowd, and the split, the two counts, the answer, the status and the text all follow.
- * It starts on a made-up result and "Back to Robin" returns to it.
+ * It starts on a made-up result.
  *
  * Dragging is direct. A change of crowd glides (at once with reduced motion).
  *
@@ -20,7 +20,7 @@ const FULL = 784, PAD = 12, SAMPLES = 181, BAND_TOP = 22, KNOB = 28;
 const fill = (text, words) => text.replace(/\{(\w+)\}/g, (_, k) => words[k]);
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
-/* Shows `target`, gliding to it from whatever is on screen when `glideKey` changed (another crowd, a reset).
+/* Shows `target`, gliding to it from whatever is on screen when `glideKey` changed (another crowd).
    Any other change (the slider, another value, another width: `jumpKey`) shows at once. */
 function useMorph(target, glideKey, jumpKey) {
   const [anim, setAnim] = useState(null);
@@ -113,9 +113,9 @@ function Hill({ v, who, value, atStart, width, glideKey, words }) {
 
 /* v: one value from content.js, with its starting number and chart settings. who: the crowd, { sex: 'm' | 'w', age: 'a' | 'b' | 'c' }. */
 export default function CrowdChart({ v, who, setWho }) {
-  const data = crowds.values[v.chart.data], [from, to] = v.chart.window, start = +v.value, home = CHART.robin.crowd;
+  const data = crowds.values[v.chart.data], [from, to] = v.chart.window, start = +v.value;
   const digits = (String(data.step).split('.')[1] || '').length;
-  const [value, setValue] = useState(start), [resets, setResets] = useState(0);
+  const [value, setValue] = useState(start);
   const box = useRef(null), [width, setWidth] = useState(0);
   useLayoutEffect(() => {
     const measure = () => setWidth(Math.min(FULL, Math.floor(box.current.clientWidth)));
@@ -124,13 +124,12 @@ export default function CrowdChart({ v, who, setWho }) {
   }, []);
 
   const group = who.sex + who.age, range = v.chart.range && v.chart.range[who.sex], number = value.toFixed(digits);
-  const atStart = Math.abs(value - start) < 1e-9, changed = !atStart || who.sex !== home.sex || who.age !== home.age;
+  const atStart = Math.abs(value - start) < 1e-9;
   const status = range ? rangeStatus(value, range[0], range[1]) : null, cuts = v.chart.textCuts;
   const zone = cuts ? (value < cuts[0] - 1e-9 ? 'below' : value < cuts[1] - 1e-9 ? 'in' : 'above') : status;
   const text = v.chart.text && (Array.isArray(v.chart.text) ? v.chart.text : v.chart.text[zone]);
   const n = belowCount(data, group, value), people = CHART.groups[who.sex] + ' ' + CHART.ages[who.age];
   const lead = fill(CHART.answer[answerKind(n)], { n }), rest = fill(CHART.answer.rest, { group: people });
-  const back = () => { setValue(start); setWho(home); setResets(resets + 1); };
 
   return (
     <div className="crowd">
@@ -152,7 +151,7 @@ export default function CrowdChart({ v, who, setWho }) {
 
       <div ref={box} className="hill">
         {width > 0 && <>
-          <Hill v={v} who={who} value={value} atStart={atStart} width={width} glideKey={group + ' ' + resets}
+          <Hill v={v} who={who} value={value} atStart={atStart} width={width} glideKey={group}
             words={{ name: v.name, group: people, value: number, unit: v.chart.unitName }} />
           {/* as wide as the axis plus one knob, so the knob's centre sits exactly under the line */}
           <input type="range" min={from} max={to} step={data.step} value={value} onChange={e => setValue(+(+e.target.value).toFixed(digits))}
@@ -160,10 +159,7 @@ export default function CrowdChart({ v, who, setWho }) {
             style={{ width: width - 2 * PAD + KNOB, marginLeft: PAD - KNOB / 2 }} />
         </>}
       </div>
-      <div className="try">
-        <span className="mono">{CHART.robin.hint}</span>
-        {changed && <button type="button" onClick={back}>{CHART.robin.reset}</button>}
-      </div>
+      <p className="try mono">{CHART.robin.hint}</p>
 
       {text ? <p className="note"><b>{text[0]}</b> {text[1]}</p> : SHOW_GAPS && <p className="gap mono">{RESULTS.textGap}</p>}
       <p className="small mono">{CHART.demo} {fill(CHART.source.crowd, { people: data.groups[group].n, sex: CHART.groups[who.sex] })}{range && ' ' + CHART.source.range}</p>

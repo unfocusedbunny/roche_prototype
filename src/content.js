@@ -81,10 +81,14 @@ export const TUBES = [
       body: 'Sugar sticks to hemoglobin, and red cells live about 3 months, so it reflects your average, not just the test day.',
       value: '5.8', unit: '%',
       /* lopsided, so the chart is zoomed in to 4.5–8.5 and says how many people are past the edge.
-         MIMI: the three texts from your reviewed draft (under 5.7 · 5.7 to 6.4 · 6.5 or more) were not in the handoff folder.
-         Put them in as  text: { below: ['…', '…'], in: ['…', '…'], above: ['…', '…'] }  and the cuts below do the rest. */
+         The three texts follow Mimi's zones (under 5.7 · 5.7 to 6.4 · 6.5 or more), not the example range. They come from
+         "Blood test explainer: texts for review" by way of the chart handoff (14 Nov 2026). The doctor's review is not back. */
       chart: { data: 'hba1c', asked: 'an HbA1c', unitName: 'percent', window: [4.5, 8.5], range: { m: [4, 5.6], w: [4, 5.6] },
-        text: null, textCuts: [5.7, 6.5] } }] },
+        textCuts: [5.7, 6.5],
+        text: {
+          below: ['In range:', 'a typical average blood sugar.'],
+          in: ['Higher-risk range:', 'not diabetes. An early signal that changes in activity, food and weight often bring down.'],
+          above: ['Diabetes range:', 'one result usually isn’t a diagnosis; it’s normally confirmed with another test.'] } } }] },
   { owner: 'Robin · Iron', values: [
     { key: 'iron', name: 'Iron',
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
@@ -103,12 +107,12 @@ export const RESULTS = {
 };
 
 /* The crowd chart's words. {…} parts are filled in by the chart.
-   MIMI: how Robin is framed is still open. The four labels that name Robin are together under "robin" below, so they are easy to rewrite:
-   the name on the line at the starting number, the name anywhere else, the reset button, and the hint under the slider.
+   MIMI: how Robin is framed is still open. The three labels that name Robin are together under "robin" below, so they are easy to rewrite:
+   the name on the line at the starting number, the name anywhere else, and the hint under the slider.
    Example ranges: ABIM laboratory reference ranges, January 2026. That table says its ranges are not targets for one person, hence "example range". */
 export const CHART = {
-  robin: { start: 'Robin', other: 'what if?', reset: 'Back to Robin', hint: 'Drag to try another number. It starts on Robin’s.',
-    /* the crowd every chart starts on, and returns to: men (m) or women (w), aged 20–39 (a), 40–59 (b) or 60+ (c) */
+  robin: { start: 'Robin', other: 'what if?', hint: 'Drag to try another number. It starts on Robin’s.',
+    /* the crowd every chart starts on: men (m) or women (w), aged 20–39 (a), 40–59 (b) or 60+ (c) */
     crowd: { sex: 'm', age: 'b' } },
 
   /* the control, read as one sentence: "What does a hemoglobin of 15.6 g/dL mean for a [man] aged [40–59]?" */

@@ -128,7 +128,7 @@ button { font: inherit; color: inherit; }
 .chip svg { width: 16px; height: 16px; fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .who { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin: .6rem 0 .2rem; font-size: 1.125rem; }
 .seg { display: inline-flex; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--ink); }
-.seg button, .try button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: none; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.seg button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: none; font-size: 1rem; font-weight: 700; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 .hill { max-width: 784px; margin-top: .6rem; }
 .hill svg { display: block; overflow: visible; }
@@ -148,9 +148,7 @@ button { font: inherit; color: inherit; }
 .hill input::-moz-range-track { height: 4px; border-radius: 2px; background: var(--ink); }
 .hill input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: var(--ink); border: 3px solid var(--cream); box-shadow: 0 0 0 2.5px var(--ink); }
 .hill input::-moz-range-thumb { box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); border: 3px solid var(--cream); box-shadow: 0 0 0 2.5px var(--ink); }
-.try { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; min-height: 44px; }
-.try .mono { font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
-.try button { padding: 0 16px; box-shadow: inset 0 0 0 2px var(--ink); font-size: .9375rem; }
+.try { margin-top: .5rem; font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
 .crowd .note { font-size: 1rem; line-height: 1.4; margin-top: .6rem; min-height: 2.8em; }
 .crowd .gap { margin-top: .6rem; }
 .crowd .small { margin-top: 1rem; font-size: .75rem; letter-spacing: .02em; max-width: none; }
