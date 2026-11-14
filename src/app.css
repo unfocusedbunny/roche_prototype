@@ -78,7 +78,6 @@ button { font: inherit; color: inherit; }
 .results .small + .small { margin-top: .5rem; }
 .switch { display: flex; flex-wrap: wrap; gap: 8px; margin: .7rem 0 .2rem; }
 .gap { border: 1px dashed var(--ink); border-radius: 12px; padding: .8rem 1rem; margin-top: 1.6rem; width: fit-content; }
-.chart.gap { width: min(100%, 27rem); aspect-ratio: 31 / 20; display: grid; place-items: center; border-radius: 18px; }
 
 /* ---- controls ---- */
 .controls { position: absolute; right: 20px; bottom: 18px; z-index: 7; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
@@ -120,19 +119,18 @@ button { font: inherit; color: inherit; }
 .plain .big { font-size: 3rem; font-weight: 700; line-height: 1; margin: 1.2rem 0 .6rem; }
 .plain .mono, .plain .small { font-size: .9rem; }
 
-/* ---- the crowd chart: Robin's number and status, the sentence, the who-is-Robin switch, the hill ---- */
+/* ---- the crowd chart: the question with its number and status, the answer, the hill, the slider, the text ---- */
 .crowd { margin-top: 2.2rem; }
-.crowd-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .75rem; }
-.crowd-head .big { margin: 0; }
-.crowd-head .unit { font-size: 1.125rem; }
+.ask { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .75rem; font-size: 1.125rem; }
+.ask .big { margin: 0; }
 .chip { align-self: center; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px 6px 10px; border-radius: 999px; background: var(--yellow); font-size: .875rem; font-weight: 700; }
 .chip.above, .chip.below { background: var(--cream); box-shadow: inset 0 0 0 2px var(--ink); }
 .chip svg { width: 16px; height: 16px; fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.who { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin: 1.3rem 0 .5rem; font-size: 1.125rem; }
+.who { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin: .6rem 0 .2rem; font-size: 1.125rem; }
 .seg { display: inline-flex; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--ink); }
-.seg button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: none; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.seg button, .try button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: none; font-size: 1rem; font-weight: 700; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
-.hill { max-width: 784px; }
+.hill { max-width: 784px; margin-top: .6rem; }
 .hill svg { display: block; overflow: visible; }
 .hill .ink { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
 .hill text { fill: var(--ink); }
@@ -140,8 +138,20 @@ button { font: inherit; color: inherit; }
 .hill .edge { font-family: var(--mono); font-size: 13px; font-weight: 700; }
 .hill .label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
 .hill .name { font-family: var(--hand); font-size: 17px; }
-/* cream on the red is 3.77:1, which only passes as large text: these two sizes must not shrink */
+/* cream on the red is 3.77:1, which only passes as large text: this size must not shrink */
 .hill .count { font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.hill .word { font-size: 19px; font-weight: 700; }
-.hill .on-red text { fill: var(--cream); }
+.hill .count.on-red { fill: var(--cream); }
+/* the slider: a 44 px tall hit area, a 4 px track, a 28 px knob */
+.hill input { -webkit-appearance: none; appearance: none; display: block; height: 44px; margin-top: 0; background: none; cursor: grab; }
+.hill input:active { cursor: grabbing; }
+.hill input::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--ink); }
+.hill input::-moz-range-track { height: 4px; border-radius: 2px; background: var(--ink); }
+.hill input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: var(--ink); border: 3px solid var(--cream); box-shadow: 0 0 0 2.5px var(--ink); }
+.hill input::-moz-range-thumb { box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); border: 3px solid var(--cream); box-shadow: 0 0 0 2.5px var(--ink); }
+.try { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; min-height: 44px; }
+.try .mono { font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+.try button { padding: 0 16px; box-shadow: inset 0 0 0 2px var(--ink); font-size: .9375rem; }
+.crowd .note { font-size: 1rem; line-height: 1.4; margin-top: .6rem; min-height: 2.8em; }
+.crowd .gap { margin-top: .6rem; }
+.crowd .small { margin-top: 1rem; font-size: .75rem; letter-spacing: .02em; max-width: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

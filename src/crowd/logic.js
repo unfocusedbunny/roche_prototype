@@ -1,6 +1,7 @@
 /*
- * Sangui crowd chart: the sums behind the hill. Nothing here touches the page.
- * Ported from the chart chat's reference file (14 Nov 2026), which was checked against the mock-up Mimi approved.
+ * Sangui crowd chart: the sums behind the hill. Nothing here touches the page, and no wording lives here (that is in content.js).
+ * Ported from the chart chat's reference file, version 2 (14 Nov 2026, evening), which was checked against the prototype Mimi approved.
+ * Since version 2 the number can move: the split, the counts and the status are worked out for any value on a step.
  *
  * Data shape (src/data/crowds.json): values[name] = { unit, axis: {min, max}, step, groups: { ma|mb|mc|wa|wb|wc: { n, p, below, density } } }
  * density has 91 evenly spaced samples from axis.min to axis.max.
@@ -30,46 +31,59 @@ export function hillHeights(valueData, groupKey, K, from, to, samples = 181) {
   return out;
 }
 
-/* "Higher than X of 100": people in the group strictly below `value`. The value must sit on a step of the table. Kept between 1 and 99. */
+/* How many of 100 people in the group are strictly below `value` (0 to 100). The value must sit on a step of the table,
+   counted from the table's own axis.min (the drawn window may start later). */
 export function belowCount(valueData, groupKey, value) {
-  const i = Math.round((value - valueData.axis.min) / valueData.step);
   const b = valueData.groups[groupKey].below;
-  return Math.min(99, Math.max(1, b[Math.min(b.length - 1, Math.max(0, i))]));
+  return b[Math.min(b.length - 1, Math.max(0, Math.round((value - valueData.axis.min) / valueData.step)))];
+}
+
+/* Which answer the count calls for. At the very ends there is no honest number, so the sentence says "nearly all". */
+export function answerKind(below) {
+  return below <= 0 ? 'none' : below >= 100 ? 'all' : 'some';
+}
+
+/* Where the value sits against the example range: 'in', 'above' or 'below'. Always shown with a word, never colour alone. */
+export function rangeStatus(value, lo, hi) {
+  return value > hi + 1e-9 ? 'above' : (value < lo - 1e-9 ? 'below' : 'in');
 }
 
 /* How many of 100 are past the right edge of a zoomed axis (the note on lopsided values such as HbA1c). */
 export function pastEdge(valueData, groupKey, edgeValue) {
-  const i = Math.round((edgeValue - valueData.axis.min) / valueData.step);
-  return 100 - valueData.groups[groupKey].below[i];
+  return 100 - belowCount(valueData, groupKey, edgeValue);
 }
 
-/* The two closed shapes of the hill, split at Robin. heights[i] belongs to x = x0 + i * dx; robinX is in px. */
-export function hillPaths(heights, x0, dx, baseline, robinX) {
+/* The two closed shapes of the hill, split at the line. heights[i] belongs to x = x0 + i * dx; lineX is in px and can be anywhere on the axis. */
+export function hillPaths(heights, x0, dx, baseline, lineX) {
   const r = (n) => Math.round(n * 10) / 10;
-  const t = Math.min(heights.length - 1, Math.max(0, (robinX - x0) / dx)), i = Math.min(heights.length - 2, Math.floor(t));
-  const robinH = heights[i] + (heights[i + 1] - heights[i]) * (t - i);
-  let below = 'M' + r(x0) + ' ' + r(baseline), above = 'M' + r(robinX) + ' ' + r(baseline) + ' L' + r(robinX) + ' ' + r(baseline - robinH);
+  const t = Math.min(heights.length - 1, Math.max(0, (lineX - x0) / dx)), i = Math.min(heights.length - 2, Math.floor(t));
+  const lineH = heights[i] + (heights[i + 1] - heights[i]) * (t - i);
+  let below = 'M' + r(x0) + ' ' + r(baseline), above = 'M' + r(lineX) + ' ' + r(baseline) + ' L' + r(lineX) + ' ' + r(baseline - lineH);
   for (let k = 0; k <= i; k++) { below += ' L' + r(x0 + k * dx) + ' ' + r(baseline - heights[k]); }
-  below += ' L' + r(robinX) + ' ' + r(baseline - robinH) + ' L' + r(robinX) + ' ' + r(baseline) + ' Z';
+  below += ' L' + r(lineX) + ' ' + r(baseline - lineH) + ' L' + r(lineX) + ' ' + r(baseline) + ' Z';
   for (let k = i + 1; k < heights.length; k++) { above += ' L' + r(x0 + k * dx) + ' ' + r(baseline - heights[k]); }
   above += ' L' + r(x0 + (heights.length - 1) * dx) + ' ' + r(baseline) + ' Z';
-  return { below, above, robinY: r(baseline - robinH) };
+  return { below, above, lineY: r(baseline - lineH) };
 }
 
-/* Where "67 below" and "33 above" go. Each is a 100 px wide centred box (number 40 px bold, word 19 px bold 42 px lower).
-   Inside its half of the hill when that half is at least minWidth px wide where the hill is taller than the label; otherwise beside Robin's line near the top. */
-export function placeCounts(heights, x0, dx, robinX, opts = {}) {
-  const { labelClearance = 78, minWidth = 76, insideTop = 184, besideTop = 34 } = opts;
+/* Where the two counts go. Each is a bare number, 40 px bold, in a 100 px wide centred box.
+   Inside its half of the hill when that half is at least minWidth px wide where the hill is taller than the number;
+   otherwise beside the line near the top, on whichever side has room. plotWidth is the width of the plot area in px. */
+export function placeCounts(heights, x0, dx, lineX, plotWidth = 784, opts = {}) {
+  const { clearance = 72, minWidth = 76, insideTop = 204, besideTop = 40 } = opts;
   const span = (lo, hi) => {
     let a = -1, b = -1;
-    for (let k = 0; k < heights.length; k++) { const x = x0 + k * dx; if (x >= lo && x <= hi && heights[k] >= labelClearance) { if (a < 0) { a = x; } b = x; } }
+    for (let k = 0; k < heights.length; k++) { const x = x0 + k * dx; if (x >= lo && x <= hi && heights[k] >= clearance) { if (a < 0) { a = x; } b = x; } }
     return a < 0 ? null : [a, b];
   };
   const one = (s, beside) => (s && s[1] - s[0] >= minWidth) ? { left: (s[0] + s[1]) / 2 - 50, top: insideTop, inside: true } : { left: beside, top: besideTop, inside: false };
-  return { below: one(span(-Infinity, robinX), robinX - 110), above: one(span(robinX, Infinity), robinX + 10) };
+  return {
+    below: one(span(-Infinity, lineX), lineX - 110 >= 0 ? lineX - 110 : lineX + 10),
+    above: one(span(lineX, Infinity), lineX + 110 <= plotWidth ? lineX + 10 : lineX - 110),
+  };
 }
 
-/* The morph: 500 ms, this easing. Every number glides from the state on screen to the target. */
+/* The morph, used when the crowd changes (dragging the slider is direct): 500 ms, this easing. */
 export const MORPH_MS = 500;
 export const ease = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
 export const mix = (a, b, e) => (Array.isArray(a) ? a.map((v, i) => v + (b[i] - v) * e) : a + (b - a) * e);
