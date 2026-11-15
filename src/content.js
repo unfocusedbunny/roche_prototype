@@ -33,8 +33,8 @@ export const STEPS = {
   2: ['So I built this to make blood test results more informative, accessible and fun.'],
   3: ['Sangui takes one blood test and explains it against an example range, and against people of the same sex and age in a US health survey.*'],
   4: ['*Why American data? Because it is open and I could get my hands on it quickly.'],
-  5: { heading: 'These are Robin’s tubes.',
-    body: 'Robin’s blood went into three tubes. The cap colour tells the lab what each one is for. Robin isn’t real, so Robin can be anyone. Slide the number, switch the crowd.' },
+  5: { heading: 'These are example tubes.',
+    body: 'One blood test goes into three tubes. The cap colour tells the lab what each one is for. The numbers here are examples. Slide them to your own, and switch the crowd.' },
   6: { prompt: 'Pick one',
     note: 'A real version would let you bring your own report, securely. This one takes no uploads, on purpose. You can slide to your own number, and nothing you do here is collected or stored.' },
 };
@@ -55,7 +55,7 @@ export const STEPS = {
                        (below: under a · in: from a to under b · above: b or more)
              pastNote  true: a small note at the right edge says how many of 100 are past the window (HbA1c only) */
 export const TUBES = [
-  { owner: 'Robin · Blood fats', values: [
+  { owner: 'Blood fats', values: [
     { key: 'ldl', name: 'LDL cholesterol',
       lead: 'The cholesterol that can build up in your artery walls.',
       body: 'LDL particles carry cholesterol to the body’s tissues. Any surplus slowly builds up in artery walls over years, hence “bad” cholesterol, though the body needs some.',
@@ -63,7 +63,7 @@ export const TUBES = [
       /* no band and no status: the chart chat's recommendation, Mimi's call. The alternative is a shaded "optimal, under 2.6" zone. */
       chart: { data: 'ldl', unitName: 'millimoles per litre', window: [1, 6], range: null,
         text: ['LDL has no single range.', 'The right number depends on your overall risk.'] } }] },
-  { owner: 'Robin · Blood count and sugar', values: [
+  { owner: 'Blood count and sugar', values: [
     { key: 'hemoglobin', name: 'Hemoglobin',
       lead: 'Carries oxygen from your lungs to the rest of your body.',
       body: 'It’s an iron-containing protein inside your red cells. Each cell holds about 270 million of them, picking up oxygen in the lungs and letting it go in the body.',
@@ -87,7 +87,7 @@ export const TUBES = [
           below: ['In range:', 'a typical average blood sugar.'],
           in: ['Higher-risk range:', 'not diabetes. An early signal that changes in activity, food and weight often bring down.'],
           above: ['Diabetes range:', 'one result usually isn’t a diagnosis; it’s normally confirmed with another test.'] } } }] },
-  { owner: 'Robin · Iron', values: [
+  { owner: 'Iron', values: [
     { key: 'iron', name: 'Iron',
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
       body: null, value: '9.0', unit: 'µmol/L',
@@ -100,7 +100,7 @@ export const RESULTS = {
   /* The texts are AI-drafted and the doctor's review is still out, so this does not say "checked by a person" yet. */
   aiNote: 'Drafted with AI. Review pending.',
   disclaimer: 'Sangui explains. It doesn’t diagnose, and it can’t tell you what to do. That’s what doctors are for.',
-  valueGap: 'Robin’s number is still to come.',
+  valueGap: 'The example number is still to come.',
   textGap: 'The text for this number is still to come.',
 };
 
@@ -143,7 +143,7 @@ export const LINKS = { label: 'About this project', about: 'About this project',
 /* DRAFT (Claude). Says only what the page itself does; the host keeps ordinary server logs like any website. */
 export const PRIVACY = {
   label: 'Privacy note',
-  text: 'This page sets no cookies, runs no analytics and stores nothing you do here. The results belong to Robin, who doesn’t exist.',
+  text: 'This page sets no cookies, runs no analytics and stores nothing you do here. The numbers are examples, not anyone’s results.',
 };
 
 /* What the 3D picture shows, for people who can't see it */
