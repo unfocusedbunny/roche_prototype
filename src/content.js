@@ -27,7 +27,7 @@ export const TITLE = {
 /* One entry per scroll step, 1 to 6. Each line fades in a moment after the one before it. */
 export const STEPS = {
   1: ['I have chronic anemia, so my blood gets checked regularly.',
-    'I’m told a number on the phone, and it means nothing to me: I don’t know what’s normal or where I stand.'],
+    'I’m usually told a number on the phone between appointments, and it means nothing to me: I don’t know what’s normal or where I stand.'],
   2: ['Pasting my results into an AI would explain them, but that means handing over my health data.'],
   3: ['So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age, with nothing stored.'],
   /* the story no longer marks this with a *, so the line stands on its own */

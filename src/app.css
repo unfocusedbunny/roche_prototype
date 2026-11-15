@@ -53,8 +53,10 @@ button { font: inherit; color: inherit; }
 .dived .steps { opacity: 0; }
 .step { position: absolute; }
 .step p { opacity: 0; font-size: calc(var(--story) * .88); font-weight: 700; line-height: 1.35; text-wrap: pretty; }
-/* the story itself (steps 1 to 4) is set in the regular weight; the heading of step 5 stays bold */
-.s1 p, .s2 p, .s3 p, .s4 p { font-weight: 400; }
+/* the story itself (steps 1 to 4) reads as a narrow column, not a wide line */
+.s1 p, .s2 p, .s3 p, .s4 p { max-width: 24em; }
+/* step 3 sits under the three tubes, so it gets a little more width to stay clear of them */
+.s3 p { max-width: 31em; }
 .step p + p { margin-top: .9em; }
 .rm .step p { transition: opacity .4s; }
 .s1 { left: 3%; top: 27%; width: 50%; }
@@ -105,6 +107,7 @@ button { font: inherit; color: inherit; }
 @media (max-height: 560px) {
   .step p { width: fit-content; background: rgba(244, 241, 228, .9); border-radius: 6px; padding: 1px 6px; margin-left: -6px; }
   .step p + p { margin-top: .45em; }
+  .s1 p, .s2 p, .s3 p, .s4 p { max-width: none; }
   .s1 { top: 22%; }
   .s6a p { margin: 0 auto; }
   .s6b { left: 74%; right: 3%; top: 30%; bottom: auto; text-align: left; }
