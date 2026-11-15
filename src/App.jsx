@@ -135,6 +135,24 @@ function Story({ onNoGL }) {
   const picture = mode === 'scroll' ? PICTURE.steps[step] : PICTURE.models[SCENE_TUBES[tube].model];
   const t = TUBES[tube], showResults = textOn && mode !== 'returning';
 
+  /* A nudge: shortly after a result opens, the column slides down a little and back, once, to show there is more below.
+     Not with reduced or paused motion, and it stops the moment the reader does anything in the column. */
+  useEffect(() => {
+    const el = results.current;
+    if (!showResults || REDUCED || paused) { return; }
+    let frame, t0;
+    const step = (now) => {
+      t0 ??= now; const p = Math.min(1, (now - t0) / 1200);
+      el.scrollTop = 64 * Math.sin(Math.PI * p) ** 2;
+      if (p < 1) { frame = requestAnimationFrame(step); }
+    };
+    const timer = setTimeout(() => { if (el.scrollTop === 0 && el.scrollHeight > el.clientHeight + 64) { frame = requestAnimationFrame(step); } }, 900);
+    const stop = () => { clearTimeout(timer); cancelAnimationFrame(frame); };
+    const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    events.forEach(e => el.addEventListener(e, stop, { passive: true }));
+    return () => { stop(); events.forEach(e => el.removeEventListener(e, stop)); };
+  }, [showResults]);
+
   return (
     <div className="track">
       <div ref={stage} className={'stage' + (REDUCED ? ' rm' : '') + (mode !== 'scroll' ? ' dived' : '')}>
