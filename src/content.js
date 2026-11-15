@@ -12,7 +12,7 @@
 
 /* true: a missing number or a missing text is shown with a small "to come" note.
    false: missing parts are simply left out. Set to false before sending the link to anyone. */
-export const SHOW_GAPS = true;
+export const SHOW_GAPS = false;
 
 export const TITLE = {
   name: 'Sangui',
@@ -31,12 +31,10 @@ export const STEPS = {
     'No call if I don’t.',
     'I wanted to know where I land on the scales in those instances when I receive no call at all.'],
   2: ['So I built this to make blood test results more informative, accessible and fun.'],
-  3: ['Sangui takes one blood test and explains it against the lab’s own range, and against people of the same sex and age in a US health survey.*'],
+  3: ['Sangui takes one blood test and explains it against an example range, and against people of the same sex and age in a US health survey.*'],
   4: ['*Why American data? Because it is open and I could get my hands on it quickly.'],
-  /* MIMI: the last two sentences of the body are a placeholder from the chart chat, yours to rewrite.
-     The old line ("picked from real survey data for men aged 40 to 59") stopped being true once the number and the crowd could move. */
   5: { heading: 'These are “Robin’s” - prototype patient.',
-    body: 'Robin’s blood went into three tubes. The cap colour tells the lab what each one is for. It starts on one made-up result. Move the number, change the crowd.' },
+    body: 'Robin’s blood went into three tubes. The cap colour tells the lab what each one is for. Robin isn’t real, so Robin can be anyone. Slide the number, switch the crowd.' },
   6: { prompt: 'Pick one',
     note: 'A real version would let you bring your own report, securely. This one doesn’t, on purpose. Nothing you do here is collected or stored.' },
 };

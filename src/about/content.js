@@ -32,7 +32,7 @@ export const WHAT = {
   points: [
     'A rack of tubes, then three tubes: blood count and sugar (purple cap), blood fats (yellow), iron (rust red), with medically accurate cap colours.',
     'Tap a tube and the camera dives into it, landing on a 3D model of what the result measures: a red blood cell (sugar on it for HbA1c), an LDL particle, iron in its heme ring.',
-    'Each result is explained in plain words and compared two ways: against the lab’s range, and against people of the same sex and age in a US health survey.',
+    'Each result is explained in plain words and compared two ways: against an example range, and against people of the same sex and age in a US health survey.',
     'One made-up person, Robin. Nothing is uploaded, stored or sent to an AI model.'],
   /* Screenshots: save them to public/how-it-was-made/ and list them here, e.g.
      { file: 'tubes.png', alt: 'Three blood tubes with yellow, purple and rust red caps.' }. Every picture needs its alt text. */
@@ -57,7 +57,7 @@ export const DECISIONS = {
   intro: 'What the data and the testing changed.',
   items: [
     'Men and women need different comparison groups, so the comparison is always “people like you”.',
-    'Common is not healthy, so each value shows the lab’s range and the crowd side by side.',
+    'Common is not healthy, so each value shows an example range and the crowd side by side.',
     'High HDL is good news, so colour can’t mean “high = bad”.',
     'HbA1c is lopsided, so a bare “top X%” would mislead.',
     'Three tubes for three sample people became three tubes for three groups of results, after realising cholesterol isn’t drawn into a purple-capped tube. It also stopped one results panel from getting crowded. (Mimi’s call.)',

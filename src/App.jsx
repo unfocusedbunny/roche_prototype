@@ -94,7 +94,8 @@ function Story({ onNoGL }) {
     const blobs = createSanguiBlobs({ canvas: blobCanvas.current });
     api.current = { scene, labels, blobs };
 
-    const onScroll = () => scene.setScroll(window.scrollY / el.clientHeight);
+    /* a window with no height (a hidden pane, say) would make this 0 / 0 and stall the scene for good; the resize observer calls again once there is a height */
+    const onScroll = () => { if (el.clientHeight) { scene.setScroll(window.scrollY / el.clientHeight); } };
     const ro = new ResizeObserver(() => { measure(); onScroll(); }); ro.observe(el);
     document.fonts.ready.then(measure);
     addEventListener('scroll', onScroll, { passive: true }); measure(); onScroll();
