@@ -205,12 +205,15 @@ export const SYSTEM = {
 export const REFLECTIONS = {
   heading: 'Reflections',
   mistakesTitle: 'Mistakes',
+  /* Mimi's own two come first: the first in her words, the second drafted from the working log (entry 46) and approved by her, 15 Nov 2026 */
   mistakes: [
+    'I missed the application deadline, but I finished it anyway.',
+    'My made-up patient, Robin, confused the one person who tested it. Robin is gone; the reader is the patient now.',
     'Claude named a CDC file for iron that does not exist for 2015–2016.',
     'Claude first proposed keeping the result fixed while the crowd changed. That is the version I found convoluted.',
   ],
   /* from Mimi's dictation, 15 Nov 2026, tidied by Claude Code */
-  own: 'Working with an LLM like Claude made me far more productive than I expected, even in a rush. But it only works if you stay organised: write proper handoffs and structure the work, so that different chats and agents stay in sync and don’t work over each other. The LLM can take the boring work off you. It can’t replace your own ideas, your creativity or your critical eye. And I wish I hadn’t missed the application deadline.',
+  own: 'Working with an LLM like Claude made me far more productive than I expected, even in a rush. But it only works if you stay organised: write proper handoffs and structure the work, so that different chats and agents stay in sync and don’t work over each other. The LLM can take the boring work off you. It can’t replace your own ideas, your creativity or your critical eye.',
   limits:
     'A prototype takes liberties. Of the blood cells, only the red one is modelled. White cells and platelets are not in this version yet (a time call). The iron model is a diagram and not the real molecule, and the cap colours are adapted to the palette. A real version would need consent and secure handling of results, medical-device rules, clinician review of every text, and testing with patients.',
 };
