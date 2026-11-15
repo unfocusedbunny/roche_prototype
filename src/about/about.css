@@ -89,7 +89,11 @@ h2 + h3 { margin-top: 0; }
 .moment h3 { font-size: 1.35rem; margin: .3rem 0 .8rem; letter-spacing: -.01em; text-wrap: balance; }
 .num { font-size: .875rem; font-weight: 700; color: var(--mint-ink); font-variant-numeric: tabular-nums; }
 section p.by { margin-top: 1.2rem; font-size: .875rem; line-height: 1.45; color: var(--muted); }
-.gap { margin-top: 1.2rem; padding: 1.2rem; border: 1px dashed var(--muted); border-radius: 12px; }
+/* a moment's pictures: one row, all the same height (each picture's share of the width is its own width-to-height ratio) */
+.shots { margin-top: 1.4rem; }
+.shots div { display: flex; gap: .6rem; align-items: flex-start; }
+.shots img { min-width: 0; border-radius: 8px; border: 1px solid var(--rule); }
+.shots figcaption { margin-top: .6rem; font-size: .8125rem; line-height: 1.45; color: var(--muted); }
 
 /* ---- the working chart: Sangui's colours and fonts, as in the prototype ---- */
 .sangui { margin-top: 1.5rem; padding: 1.2rem clamp(.9rem, 3vw, 1.6rem) 1.4rem; border-radius: 16px; background: var(--haze); color: var(--ink); font-family: var(--sans); }

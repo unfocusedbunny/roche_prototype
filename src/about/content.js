@@ -36,8 +36,8 @@ export const NAV = {
 
 export const WHY = {
   heading: 'Context',
-  problem: 'Most people never see their blood results, and can’t read them when they do.',
-  story: '[MIMI: two or three lines of your own story, as on the prototype’s story steps. Keep the health part general: a period of many blood tests, results you never saw, and numbers you couldn’t read when you asked.]',
+  /* Mimi's story, dictated on 15 Nov 2026 and shortened by Claude Code. No values of her own appear. */
+  story: 'I have chronic anemia, so my blood gets checked regularly. I’m usually told a number on the phone between appointments, and it means nothing to me: I don’t know what’s normal or where I stand. Pasting my results into an AI would explain them, but that means handing over my health data. So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age, with nothing stored.',
 };
 
 export const WHAT = {
@@ -62,7 +62,7 @@ export const CELL = {
 
 /*
  * Key design moments: the four Mimi picked on 15 Nov 2026. `chart: true` puts the working crowd chart under that moment.
- * `gap` is a picture still to come.
+ * `shots` are that moment's pictures, shown in one row at the same height.
  * The headings are plain names, at Mimi's request. DRAFT (Claude): the four texts. The facts are from the working log (entries 44 to 46) and the chart handoff.
  */
 export const MOMENTS = {
@@ -72,7 +72,8 @@ export const MOMENTS = {
       title: 'The slider',
       text: [
         'The first built version let the reader switch the crowd while the result stayed fixed, as Claude had proposed. I found it convoluted that one patient could be any age or sex with the same result. My fix: make the number move too, with a slider limited to where the data has support.',
-        '[MIMI: the Robin story, in your words. A made-up patient helped explain the data, a tester found it confusing, so it became “you” and example numbers.]'],
+        /* from Mimi's dictation, 15 Nov 2026 */
+        'A small fun fact: the prototype used to have a made-up patient called Robin. The name works for any gender, and it was once my dog’s. After a test we dropped example patients altogether. Now the reader is the patient, and the line on the chart says “you”.'],
       who: 'Slider idea: Mimi · Prototype: Claude in chat · Build: Claude Code',
       chart: true, chartNote: 'The working chart from the prototype. Try it.' },
     { key: 'hill',
@@ -80,7 +81,12 @@ export const MOMENTS = {
       text: [
         'The first chart was 100 dots, one for each person in a hundred. I rejected it: not original, and not in Sangui’s style. From my references of smooth curves and bold shapes, Claude drew three mock-ups on real hemoglobin numbers, and I chose the hill.'],
       who: 'References, brief and choice: Mimi · Mock-ups: Claude in chat',
-      gap: '[MIMI: a picture of the three mock-ups, or of the dot plot next to the hill]' },
+      /* Mimi's exports from the canvas "Blood test explainer: the crowd" (10 Nov 2026), made smaller. w and h are the pictures' sizes in pixels. */
+      shots: [
+        { file: 'dots-1.png', w: 507, h: 1300, alt: 'The first mock-up on a phone screen: an LDL value of 4.4 above a small chart of 100 dots in a box, with boxes of text under it.' },
+        { file: 'dots-2.png', w: 487, h: 1300, alt: 'The poster version on a phone screen: a very large 4.4, then 100 dots filling the width, with one larger red dot marked “You”.' },
+        { file: 'dots-colours.jpg', w: 1300, h: 1099, alt: 'Six colour studies of the dot chart, five on dark blue and purple backgrounds and one on a light page.' }],
+      caption: 'The dot versions from 10 Nov: the first mock-up, the poster version and colour studies.' },
     { key: 'data',
       title: 'The data',
       text: [
@@ -108,7 +114,7 @@ export const SYSTEM = {
   figma: { show: 'Show the Figma file', link: 'Open it in Figma', note: 'Nothing loads from Figma until you ask for it.', title: 'The Sangui Figma file' },
 };
 
-/* DRAFT (Claude): the mistakes (from the handoff's "mistakes worth keeping") and the limits line. The lessons are Mimi's to write. */
+/* DRAFT (Claude): the mistakes (from the handoff's "mistakes worth keeping") and the limits line. */
 export const REFLECTIONS = {
   heading: 'Reflections',
   mistakesTitle: 'Mistakes',
@@ -116,8 +122,9 @@ export const REFLECTIONS = {
     'Claude named a CDC file for iron that does not exist for 2015–2016.',
     'Claude first proposed keeping the result fixed while the crowd changed. That is the version I found convoluted.',
     'Claude Code’s first layout for this page was the tidy default. I called it too Claude-made; this is the second one.'],
-  own: '[MIMI: your own reflections. What you learned about designing with AI, what you would do differently.]',
-  limits: 'A prototype takes liberties: white cells and platelets have no model, the iron model is a diagram and not the real molecule, and the cap colours are adapted to the palette. A real version would need consent and secure handling of results, medical-device rules, clinician review of every text, and testing with patients.',
+  /* from Mimi's dictation, 15 Nov 2026, tidied by Claude Code */
+  own: 'Working with an LLM like Claude made me far more productive than I expected, even in a rush. But it only works if you stay organised: write proper handoffs and structure the work, so that different chats and agents stay in sync and don’t work over each other. The LLM can take the boring work off you. It can’t replace your own ideas, your creativity or your critical eye. And I wish I hadn’t missed the application deadline.',
+  limits: 'A prototype takes liberties. Of the blood cells, only the red one is modelled. White cells and platelets are not in this version yet (a time call). The iron model is a diagram and not the real molecule, and the cap colours are adapted to the palette. A real version would need consent and secure handling of results, medical-device rules, clinician review of every text, and testing with patients.',
 };
 
 export const CREDIT = {
@@ -128,7 +135,7 @@ export const CREDIT = {
     ['3D models and scene', 'direction and feedback', '✓', ''],
     ['Crowd chart', 'decisions and the slider idea', 'mock-ups, prototypes, data analysis', 'build'],
     ['Page code, this page, deploy', 'direction and feedback', 'first version', '✓ (since 12 Nov)']],
-  note: 'Explanation texts drafted with AI, reviewed by Mimi, [MIMI: and by a physician. Update when done.]',
+  note: 'Explanation texts drafted with AI, reviewed by Mimi.',
 };
 
 export const FOOTER = { cv: 'CV (PDF)', figma: 'Figma', site: 'unfocused.ch', siteUrl: 'https://unfocused.ch', email: 'mimi@unfocused.ch' };

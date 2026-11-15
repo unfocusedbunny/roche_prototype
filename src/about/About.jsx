@@ -13,7 +13,7 @@ import { TOP, NAV, WHY, WHAT, MOMENTS, SYSTEM, REFLECTIONS, CREDIT, FOOTER } fro
 
 /* This page lives one folder below the prototype */
 const HOME = '../', CV = '../' + CV_FILE;
-const FIGMA_EMBED = FIGMA_URL.replace('https://www.figma.com/', 'https://embed.figma.com/') + '?embed-host=share';
+const FIGMA_EMBED = FIGMA_URL.replace('https://www.figma.com/', 'https://embed.figma.com/') + (FIGMA_URL.includes('?') ? '&' : '?') + 'embed-host=share';
 /* the value the chart on this page shows */
 const HEMOGLOBIN = TUBES.flatMap(t => t.values).find(v => v.key === 'hemoglobin');
 
@@ -78,7 +78,6 @@ export default function About() {
 
             <section id="context">
               <h2>{WHY.heading}</h2>
-              <p>{WHY.problem}</p>
               <p><T>{WHY.story}</T></p>
             </section>
 
@@ -97,7 +96,10 @@ export default function About() {
                 {m.text.map(p => <p key={p}><T>{p}</T></p>)}
                 <p className="by">{m.who}</p>
                 {m.chart && <Chart note={m.chartNote} />}
-                {m.gap && <p className="gap"><T>{m.gap}</T></p>}
+                {m.shots && <figure className="shots">
+                  <div>{m.shots.map(s => <img key={s.file} src={'./' + s.file} alt={s.alt} width={s.w} height={s.h} loading="lazy" style={{ flex: s.w / s.h }} />)}</div>
+                  <figcaption>{m.caption}</figcaption>
+                </figure>}
               </article>)}
             </section>
 
@@ -112,9 +114,9 @@ export default function About() {
 
             <section id="reflections">
               <h2>{REFLECTIONS.heading}</h2>
+              <p><T>{REFLECTIONS.own}</T></p>
               <h3>{REFLECTIONS.mistakesTitle}</h3>
               <List items={REFLECTIONS.mistakes} />
-              <p><T>{REFLECTIONS.own}</T></p>
               <p>{REFLECTIONS.limits}</p>
             </section>
 
