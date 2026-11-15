@@ -4,7 +4,7 @@
  * and the flat parts (title page, step text) are placed from that same number, so text and 3D move together.
  */
 import { useEffect, useRef, useState } from 'react';
-import { createSanguiScene, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
+import { createSanguiScene, LAYOUTS, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 import { createSanguiLabels } from './sangui/sangui-labels.js';
 import { createSanguiBlobs, SCROLL_BUTTON_CSS, SCROLL_BUTTON_HTML } from './sangui/sangui-blobs.js';
 import CrowdChart, { CrowdNote } from './crowd/CrowdChart.jsx';
@@ -96,7 +96,10 @@ function Story({ onNoGL }) {
 
     /* a window with no height (a hidden pane, say) would make this 0 / 0 and stall the scene for good; the resize observer calls again once there is a height */
     const onScroll = () => { if (el.clientHeight) { scene.setScroll(window.scrollY / el.clientHeight); } };
-    const ro = new ResizeObserver(() => { measure(); onScroll(); }); ro.observe(el);
+    /* On wide screens the three tubes are a little smaller and higher than the scene's own layout, so the text under them has room.
+       Upright screens keep the scene's own narrow layout. */
+    const fit = () => { const narrow = el.clientWidth / el.clientHeight < .9; scene.setLayout(narrow ? { tubeH: LAYOUTS.narrow.tubeH, tubeY: LAYOUTS.narrow.tubeY } : { tubeH: .46, tubeY: .48 }); };
+    const ro = new ResizeObserver(() => { if (el.clientHeight) { fit(); } measure(); onScroll(); }); ro.observe(el);
     document.fonts.ready.then(measure);
     addEventListener('scroll', onScroll, { passive: true }); measure(); onScroll();
     return () => { removeEventListener('scroll', onScroll); ro.disconnect(); labels.dispose(); blobs.dispose(); scene.dispose(); api.current = null; };
