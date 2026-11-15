@@ -1,7 +1,7 @@
 /*
  * Sangui crowd chart: "the hill". Try a number, try a crowd.
- * Top to bottom: the number, the answer, the hill with a line at the number, the slider that moves the number,
- * the buttons that change the crowd, a line of text, the small print.
+ * Top to bottom: the number, the answer, a hint on what to do, the hill with a line at the number, the slider that moves
+ * the number, the buttons that change the crowd, a line of text, the small print.
  *
  * Dragging is direct. A change of crowd glides (at once with reduced motion).
  *
@@ -110,6 +110,7 @@ export default function CrowdChart({ v, who, setWho }) {
       {/* said aloud after a change, so a screen reader hears what the slider or the buttons did */}
       <p className="sr-only" role="status">{lead + ' ' + rest}</p>
 
+      <p className="try">{CHART.hint}</p>
       <div ref={box} className="hill">
         {width > 0 && <>
           <Hill v={v} who={who} value={value} width={width} glideKey={group}
@@ -124,7 +125,6 @@ export default function CrowdChart({ v, who, setWho }) {
         <Segment label={CHART.who.sex} options={CHART.who.sexes} value={who.sex} onPick={sex => setWho(w => ({ ...w, sex }))} />
         <Segment label={CHART.who.age} options={CHART.who.ageBands} value={who.age} onPick={age => setWho(w => ({ ...w, age }))} />
       </div>
-      <p className="try mono">{CHART.hint}</p>
       {text ? <p className="note"><b>{text[0]}</b> {text[1]}</p> : SHOW_GAPS && <p className="gap mono">{RESULTS.textGap}</p>}
 
       <p className="small mono">{CHART.demo} {fill(CHART.source.crowd, { people: data.groups[group].n, sex: CHART.groups[who.sex] })}</p>

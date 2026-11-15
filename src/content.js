@@ -121,7 +121,7 @@ export const CHART = {
   range: 'EXAMPLE RANGE*',
   past: '{n} OF 100 ARE PAST {edge} →', pastOne: '1 OF 100 IS PAST {edge} →',
 
-  /* the slider, the crowd buttons under it, and the hint under those (DRAFT (Claude): the hint's second sentence) */
+  /* the hint above the picture (DRAFT (Claude): its second sentence), the slider, and the crowd buttons under the slider */
   slider: '{name} value to try',
   who: { sex: 'Sex', age: 'Age band', sexes: { m: 'man', w: 'woman' }, ageBands: { a: '20–39', b: '40–59', c: '60+' } },
   hint: 'Drag the slider to try another number. Switch the buttons to try another crowd.',
