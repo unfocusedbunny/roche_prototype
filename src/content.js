@@ -26,13 +26,12 @@ export const TITLE = {
 
 /* One entry per scroll step, 1 to 6. Each line fades in a moment after the one before it. */
 export const STEPS = {
-  1: ['I suffer from low iron.',
-    'Every few years, the clinic boils my blood test down to a call from the doctor prescribing an infusion.',
-    'No call if I don’t.',
-    'I wanted to know where I land on the scales in those instances when I receive no call at all.'],
-  2: ['So I built this to make blood test results more informative, accessible and fun.'],
-  3: ['Sangui takes one blood test and explains it against an example range, and against people of the same sex and age in a US health survey.*'],
-  4: ['*Why American data? Because it is open and I could get my hands on it quickly.'],
+  1: ['I have chronic anemia, so my blood gets checked regularly.',
+    'I’m told a number on the phone, and it means nothing to me: I don’t know what’s normal or where I stand.'],
+  2: ['Pasting my results into an AI would explain them, but that means handing over my health data.'],
+  3: ['So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age, with nothing stored.'],
+  /* the story no longer marks this with a *, so the line stands on its own */
+  4: ['Why American data? Because it is open and I could get my hands on it quickly.'],
   5: { heading: 'These are example tubes.',
     body: 'One blood test goes into three tubes. The cap colour tells the lab what each one is for. The numbers here are examples. Slide them to your own, and switch the crowd.' },
   6: { prompt: 'Pick one',
