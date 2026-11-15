@@ -52,6 +52,11 @@
   stroke-linejoin: round;
   stroke-linecap: round;
 }
+.hill .band-edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
 .hill text {
   fill: var(--ink);
 }

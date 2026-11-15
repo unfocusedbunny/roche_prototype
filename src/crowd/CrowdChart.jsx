@@ -68,7 +68,7 @@ function useMorph(target, glideKey, jumpKey) {
     };
     frame();
     return () => cancelAnimationFrame(id);
-  }, [target]);
+  }, [target, glideKey, jumpKey]);
   useLayoutEffect(() => {
     seen.current = { target, shown, glideKey, jumpKey };
   });
@@ -103,7 +103,7 @@ function Hill({ v, who, value, onValue, width, glideKey, label }) {
   );
   const target = useMemo(
     () => ({ heights, lo: range ? range[0] : 0, hi: range ? range[1] : 0 }),
-    [heights],
+    [heights, range],
   );
   const m = useMorph(target, glideKey, v.key + ' ' + width);
 
@@ -157,6 +157,11 @@ function Hill({ v, who, value, onValue, width, glideKey, label }) {
           fill="var(--yellow)"
         />
       )}
+      {/* the band's sides: yellow on cream is too faint to see for some people, so a thin line marks where it starts and ends */}
+      <path
+        className="band-edge"
+        d={edges.map(([at]) => `M${x(at)} ${BAND_TOP}V${base}`).join('')}
+      />
       <path className="ink" d={paths.below} style={{ fill: 'var(--red)' }} />
       <path className="ink" d={paths.above} style={{ fill: 'var(--cream)' }} />
       <path
@@ -273,12 +278,9 @@ export default function CrowdChart({ v, who, setWho }) {
       <p className="value">
         <span className="big">{number}</span> <span className="mono unit">{v.unit}</span>
       </p>
-      <p className="reading">
+      {/* role="status": said aloud after a change, so a screen reader hears what the slider or the buttons did */}
+      <p className="reading" role="status">
         <b>{lead}</b> {rest}
-      </p>
-      {/* said aloud after a change, so a screen reader hears what the slider or the buttons did */}
-      <p className="sr-only" role="status">
-        {lead + ' ' + rest}
       </p>
 
       <p className="try">{CHART.hint}</p>

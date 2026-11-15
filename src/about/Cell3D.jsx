@@ -6,6 +6,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { CELL } from './content.js';
+import { LABELS } from '../content.js';
 
 const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 
@@ -15,8 +16,10 @@ export default function Cell3D() {
     overlay = useRef(null),
     api = useRef(null);
 
+  /* live: the reader has asked for the 3D, and it is loading or running */
+  const live = state === 'loading' || state === 'on';
   useEffect(() => {
-    if (state !== 'loading') {
+    if (!live) {
       return;
     }
     let gone = false,
@@ -38,7 +41,7 @@ export default function Cell3D() {
             }
           },
         });
-        labels = l.createSanguiLabels({ root: overlay.current, scene });
+        labels = l.createSanguiLabels({ root: overlay.current, scene, text: LABELS });
         /* the cell sits in the middle of the card, where the prototype keeps it to the left of the text */
         scene.setLayout({ model: { x: 0.5, y: 0.5, rw: 0.2, rh: 0.3 } });
         /* nothing here moves by itself: the cell turns only when the reader turns it, so the card needs no pause control */
@@ -70,7 +73,7 @@ export default function Cell3D() {
         scene.dispose();
       }
     };
-  }, [state === 'still' || state === 'failed']);
+  }, [live]);
 
   function onKeys(e) {
     const d = ARROWS[e.key];
@@ -80,7 +83,6 @@ export default function Cell3D() {
     }
   }
 
-  const live = state === 'loading' || state === 'on';
   return (
     <figure className="cell3d">
       <div

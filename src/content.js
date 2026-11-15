@@ -3,11 +3,11 @@
  *
  * Where the wording comes from:
  *   - Title page, story steps and the hemoglobin screen: Mimi's Figma frames (12 Nov 2026).
- *   - HbA1c and LDL: the "texts for review" document (AI-drafted, sent to a doctor friend, review pending).
- *   - Iron: one unreviewed draft line from the 3D mockup.
+ *   - HbA1c, LDL and iron: the explanation texts document and the 3D mockup. Drafted with AI, reviewed by Mimi.
+ *   - The words on the 3D (captions, model names, notes): the 3D mockups. Drafted with AI, reviewed by Mimi.
  *   - The crowd chart's wording, the hemoglobin texts under its slider and the starting numbers for HbA1c, LDL and iron:
  *     the chart chat's handoff (14 Nov 2026).
- *   - Anything marked DRAFT (Claude) below was written by Claude and has not been looked at by Mimi yet.
+ *   Mimi has reviewed every text on the page.
  */
 
 /* true: a missing number or a missing text is shown with a small "to come" note.
@@ -102,7 +102,7 @@ export const TUBES = [
           unitName: 'grams per decilitre',
           window: [10, 19],
           range: { m: [14, 18], w: [12, 16] },
-          /* AI-drafted, from the prototype Mimi approved in the chart chat. Review pending. */
+          /* Drafted with AI, from the prototype Mimi approved in the chart chat. */
           text: {
             below: [
               'Low (anaemia):',
@@ -125,7 +125,7 @@ export const TUBES = [
         unit: '%',
         /* lopsided, so the chart is zoomed in to 4.5–8.5 and says how many people are past the edge.
          The three texts follow Mimi's zones (under 5.7 · 5.7 to 6.4 · 6.5 or more), not the example range. They come from
-         "Blood test explainer: texts for review" by way of the chart handoff (14 Nov 2026). The doctor's review is not back. */
+         the explanation texts document by way of the chart handoff (14 Nov 2026). */
         chart: {
           data: 'hba1c',
           unitName: 'percent',
@@ -192,8 +192,54 @@ export const TUBES = [
   },
 ];
 
+/* The words on the 3D, drawn by src/sangui/sangui-labels.js.
+     tubes   the caption under each tube, left to right. They are the tubes' names above, so each name is written once.
+     models  for each model: its figure number, its caption, the handwritten name along its edge, and its three notes
+             as [title, text]. The notes are in the order of the scene's markers (MARKERS in sangui-scene.js).
+     note    what a marker dot is called for a screen reader; {title} is the note's title. */
+export const LABELS = {
+  tubes: TUBES.map((t) => t.owner),
+  models: {
+    cell: {
+      fig: 'Fig. 1',
+      caption: 'Red blood cell',
+      edge: 'Erythrocytus',
+      notes: [
+        ['Dented on both sides', 'More surface for oxygen to pass through.'],
+        ['A bendy edge', 'It folds to squeeze through vessels narrower than itself.'],
+        ['No nucleus', 'It gave that up to make room for hemoglobin.'],
+      ],
+    },
+    ldl: {
+      fig: 'Fig. 2',
+      caption: 'LDL particle',
+      edge: 'Lipoproteinum densitatis humilis',
+      notes: [
+        ['The wrapper', 'A thin coat that lets fat travel in watery blood.'],
+        ['The cargo', 'Cholesterol, packed in the middle.'],
+        ['One long protein', 'It wraps the whole particle like a belt.'],
+      ],
+    },
+    iron: {
+      fig: 'Fig. 3',
+      caption: 'Heme, with its iron',
+      edge: 'Ferrum',
+      notes: [
+        ['Iron', 'One atom, sitting in the middle of the ring.'],
+        ['Heme', 'The ring that holds it. Every hemoglobin has four.'],
+        ['Oxygen', 'One molecule per iron. Picked up in the lungs, let go in the body.'],
+      ],
+    },
+  },
+  note: 'Note: {title}',
+};
+
 export const RESULTS = {
   back: 'Back to the tubes',
+  /* the name of the row of buttons that switches between a tube's values, for a screen reader */
+  values: 'Values in this tube',
+  /* read out by a screen reader when a result opens or the value is switched; {name} is the value's name */
+  opened: 'Now showing: {name}.',
   valueGap: 'The example number is still to come.',
   textGap: 'The text for this number is still to come.',
 };
@@ -221,7 +267,7 @@ export const CHART = {
   past: '{n} OF 100 ARE PAST {edge} →',
   pastOne: '1 OF 100 IS PAST {edge} →',
 
-  /* the hint above the picture (DRAFT (Claude): its second sentence), the slider, and the crowd buttons under the slider */
+  /* the hint above the picture, the slider, and the crowd buttons under the slider */
   slider: '{name} value to try',
   who: {
     sex: 'Sex',
@@ -249,11 +295,13 @@ export const CONTROLS = { skip: 'Skip to the tubes', pause: 'Pause motion', play
 export const LINKS = {
   label: 'About this project',
   about: 'About this project',
+  /* the same link on a phone, where the top row is short */
+  aboutShort: 'About',
   cv: 'CV',
   figma: 'Figma',
 };
 
-/* DRAFT (Claude). Says only what the page itself does; the host keeps ordinary server logs like any website. */
+/* Says only what the page itself does; the host keeps ordinary server logs like any website. */
 export const PRIVACY = {
   label: 'Privacy note',
   text: 'This page sets no cookies, runs no analytics and stores nothing you do here. The numbers are examples, not anyone’s results.',
@@ -278,5 +326,5 @@ export const PICTURE = {
   stage: '3D stage. Arrow keys turn the tubes or the model.',
 };
 
-/* DRAFT (Claude). Shown only where the browser can't draw the 3D scene. */
+/* Shown only where the browser can't draw the 3D scene. */
 export const PLAIN = { note: 'This browser can’t show the 3D part, so here is the story as text.' };

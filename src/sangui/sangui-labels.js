@@ -3,68 +3,30 @@
  * markers, notes with a drawn line, and handwritten edge text that follows the model's outline.
  * Plain DOM and SVG. It only needs the numbers the scene sends with every 'frame' event.
  *
- *   const labels = createSanguiLabels({ root, scene });
+ *   const labels = createSanguiLabels({ root, scene, text });
  *   createSanguiScene({ ..., onEvent: (type, data) => { if (type === 'frame') labels.update(data); if (type === 'tap') labels.tap(data.x, data.y); } });
+ *
+ * No wording lives here. `text` is LABELS from src/content.js: the tube captions, and each model's figure number,
+ * caption, edge name and notes.
  *
  * The marker dots do not take the pointer themselves, so a drag that starts on a dot still turns the model.
  * A tap on a dot arrives through the scene's 'tap' event. Keyboard users reach the dots as normal buttons.
- *
- * All wording here is draft. The notes have not been reviewed by a doctor yet.
  */
 
-/* Left to right: yellow, purple, rust red */
-export const TUBE_TEXT = [
-  { name: 'Blood fats', line: 'Measures the cholesterol travelling in your blood.' },
-  { name: 'Blood count and sugar', line: 'Counts your blood cells and reads your average sugar.' },
-  { name: 'Iron', line: 'Measures the iron travelling in your blood.' },
-];
-
-export const MODEL_TEXT = {
-  cell: {
-    fig: 'Fig. 1',
-    caption: 'Red blood cell',
-    edge: 'Erythrocytus',
-    size: 19,
-    notes: [
-      ['Dented on both sides', 'More surface for oxygen to pass through.'],
-      ['A bendy edge', 'It folds to squeeze through vessels narrower than itself.'],
-      ['No nucleus', 'It gave that up to make room for hemoglobin.'],
-    ],
-  },
-  ldl: {
-    fig: 'Fig. 2',
-    caption: 'LDL particle',
-    edge: 'Lipoproteinum densitatis humilis',
-    size: 15,
-    notes: [
-      ['The wrapper', 'A thin coat that lets fat travel in watery blood.'],
-      ['The cargo', 'Cholesterol, packed in the middle.'],
-      ['One long protein', 'It wraps the whole particle like a belt.'],
-    ],
-  },
-  iron: {
-    fig: 'Fig. 3',
-    caption: 'Heme, with its iron',
-    edge: 'Ferrum',
-    size: 19,
-    notes: [
-      ['Iron', 'One atom, sitting in the middle of the ring.'],
-      ['Heme', 'The ring that holds it. Every hemoglobin has four.'],
-      ['Oxygen', 'One molecule per iron. Picked up in the lungs, let go in the body.'],
-    ],
-  },
-};
+/* The size of each model's handwritten edge name, in px: the long LDL name is set smaller so it fits round the ball */
+const EDGE_SIZE = { cell: 19, ldl: 15, iron: 19 };
 
 const CSS = `
 .sg-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .sg-line{fill:none;stroke:#1E2145;stroke-width:1;stroke-dasharray:1;stroke-dashoffset:1}
 .sg-line.on{stroke-dashoffset:0;transition:stroke-dashoffset .45s ease-out}
-.sg-edge{font-family:'Playwrite SK',cursive;fill:#1E2145}
+.sg-edge{font-family:var(--hand,'Playwrite US Trad',cursive);fill:#1E2145}
 .sg-fade{opacity:0;transition:opacity .35s}
 .sg-fade.on{opacity:1}
 .sg-cap{position:absolute;pointer-events:none;font-size:16px;color:#1E2145;white-space:nowrap}
+.sg-cap.sg-small{white-space:normal;width:150px;font-size:14px;line-height:1.25}
 .sg-mono{font-family:'Atkinson Hyperlegible Mono',ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em}
-.sg-dot{position:absolute;left:-99px;top:-99px;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity .2s}
+.sg-dot{position:absolute;left:-99px;top:-99px;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;pointer-events:none;visibility:hidden;transition:opacity .2s,visibility .2s}
 .sg-dot span{position:relative;width:12px;height:12px;border-radius:50%;background:#F4F1E4;border:1.5px solid #1E2145;box-sizing:border-box}
 .sg-dot span::after{content:"";position:absolute;inset:-1.5px;border-radius:50%;border:1px solid #1E2145;opacity:0}
 .sg-dot[aria-expanded="true"] span{background:#F0E66E}
@@ -75,7 +37,8 @@ const CSS = `
 .sg-note.on{opacity:1;transition:opacity .3s ease .3s}
 .sg-note b{display:block;font-size:14px;font-weight:700;line-height:1.25}
 .sg-note p{margin:2px 0 0;font-size:13px;line-height:1.35}
-.sg-tube{position:absolute;transform:translateX(-50%);border:0;background:transparent;color:#1E2145;padding:8px 6px;min-height:44px;text-align:center;pointer-events:none;cursor:default;white-space:nowrap}
+.sg-tube{position:absolute;transform:translateX(-50%);border:0;background:transparent;color:#1E2145;padding:8px 6px;min-height:44px;text-align:center;pointer-events:none;cursor:default;white-space:nowrap;visibility:hidden;transition:opacity .35s,visibility .35s}
+.sg-tube.on{visibility:visible}
 .sg-tube.pick{pointer-events:auto;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
 .sg-tube:focus-visible{outline:2px solid #1E2145;outline-offset:2px;border-radius:6px}
 `;
@@ -120,7 +83,7 @@ function rad(h, cx, cy, ux, uy) {
 }
 
 let uid = 0;
-export function createSanguiLabels({ root, scene, showEdgeText = true }) {
+export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
   const id = 'sg' + ++uid,
     NS = 'http://www.w3.org/2000/svg';
   const style = document.createElement('style');
@@ -154,22 +117,19 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
     b.addEventListener('click', () => open(i));
     return b;
   });
-  const tubeBtns = TUBE_TEXT.map((t, i) => {
+  const tubeBtns = text.tubes.map((name, i) => {
     const b = el('button', 'sg-tube sg-mono sg-fade');
-    b.textContent = t.name;
+    b.textContent = name;
     b.type = 'button';
     b.tabIndex = -1;
-    b.addEventListener('click', (e) => {
-      if (scene.pick(i) && e.detail === 0) {
-        byKey = true;
-      }
+    b.addEventListener('click', () => {
+      scene.pick(i);
     });
     return b;
   });
   let key = null,
     cur = -1,
     edge = showEdgeText,
-    byKey = false,
     autoTimer = 0,
     marks = [];
   const TH = [
@@ -182,7 +142,7 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
     lp.classList.remove('on');
     note.classList.remove('on');
     if (cur >= 0 && key) {
-      const n = MODEL_TEXT[key].notes[cur];
+      const n = text.models[key].notes[cur];
       note.children[0].textContent = n[0];
       note.children[1].textContent = n[1];
       void note.offsetHeight;
@@ -204,6 +164,8 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
       b.classList.toggle('on', capOn && t.visible);
       b.classList.toggle('pick', !!D.atPick);
       b.tabIndex = D.atPick ? 0 : -1;
+      /* before the pick step they are captions only, and a screen reader says so */
+      b.setAttribute('aria-disabled', D.atPick ? 'false' : 'true');
       b.style.left = t.cx.toFixed(1) + 'px';
       b.style.top = (bottom + 4).toFixed(1) + 'px';
     });
@@ -216,20 +178,24 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
       open(-1);
       clearTimeout(autoTimer);
       if (key) {
-        const t = MODEL_TEXT[key];
+        const t = text.models[key];
         cap.children[0].textContent = t.fig;
         cap.children[1].textContent = t.caption;
         tp.textContent = t.edge;
-        et.style.fontSize = t.size + 'px';
-        dots.forEach((b, i) => b.setAttribute('aria-label', 'Note: ' + t.notes[i][0]));
+        et.style.fontSize = EDGE_SIZE[key] + 'px';
+        dots.forEach((b, i) =>
+          b.setAttribute('aria-label', text.note.replace('{title}', t.notes[i][0])),
+        );
       }
     }
     svg.classList.toggle('on', on);
     cap.classList.toggle('on', on);
     if (!on) {
       marks = [];
+      /* visibility also takes a hidden dot away from screen readers; opacity alone would leave it there */
       dots.forEach((b) => {
         b.style.opacity = 0;
+        b.style.visibility = 'hidden';
         b.tabIndex = -1;
       });
       if (cur >= 0) open(cur);
@@ -244,12 +210,13 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
     }
     const h = hull(m.outline),
       c = [m.cx, m.cy],
-      t = MODEL_TEXT[key];
+      edgeText = text.models[key].edge,
+      edgeSize = EDGE_SIZE[key];
     marks = m.markers;
     et.style.display = edge ? '' : 'none';
     if (edge) {
       /* the path starts at the lower left and runs clockwise over the top; long words get more of the outline */
-      const need = t.edge.length * t.size * 0.62,
+      const need = edgeText.length * edgeSize * 0.62,
         r0 = rad(h, c[0], c[1], 0, -1) + 9,
         span = cl((((need / r0) * 180) / Math.PI) * 1.25, 150, 330),
         start = -90 - span * 0.52,
@@ -268,14 +235,18 @@ export function createSanguiLabels({ root, scene, showEdgeText = true }) {
     h.forEach((pt) => {
       low = Math.max(low, pt[1]);
     });
-    /* caption under the model on the left, notes under it on the right; on a small model the caption drops below the notes */
-    cap.style.left = cl(m.cx - m.r, 16, D.w - 220).toFixed(1) + 'px';
-    cap.style.top = cl(low + (m.r < 150 ? 104 : 40), 0, D.h - 40).toFixed(1) + 'px';
+    /* caption under the model on the left, notes under it on the right. On a small stage (a phone, a low window) the caption
+       moves out to the left edge and may wrap, so it sits beside the note and not under it */
+    const small = m.r < 150;
+    cap.classList.toggle('sg-small', small);
+    cap.style.left = (small ? 16 : cl(m.cx - m.r, 16, D.w - 220)).toFixed(1) + 'px';
+    cap.style.top = cl(low + (small ? 14 : 40), 0, D.h - 40).toFixed(1) + 'px';
     m.markers.forEach((mk, i) => {
       const b = dots[i];
       b.style.left = mk.x.toFixed(1) + 'px';
       b.style.top = mk.y.toFixed(1) + 'px';
       b.style.opacity = mk.visible ? 1 : 0;
+      b.style.visibility = mk.visible ? 'visible' : 'hidden';
       b.tabIndex = mk.visible ? 0 : -1;
       if (!mk.visible && i === cur) {
         open(i);

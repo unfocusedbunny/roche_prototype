@@ -138,7 +138,7 @@ mark {
 .col {
   max-width: 44rem;
   margin: 0 auto;
-  padding: 3rem 0 4rem;
+  padding: 3rem 0 0;
 }
 .toc {
   display: none;
@@ -575,11 +575,19 @@ tbody tr:last-child td {
   margin-top: 1.2rem;
 }
 
+/* the footer sits after the main content, in line with the reading column */
 footer {
-  margin-top: 4rem;
-  padding-top: 1.5rem;
+  width: min(100% - 2.5rem, 44rem);
+  margin: 4rem auto 0;
+  padding: 1.2rem 0 4rem;
   border-top: 1px solid var(--rule);
   font-size: 0.9375rem;
   color: var(--muted);
   line-height: 2;
+}
+/* links at least 24 px tall, so they are easy to hit */
+footer a {
+  display: inline-block;
+  padding: 0.3rem 0;
+  line-height: 1.4;
 }

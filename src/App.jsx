@@ -3,7 +3,7 @@
  * Scroll position drives the scene (0 to 6, one unit per screen). The scene reports back every frame,
  * and the flat parts (title page, step text) are placed from that same number, so text and 3D move together.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createSanguiScene, LAYOUTS, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 import { createSanguiLabels } from './sangui/sangui-labels.js';
 import { createSanguiBlobs, SCROLL_BUTTON_CSS, SCROLL_BUTTON_HTML } from './sangui/sangui-blobs.js';
@@ -12,6 +12,7 @@ import {
   TITLE,
   STEPS,
   TUBES,
+  LABELS,
   RESULTS,
   CHART,
   CONTROLS,
@@ -31,9 +32,84 @@ const sm = (a, b, x) => {
 };
 const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 
+/* Where the page puts the 3D, as fractions of the stage (see LAYOUTS in the scene for what each number means).
+   Each entry is complete, so switching from one to another (turning a phone, resizing a window) leaves nothing behind.
+     wide   the scene's own wide layout, with the three tubes a little smaller and higher so the text under them has room
+     low    a low window, such as a laptop zoomed to 200%: the model sits higher and smaller, clear of the buttons below
+   Upright screens (phones) have no fixed entry: phonePlacing() works theirs out from the room the text leaves. */
+const WIDE = {
+  tubeH: 0.46,
+  tubeY: 0.48,
+  tubeX: LAYOUTS.wide.tubeX,
+  rack: LAYOUTS.wide.rack,
+  sheet: LAYOUTS.wide.sheet,
+  model: LAYOUTS.wide.model,
+};
+const PLACING = {
+  wide: WIDE,
+  low: { ...WIDE, model: { x: 0.27, y: 0.44, rw: 0.15, rh: 0.24 } },
+};
+
+/* On a phone, as on wide screens, the tubes step to the left while the results sheet arrives beside them (steps 3 and 4) */
+const PHONE_TUBE_X = [
+  [0.24, 0.5, 0.76],
+  [0.14, 0.37, 0.6],
+  [0.14, 0.37, 0.6],
+  [0.24, 0.5, 0.76],
+  [0.24, 0.5, 0.76],
+];
+/* Upright screens, top to bottom: the wordmark and links, the 3D, the step's text, the privacy note, the buttons.
+   The text's height changes with the screen's width, so the 3D takes whatever room is left above it.
+   The numbers are px and go with the phone rules at the end of app.css. Returns the scene's layout and, for the
+   results sheet, how far below the top row the model with its caption and note ends. */
+function phonePlacing(stage) {
+  const W = stage.clientWidth,
+    H = stage.clientHeight,
+    phone = W <= 640;
+  const TOP_ROW = phone ? 56 : H * 0.12, // where the wordmark and the links end
+    TEXT_BOTTOM = 108, // the step text ends this far above the bottom edge
+    PICK = 48, // "Pick one", above the tubes on the last step
+    CAPTIONS = 64, // the tubes' names under them, up to three lines
+    GAP = 8;
+  const tallest = (selector) =>
+    Math.max(0, ...[...stage.querySelectorAll(selector)].map((block) => block.offsetHeight));
+  /* the rack: between the top row and step 1's text */
+  const rackBottom = H - TEXT_BOTTOM - tallest('.s1') - GAP;
+  /* the tubes: under "Pick one", above their captions and the longest text of steps 2 to 6 */
+  const tubesTop = TOP_ROW + PICK,
+    tubesBottom = H - TEXT_BOTTOM - tallest('.s2, .s3, .s4, .s5, .s6b') - GAP - CAPTIONS;
+  const tubeH = Math.min(0.34, Math.max(0.16, (tubesBottom - tubesTop) / H)),
+    tubeY = (tubesTop + tubesBottom) / 2 / H;
+  /* the model: just under the top row, as big as the width allows */
+  const modelTop = TOP_ROW + 20,
+    r = Math.min(W * 0.27, H * 0.13);
+  return {
+    layout: {
+      tubeH,
+      tubeY,
+      tubeX: PHONE_TUBE_X,
+      rack: {
+        x: 0.5,
+        y: (TOP_ROW + rackBottom) / 2 / H,
+        w: 0.9,
+        h: ((rackBottom - TOP_ROW) / H) * 0.86,
+      },
+      sheet: [
+        { x: 0.82, y: tubeY, h: tubeH * 0.5 },
+        { x: 0.8, y: tubeY + 0.03, h: tubeH * 0.41 },
+      ],
+      model: { x: 0.5, y: (modelTop + r) / H, rw: 0.27, rh: 0.13 },
+    },
+    sheetTop: TOP_ROW,
+    /* 85 px under the model for its caption and its note */
+    sheetGap: modelTop + 2 * r + 85 - TOP_ROW,
+  };
+}
+
 export default function App() {
   const [noGL, setNoGL] = useState(false);
-  return noGL ? <PlainPage /> : <Story onNoGL={() => setNoGL(true)} />;
+  const onNoGL = useCallback(() => setNoGL(true), []);
+  return noGL ? <PlainPage /> : <Story onNoGL={onNoGL} />;
 }
 
 /* One value: what it is, and its crowd chart. Without a starting number there is no chart, only a note that it is to come. */
@@ -86,7 +162,8 @@ function Story({ onNoGL }) {
   useEffect(() => {
     const el = stage.current,
       blocks = [...el.querySelectorAll('[data-step]')];
-    let scene,
+    let alive = true,
+      scene,
       labels,
       lastStep = 0,
       geo = { dx: 0, dy: 0, s: 1 };
@@ -161,15 +238,17 @@ function Story({ onNoGL }) {
             setTextOn(d.show);
           } else if (type === 'returned') {
             setValueIdx(0);
-            labels.tubeButtons[d.tube].focus({ preventScroll: true });
+            /* the tube's caption is hidden during the dive and comes back with this frame, so focus waits for the next one */
+            const button = labels.tubeButtons[d.tube];
+            requestAnimationFrame(() => button.focus({ preventScroll: true }));
           }
         },
       });
-    } catch (e) {
+    } catch {
       onNoGL();
       return;
     } /* no WebGL here: show the story as plain text */
-    labels = createSanguiLabels({ root: overlay.current, scene });
+    labels = createSanguiLabels({ root: overlay.current, scene, text: LABELS });
     const blobs = createSanguiBlobs({ canvas: blobCanvas.current });
     api.current = { scene, labels, blobs };
 
@@ -179,29 +258,39 @@ function Story({ onNoGL }) {
         scene.setScroll(window.scrollY / el.clientHeight);
       }
     };
-    /* On wide screens the three tubes are a little smaller and higher than the scene's own layout, so the text under them has room.
-       Upright screens keep the scene's own narrow layout. */
+    /* Pick the placing that fits this screen. The scene switches between its wide and narrow layouts at the same ratio.
+       On a phone the page is also told where the results sheet starts (see .results in app.css). */
     const fit = () => {
-      const narrow = el.clientWidth / el.clientHeight < 0.9;
-      scene.setLayout(
-        narrow
-          ? { tubeH: LAYOUTS.narrow.tubeH, tubeY: LAYOUTS.narrow.tubeY }
-          : { tubeH: 0.46, tubeY: 0.48 },
-      );
+      if (!alive || !el.clientHeight) {
+        return;
+      }
+      if (el.clientWidth / el.clientHeight < 0.9) {
+        const phone = phonePlacing(el);
+        scene.setLayout(phone.layout);
+        el.style.setProperty('--sheet-top', Math.round(phone.sheetTop) + 'px');
+        el.style.setProperty('--sheet-gap', Math.round(phone.sheetGap) + 'px');
+      } else {
+        scene.setLayout(el.clientHeight < 561 ? PLACING.low : PLACING.wide);
+      }
     };
     const ro = new ResizeObserver(() => {
-      if (el.clientHeight) {
-        fit();
-      }
+      fit();
       measure();
       onScroll();
     });
     ro.observe(el);
-    document.fonts.ready.then(measure);
+    /* once the fonts are in, the text has its real size: measure again */
+    document.fonts.ready.then(() => {
+      if (alive) {
+        measure();
+        fit();
+      }
+    });
     addEventListener('scroll', onScroll, { passive: true });
     measure();
     onScroll();
     return () => {
+      alive = false;
       removeEventListener('scroll', onScroll);
       ro.disconnect();
       labels.dispose();
@@ -209,7 +298,7 @@ function Story({ onNoGL }) {
       scene.dispose();
       api.current = null;
     };
-  }, []);
+  }, [onNoGL]);
 
   /* While a tube is open the page must not scroll; the results column scrolls by itself */
   useEffect(() => {
@@ -276,10 +365,16 @@ function Story({ onNoGL }) {
     showResults = textOn && mode !== 'returning';
 
   /* A nudge: shortly after a result opens, the column slides down a little and back, once, to show there is more below.
-     Not with reduced or paused motion, and it stops the moment the reader does anything in the column. */
+     Not with reduced or paused motion, and it stops the moment the reader does anything in the column or pauses motion.
+     `nudged` keeps it to once per result, so taking the pause off again does not play it a second time. */
+  const nudged = useRef(false);
   useEffect(() => {
     const el = results.current;
-    if (!showResults || REDUCED || paused) {
+    if (!showResults) {
+      nudged.current = false;
+      return;
+    }
+    if (REDUCED || paused || nudged.current) {
       return;
     }
     let frame, t0;
@@ -292,6 +387,7 @@ function Story({ onNoGL }) {
       }
     };
     const timer = setTimeout(() => {
+      nudged.current = true;
       if (el.scrollTop === 0 && el.scrollHeight > el.clientHeight + 64) {
         frame = requestAnimationFrame(step);
       }
@@ -306,10 +402,10 @@ function Story({ onNoGL }) {
       stop();
       events.forEach((e) => el.removeEventListener(e, stop));
     };
-  }, [showResults]);
+  }, [showResults, paused]);
 
   return (
-    <div className="track">
+    <main className="track">
       <div
         ref={stage}
         className={'stage' + (REDUCED ? ' rm' : '') + (mode !== 'scroll' ? ' dived' : '')}
@@ -333,8 +429,11 @@ function Story({ onNoGL }) {
         </div>
 
         <nav className="links mono" aria-label={LINKS.label}>
-          <a href="./how-it-was-made/">{LINKS.about}</a> · <a href={'./' + CV_FILE}>{LINKS.cv}</a> ·{' '}
-          <a href={FIGMA_URL}>{LINKS.figma}</a>
+          <a href="./how-it-was-made/">
+            <span className="long">{LINKS.about}</span>
+            <span className="short">{LINKS.aboutShort}</span>
+          </a>{' '}
+          · <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
         </nav>
 
         <header className="head">
@@ -366,7 +465,7 @@ function Story({ onNoGL }) {
 
         <div
           className="scene"
-          tabIndex={0}
+          tabIndex={mode === 'model' || atPick ? 0 : -1}
           role="group"
           aria-label={PICTURE.stage}
           onKeyDown={onKeys}
@@ -402,23 +501,29 @@ function Story({ onNoGL }) {
           tabIndex={showResults ? 0 : -1}
           inert={!showResults}
         >
-          <p className="mono">{t.owner}</p>
-          {t.values.length > 1 && (
-            <div className="switch" role="group" aria-label="Values in this tube">
-              {t.values.map((v, i) => (
-                <button
-                  key={v.key}
-                  className="pill"
-                  aria-pressed={i === valueIdx}
-                  onClick={() => setValueIdx(i)}
-                >
-                  {v.name}
-                </button>
-              ))}
-            </div>
-          )}
-          <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
+          <div className="sheet">
+            <p className="mono">{t.owner}</p>
+            {t.values.length > 1 && (
+              <div className="switch" role="group" aria-label={RESULTS.values}>
+                {t.values.map((v, i) => (
+                  <button
+                    key={v.key}
+                    className="pill"
+                    aria-pressed={i === valueIdx}
+                    onClick={() => setValueIdx(i)}
+                  >
+                    {v.name}
+                  </button>
+                ))}
+              </div>
+            )}
+            <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
+          </div>
         </section>
+        {/* said aloud when a result opens or the value is switched, so a screen reader user knows what is now on screen */}
+        <p className="sr-only" role="status">
+          {showResults ? RESULTS.opened.replace('{name}', t.values[valueIdx].name) : ''}
+        </p>
         {/* the demo line, in the middle of the page's bottom edge while a result is open (on small screens it stays under the chart) */}
         {showResults && t.values[valueIdx].value && (
           <CrowdNote v={t.values[valueIdx]} who={who} className="demo mono" />
@@ -437,7 +542,7 @@ function Story({ onNoGL }) {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

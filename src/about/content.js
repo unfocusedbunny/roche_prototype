@@ -7,8 +7,7 @@
  * Nothing is made up to fill a gap: anything written as [MIMI: …] is shown on the page as a yellow note until
  * Mimi replaces it with her own text. To fill one in, replace the whole bracket.
  *
- * DRAFT (Claude) marks text Claude wrote from the working log and the handoffs, for Mimi to rewrite in her own words.
- * The facts in those drafts are from the log; the wording is not hers yet.
+ * The texts are Mimi's own words or were drafted with AI from the working log and the handoffs. Mimi has reviewed all of them.
  */
 
 export const TOP = {
@@ -113,7 +112,7 @@ export const PATH = {
 /*
  * Key design moments: the four Mimi picked on 15 Nov 2026. `chart: true` puts the working crowd chart under that moment.
  * `shots` are that moment's pictures, shown in one row at the same height.
- * The headings are plain names, at Mimi's request. DRAFT (Claude): the four texts. The facts are from the working log (entries 44 to 46) and the chart handoff.
+ * The headings are plain names, at Mimi's request. The facts are from the working log (entries 44 to 46) and the chart handoff.
  */
 export const MOMENTS = {
   heading: 'Key design moments',
@@ -202,7 +201,7 @@ export const SYSTEM = {
   },
 };
 
-/* DRAFT (Claude): the mistakes (from the handoff's "mistakes worth keeping") and the limits line. */
+/* The mistakes are from the handoff's "mistakes worth keeping". */
 export const REFLECTIONS = {
   heading: 'Reflections',
   mistakesTitle: 'Mistakes',

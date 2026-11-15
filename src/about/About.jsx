@@ -248,7 +248,8 @@ export default function About() {
 
             <section id="credit">
               <h2>{CREDIT.heading}</h2>
-              <div className="scroll-x">
+              {/* on a narrow screen the table scrolls sideways; tabIndex lets the arrow keys do that too */}
+              <div className="scroll-x" tabIndex={0} role="region" aria-label={CREDIT.heading}>
                 <table>
                   <thead>
                     <tr>
@@ -276,15 +277,15 @@ export default function About() {
                 <T>{CREDIT.note}</T>
               </p>
             </section>
-
-            <footer>
-              <a href={CV}>{FOOTER.cv}</a> · <a href={FIGMA_URL}>{FOOTER.figma}</a> ·{' '}
-              <a href={FOOTER.siteUrl}>{FOOTER.site}</a> ·{' '}
-              <a href={'mailto:' + FOOTER.email}>{FOOTER.email}</a>
-            </footer>
           </div>
         </div>
       </main>
+
+      <footer>
+        <a href={CV}>{FOOTER.cv}</a> · <a href={FIGMA_URL}>{FOOTER.figma}</a> ·{' '}
+        <a href={FOOTER.siteUrl}>{FOOTER.site}</a> ·{' '}
+        <a href={'mailto:' + FOOTER.email}>{FOOTER.email}</a>
+      </footer>
     </>
   );
 }

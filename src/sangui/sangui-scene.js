@@ -8,7 +8,17 @@
  *   scene.setScroll(p);   // 0..6, one unit per scroll step; runs both ways
  *   scene.pick(i);        // 0 yellow (blood fats), 1 purple (blood count and sugar), 2 rust red (iron)
  *   scene.back();         // plays the dive in reverse
- * See README.md for the full list.
+ * Everything the page can call is listed, with a line each, in the object returned at the very end of this file.
+ *
+ * Short names used all through the file (kept from the mockups, so the tuned numbers stay comparable):
+ *   T          three.js              R      the renderer            cam    the camera
+ *   L          the layout in use: wide or narrow, plus anything the page overrides
+ *   P, p       scroll position, 0 to 6: P is what the page asked for, p is where the scene has got to (it eases after P)
+ *   u, dir     the dive: u runs 0 to 1 on the way in; dir is 1 while diving, -1 while returning, 0 at rest
+ *   tau, sw    the dive in seconds, and whether it has passed the swap from the tubes to the model
+ *   RK, M      the rack's and the model's turning state: the spin left over from a drag, and when it was last touched
+ *   q, q0, q1, v, v2   scratch rotations and points, reused every frame so that nothing new is created while drawing
+ *   K          how far the ink outline is pushed out from a shape
  */
 import * as THREE from 'three';
 
@@ -1006,7 +1016,7 @@ export function createSanguiScene(opts) {
       if (navigator.vibrate) {
         navigator.vibrate(8);
       }
-    } catch (_) {
+    } catch {
       /* no vibration here */
     }
   }
@@ -1094,7 +1104,7 @@ export function createSanguiScene(opts) {
       };
       try {
         el.setPointerCapture(e.pointerId);
-      } catch (_) {
+      } catch {
         /* fine */
       }
       el.style.cursor = 'grabbing';

@@ -376,11 +376,6 @@ button {
   width: fit-content;
 }
 
-/* the curved names on the 3D models: the scene's own style names the old handwriting font, so the page points it at the current one */
-.overlay .sg-edge {
-  font-family: var(--hand);
-}
-
 /* ---- controls ---- */
 .controls {
   position: absolute;
@@ -558,7 +553,12 @@ button {
   }
 }
 
-/* ---- upright screens: no phone version yet; this only keeps things from colliding. The scene switches layout at the same ratio. ---- */
+/* ---- upright screens (phones, and tablets held upright). The scene switches layout at the same ratio, and phonePlacing() in
+   App.jsx sizes the 3D to the room the text leaves. From the top: the wordmark and the links, the 3D, the step's text,
+   the privacy note, the buttons. The px numbers here and in phonePlacing() go together. ---- */
+.links .short {
+  display: none;
+}
 @media (max-aspect-ratio: 9/10) {
   .s1,
   .s2,
@@ -570,21 +570,90 @@ button {
     right: 16px;
     width: auto;
     top: auto;
-    bottom: 132px;
+    bottom: 108px;
     text-align: left;
   }
-  .results {
-    left: 16px;
-    right: 16px;
-    top: 52%;
-    bottom: 76px;
-    background: rgba(244, 241, 228, 0.88);
-    border-radius: 12px;
-    padding: 12px;
+  .controls {
+    right: 12px;
+    bottom: 12px;
   }
   .privacy {
-    bottom: 68px;
     left: 16px;
+    bottom: 58px;
+  }
+  /* the title page's text sits in the room above the privacy note and the buttons */
+  .title {
+    padding: 64px 24px 150px;
+  }
+  .title-text .sg-scroll {
+    bottom: 118px;
+  }
+  /* A result: the model on top and, under its caption and note, a sheet with the text and the chart. The sheet slides up
+     over the model as it is scrolled, so the chart gets the whole screen. For that the scrolling box runs from the top row
+     to the buttons and is see-through and out of the finger's way (the model above can still be turned); the sheet
+     inside it starts --sheet-gap further down. Both numbers come from phonePlacing() in App.jsx. */
+  .results {
+    left: 0;
+    right: 0;
+    top: var(--sheet-top, 56px);
+    bottom: 64px;
+    padding: 0 12px 20px;
+    pointer-events: none;
+  }
+  .results .sheet {
+    margin-top: var(--sheet-gap, 300px);
+    padding: 14px 12px 18px;
+    border-radius: 14px;
+    /* solid, so the model does not show through once the sheet is over it */
+    background: var(--cream);
+    pointer-events: auto;
+  }
+  /* while a result is open the sheet needs the room; its last line says the same as the privacy note */
+  .dived .privacy {
+    display: none;
+  }
+}
+/* on upright and on narrow screens the tubes stand close together, so their names wrap */
+@media (max-aspect-ratio: 9/10), (max-width: 900px) {
+  .overlay .sg-tube {
+    white-space: normal;
+    width: 5.9rem;
+    line-height: 1.3;
+  }
+}
+/* phones: one top row, the wordmark at the left and a shorter link at the right */
+@media (max-aspect-ratio: 9/10) and (max-width: 640px) {
+  :root {
+    --word: 2rem;
+  }
+  .head {
+    left: 16px;
+    top: 16px;
+  }
+  .tools {
+    display: none;
+  }
+  .links {
+    right: 12px;
+    top: 10px;
+  }
+  .links .long {
+    display: none;
+  }
+  .links .short {
+    display: inline;
+  }
+  .s6a {
+    top: 62px;
+  }
+}
+/* short phones: the V moves to the right, above the buttons, out of the way of the title page's last line */
+@media (max-aspect-ratio: 9/10) and (max-height: 700px) {
+  .title-text .sg-scroll {
+    left: auto;
+    right: 20px;
+    bottom: 66px;
+    transform: none;
   }
 }
 
