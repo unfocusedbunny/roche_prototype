@@ -155,6 +155,8 @@ function Story({ onNoGL }) {
   const [paused, setPaused] = useState(false);
   const [step, setStep] = useState(0);
   const [privacy, setPrivacy] = useState(false);
+  /* phones: the result card has been scrolled and has grown to full height */
+  const [sheetUp, setSheetUp] = useState(false);
   const [who, setWho] = useState(
     CHART.startCrowd,
   ); /* the crowd picked on a chart; it stays when you move to another value */
@@ -349,8 +351,35 @@ function Story({ onNoGL }) {
       120,
     );
   }
+  /* The V on the title page: it glides to the first step slowly enough for the rack's arrival to play, about two seconds.
+     Anything the reader does to scroll stops it. With reduced motion it jumps. */
+  const glide = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(glide.current), []);
   function scrollDown() {
-    window.scrollTo({ top: stage.current.clientHeight, behavior: REDUCED ? 'auto' : 'smooth' });
+    const from = window.scrollY,
+      to = stage.current.clientHeight;
+    if (REDUCED) {
+      window.scrollTo(0, to);
+      return;
+    }
+    const inputs = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+    const stop = () => {
+      cancelAnimationFrame(glide.current);
+      inputs.forEach((name) => removeEventListener(name, stop));
+    };
+    const t0 = performance.now();
+    const frame = (now) => {
+      const p = Math.min(1, (now - t0) / 2200);
+      window.scrollTo(0, from + (to - from) * p * p * (3 - 2 * p));
+      if (p < 1) {
+        glide.current = requestAnimationFrame(frame);
+      } else {
+        stop();
+      }
+    };
+    stop();
+    inputs.forEach((name) => addEventListener(name, stop, { passive: true }));
+    glide.current = requestAnimationFrame(frame);
   }
   function onKeys(e) {
     const d = ARROWS[e.key];
@@ -363,6 +392,22 @@ function Story({ onNoGL }) {
   const picture = mode === 'scroll' ? PICTURE.steps[step] : PICTURE.models[SCENE_TUBES[tube].model];
   const t = TUBES[tube],
     showResults = textOn && mode !== 'returning';
+
+  /* On a phone the result is a card under the model, and it scrolls like any other box. Once the reader has scrolled it a
+     little it grows up over the model, so the chart gets the whole screen; back at its top it shrinks again and the model
+     can be turned. (Only the phone rules in app.css use the class.) Each time a result opens, it starts at its top. */
+  useEffect(() => {
+    const el = results.current;
+    const onScroll = () =>
+      setSheetUp((up) => (el.scrollTop > 72 ? true : el.scrollTop < 8 ? false : up));
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+  useEffect(() => {
+    if (showResults) {
+      results.current.scrollTop = 0;
+    }
+  }, [showResults]);
 
   /* A nudge: shortly after a result opens, the column slides down a little and back, once, to show there is more below.
      Not with reduced or paused motion, and it stops the moment the reader does anything in the column or pauses motion.
@@ -496,29 +541,36 @@ function Story({ onNoGL }) {
 
         <section
           ref={results}
-          className={'results' + (showResults ? ' on' : '')}
+          className={'results' + (showResults ? ' on' : '') + (sheetUp ? ' up' : '')}
           aria-label={t.owner}
           tabIndex={showResults ? 0 : -1}
           inert={!showResults}
         >
-          <div className="sheet">
-            <p className="mono">{t.owner}</p>
-            {t.values.length > 1 && (
-              <div className="switch" role="group" aria-label={RESULTS.values}>
-                {t.values.map((v, i) => (
-                  <button
-                    key={v.key}
-                    className="pill"
-                    aria-pressed={i === valueIdx}
-                    onClick={() => setValueIdx(i)}
-                  >
-                    {v.name}
-                  </button>
-                ))}
-              </div>
-            )}
-            <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
-          </div>
+          <p className="mono">{t.owner}</p>
+          {t.values.length > 1 && (
+            <div className="switch" role="group" aria-label={RESULTS.values}>
+              {t.values.map((v, i) => (
+                <button
+                  key={v.key}
+                  className="pill"
+                  aria-pressed={i === valueIdx}
+                  onClick={() => setValueIdx(i)}
+                >
+                  {v.name}
+                </button>
+              ))}
+            </div>
+          )}
+          <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
+          {/* where to go next: the case study first, then the CV and the Figma file */}
+          <p className="next">
+            <a href="./how-it-was-made/">
+              {LINKS.made} <span aria-hidden="true">→</span>
+            </a>
+            <span className="more">
+              <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
+            </span>
+          </p>
         </section>
         {/* said aloud when a result opens or the value is switched, so a screen reader user knows what is now on screen */}
         <p className="sr-only" role="status">

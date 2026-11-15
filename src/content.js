@@ -295,6 +295,8 @@ export const CONTROLS = { skip: 'Skip to the tubes', pause: 'Pause motion', play
 export const LINKS = {
   label: 'About this project',
   about: 'About this project',
+  /* the closing line at the end of every result */
+  made: 'How Sangui was made',
   /* the same link on a phone, where the top row is short */
   aboutShort: 'About',
   cv: 'CV',

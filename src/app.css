@@ -13,6 +13,7 @@
   --big: 2.6rem;
   --note: 1rem;
   --hand-size: 1.5rem;
+  /* the privacy note: 1.2rem bold is the smallest size at which its red still has enough contrast on the haze */
   --privacy: 1.2rem;
   --privacy-weight: 700;
 }
@@ -39,8 +40,6 @@
     --big: 4.6rem;
     --note: 1.1rem;
     --hand-size: 2.3rem;
-    --privacy: 1.5rem;
-    --privacy-weight: 400;
   }
 }
 @media (min-width: 1500px) and (min-height: 820px) {
@@ -408,15 +407,37 @@ button {
   right: 20px;
   top: 18px;
   z-index: 7;
-  padding: 0 14px;
+  padding: 0 18px;
   border-radius: 22px;
   background: rgba(244, 241, 228, 0.9);
+  /* the way to the case study and the CV: larger than the other small print */
+  font-size: 1rem;
+  letter-spacing: 0.02em;
 }
 .links a {
   display: inline-block;
   padding: 12px 0;
   color: var(--ink);
   text-underline-offset: 0.15em;
+}
+
+/* the closing line at the end of every result: where to go next */
+.next {
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.next a {
+  display: inline-block;
+  padding: 0.5rem 0;
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+.next .more {
+  margin-left: 1.2rem;
+  font-weight: 400;
 }
 
 /* the demo line: in the middle of the page's bottom edge while a result is open. Where there is no room for it there
@@ -581,34 +602,41 @@ button {
     left: 16px;
     bottom: 58px;
   }
-  /* the title page's text sits in the room above the privacy note and the buttons */
+  /* the title page's text sits in the room above the V, the privacy note and the buttons */
   .title {
-    padding: 64px 24px 150px;
+    padding: 64px 24px 170px;
   }
+  /* the V stays in the middle, above the privacy note */
   .title-text .sg-scroll {
-    bottom: 118px;
+    bottom: 108px;
   }
-  /* A result: the model on top and, under its caption and note, a sheet with the text and the chart. The sheet slides up
-     over the model as it is scrolled, so the chart gets the whole screen. For that the scrolling box runs from the top row
-     to the buttons and is see-through and out of the finger's way (the model above can still be turned); the sheet
-     inside it starts --sheet-gap further down. Both numbers come from phonePlacing() in App.jsx. */
+  /* A result: the model on top and, under its caption and note, a card with the text and the chart. The card scrolls
+     like any other box. Once it has been scrolled a little it grows up to the top row (.up, set in App.jsx), so the chart
+     gets the whole screen; back at its top it shrinks again and the model can be turned. --sheet-top and --sheet-gap
+     come from phonePlacing() in App.jsx. */
   .results {
-    left: 0;
-    right: 0;
-    top: var(--sheet-top, 56px);
+    left: 12px;
+    right: 12px;
+    top: calc(var(--sheet-top, 56px) + var(--sheet-gap, 300px));
     bottom: 64px;
-    padding: 0 12px 20px;
-    pointer-events: none;
-  }
-  .results .sheet {
-    margin-top: var(--sheet-gap, 300px);
-    padding: 14px 12px 18px;
+    padding: 14px 12px 24px;
     border-radius: 14px;
-    /* solid, so the model does not show through once the sheet is over it */
+    /* solid, so the model does not show through once the card is over it */
     background: var(--cream);
-    pointer-events: auto;
+    transition:
+      top 0.3s ease,
+      opacity 0.35s;
+    /* only the bottom edge fades; the top is the card's own edge */
+    -webkit-mask-image: linear-gradient(#000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(#000 calc(100% - 28px), transparent 100%);
   }
-  /* while a result is open the sheet needs the room; its last line says the same as the privacy note */
+  .results.up {
+    top: var(--sheet-top, 56px);
+  }
+  .rm .results {
+    transition: opacity 0.35s;
+  }
+  /* while a result is open the card needs the room; its last line says the same as the privacy note */
   .dived .privacy {
     display: none;
   }
@@ -636,6 +664,8 @@ button {
   .links {
     right: 12px;
     top: 10px;
+    padding: 0 14px;
+    font-size: 0.875rem;
   }
   .links .long {
     display: none;
@@ -647,13 +677,14 @@ button {
     top: 62px;
   }
 }
-/* short phones: the V moves to the right, above the buttons, out of the way of the title page's last line */
-@media (max-aspect-ratio: 9/10) and (max-height: 700px) {
-  .title-text .sg-scroll {
-    left: auto;
-    right: 20px;
-    bottom: 66px;
-    transform: none;
+/* the narrowest phones: a slightly smaller title, so its text and the V both fit, and smaller links, clear of the wordmark */
+@media (max-aspect-ratio: 9/10) and (max-width: 360px) {
+  .slot {
+    font-size: 3.4rem;
+  }
+  .links {
+    padding: 0 10px;
+    font-size: 0.8125rem;
   }
 }
 
