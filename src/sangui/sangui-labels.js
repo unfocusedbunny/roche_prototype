@@ -122,6 +122,7 @@ export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
     b.textContent = name;
     b.type = 'button';
     b.tabIndex = -1;
+    b.dataset.tube = i; /* lets the page style the name of the tube the pointer is on */
     b.addEventListener('click', () => {
       scene.pick(i);
     });

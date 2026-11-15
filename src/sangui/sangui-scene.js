@@ -918,6 +918,7 @@ export function createSanguiScene(opts) {
     last = 0,
     raf = 0,
     drag = null,
+    pickCursor = false,
     ia = 0,
     valueKey = 'hemoglobin';
   const DIVE = 2.8,
@@ -1168,7 +1169,7 @@ export function createSanguiScene(opts) {
           (1 - Math.min(1, Math.hypot(out.vx, out.vy) / 4));
       }
       drag = null;
-      el.style.cursor = 'grab';
+      el.style.cursor = el.dataset.rest || 'grab';
       onEnd(out);
       if (tap && onTap) {
         onTap(e);
@@ -1638,6 +1639,16 @@ export function createSanguiScene(opts) {
     D.mode = mode;
     D.chosen = chosen;
     D.atPick = mode === 'scroll' && p >= 5.9;
+    /* on the pick step a tube is something to click, so the hand over it becomes a pointer (a drag still turns it) */
+    if (D.atPick !== pickCursor) {
+      pickCursor = D.atPick;
+      tubeGrabs.forEach((grab) => {
+        grab.dataset.rest = pickCursor ? 'pointer' : 'grab';
+        if (!drag || drag.el !== grab) {
+          grab.style.cursor = grab.dataset.rest;
+        }
+      });
+    }
     tubes.forEach((t, i) => {
       let x0 = 1e9,
         y0 = 1e9,

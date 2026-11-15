@@ -375,6 +375,20 @@ button {
   width: fit-content;
 }
 
+/* the tubes' names: they are what you click on the pick step, so they are larger than the other small print.
+   There, pointing at a tube or at its name marks the name. */
+.overlay .sg-tube {
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+}
+.overlay .sg-tube.pick:hover,
+.overlay [data-sangui-grab='tube-0']:hover ~ .sg-tube.pick[data-tube='0'],
+.overlay [data-sangui-grab='tube-1']:hover ~ .sg-tube.pick[data-tube='1'],
+.overlay [data-sangui-grab='tube-2']:hover ~ .sg-tube.pick[data-tube='2'] {
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+}
+
 /* ---- controls ---- */
 .controls {
   position: absolute;
@@ -641,12 +655,13 @@ button {
     display: none;
   }
 }
-/* on upright and on narrow screens the tubes stand close together, so their names wrap */
-@media (max-aspect-ratio: 9/10), (max-width: 900px) {
+/* on upright and on narrower screens the tubes stand close together, so their names wrap and stay small */
+@media (max-aspect-ratio: 9/10), (max-width: 1250px) {
   .overlay .sg-tube {
     white-space: normal;
     width: 5.9rem;
     line-height: 1.3;
+    font-size: 0.8125rem;
   }
 }
 /* phones: one top row, the wordmark at the left and a shorter link at the right */

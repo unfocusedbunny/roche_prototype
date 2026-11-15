@@ -179,7 +179,8 @@ export const MOMENTS = {
   ],
 };
 
-/* css: what the swatch is painted with. The first four are the shared tokens; the cap colours are the scene's own. */
+/* css: what the swatch is painted with. The first four are the shared tokens; the two other cap colours are the scene's own.
+   The yellow is one colour with two jobs (the highlight and the yellow cap), so it is shown once. */
 export const SYSTEM = {
   heading: 'Design system',
   credit:
@@ -188,9 +189,8 @@ export const SYSTEM = {
     { name: 'Morning haze', value: '#F4F1E4 → #F7DDD3 → #E6D8F3', css: 'var(--haze)' },
     { name: 'Ink', value: '#1E2145', css: 'var(--ink)' },
     { name: 'Cell red', value: '#D9482F', css: 'var(--red)' },
-    { name: 'Highlight', value: '#F0E66E', css: 'var(--yellow)' },
+    { name: 'Highlight and yellow cap', value: '#F0E66E', css: 'var(--yellow)' },
     { name: 'Purple cap', value: '#6A4E9E', css: '#6A4E9E' },
-    { name: 'Yellow cap', value: '#F0E66E', css: '#F0E66E' },
     { name: 'Rust red cap', value: '#A84E1B', css: '#A84E1B' },
   ],
   figma: {

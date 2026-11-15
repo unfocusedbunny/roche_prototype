@@ -51,8 +51,8 @@ export const STEPS = {
 /* The three tubes, in the scene's order: 0 yellow, 1 purple, 2 rust red.
 
    Each value has a crowd chart: a hill of real people, a line at a number, and a slider that moves the number.
-     value   the number the chart starts on, as text. It has to sit on a step of the survey table (hemoglobin, HbA1c, LDL: 0.1; iron: 0.5).
-             15.6 is Mimi's. 5.8, 3.6 and 9.0 are suggestions from the chart chat, picked from the real data for men aged 40 to 59.
+     value   the number the chart starts on, as text. It has to sit on a step of the survey table (hemoglobin: 1; HbA1c, LDL: 0.1; iron: 0.5).
+             156 is Mimi's. 5.8, 3.6 and 9.0 are suggestions from the chart chat, picked from the real data for men aged 40 to 59.
              With value: null there is no chart, only a "to come" note. Nothing is made up to fill it.
      chart   data      the value's name in src/data/crowds.json
              unitName  the unit, read out loud
@@ -95,13 +95,14 @@ export const TUBES = [
         name: 'Hemoglobin',
         lead: 'Carries oxygen from your lungs to the rest of your body.',
         body: 'It’s an iron-containing protein inside your red cells. Each cell holds about 270 million of them, picking up oxygen in the lungs and letting it go in the body.',
-        value: '15.6',
-        unit: 'g/dL',
+        /* in g/L, the SI unit, like LDL (mmol/L) and iron (µmol/L). The survey and the range table give g/dL; times ten. */
+        value: '156',
+        unit: 'g/L',
         chart: {
           data: 'hemoglobin',
-          unitName: 'grams per decilitre',
-          window: [10, 19],
-          range: { m: [14, 18], w: [12, 16] },
+          unitName: 'grams per litre',
+          window: [100, 190],
+          range: { m: [140, 180], w: [120, 160] },
           /* Drafted with AI, from the prototype Mimi approved in the chart chat. */
           text: {
             below: [
