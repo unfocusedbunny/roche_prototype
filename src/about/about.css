@@ -50,7 +50,7 @@ mark { background: var(--yellow); color: var(--head); font-size: .875rem; font-s
 h1, h2, h3 { font-family: var(--headfont); }
 h1 { font-size: 2.5rem; line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
 .lead { font-size: 1.3rem; line-height: 1.5; color: var(--txt); margin-top: 1.2rem; text-wrap: pretty; }
-.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 1.5rem; margin: 2.2rem 0 2rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 1.5rem; margin: 2.2rem 0 0; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
 .facts dt { font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .facts dt { margin-bottom: .45rem; }
 .facts dd { font-size: .9375rem; line-height: 1.4; }
@@ -68,6 +68,7 @@ section p + p { margin-top: .9rem; }
 .list li { position: relative; padding-left: 1.3rem; margin-top: .55rem; }
 .list li::before { content: ''; position: absolute; left: .1rem; top: .68em; width: .4rem; height: .4rem; border-radius: 50%; background: var(--mint); }
 .list + p { margin-top: 1.2rem; }
+h2 + h3 { margin-top: 0; }
 .fine { font-size: .8125rem; color: var(--muted); }
 @media (min-width: 760px) { h2 { font-size: 2rem; } }
 

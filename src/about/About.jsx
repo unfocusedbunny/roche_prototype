@@ -71,14 +71,14 @@ export default function About() {
 
           <div className="col">
             <h1>{TOP.title}</h1>
-            <p className="lead"><T>{TOP.lead}</T></p>
+            <p className="lead"><a href={HOME}>{TOP.name}</a><T>{TOP.lead}</T></p>
             <dl className="facts">
               {TOP.facts.map(([k, lines]) => <div key={k}><dt>{k}</dt>{lines.map(l => <dd key={l}>{l}</dd>)}</div>)}
             </dl>
-            <p><a className="btn" href={HOME}>{TOP.links.prototype}</a></p>
 
             <section id="context">
               <h2>{WHY.heading}</h2>
+              <p>{WHY.problem}</p>
               <p><T>{WHY.story}</T></p>
             </section>
 
@@ -112,6 +112,7 @@ export default function About() {
 
             <section id="reflections">
               <h2>{REFLECTIONS.heading}</h2>
+              <h3>{REFLECTIONS.mistakesTitle}</h3>
               <List items={REFLECTIONS.mistakes} />
               <p><T>{REFLECTIONS.own}</T></p>
               <p>{REFLECTIONS.limits}</p>

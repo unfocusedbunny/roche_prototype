@@ -11,7 +11,6 @@ const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], Arrow
 
 export default function Cell3D() {
   const [state, setState] = useState('still'); /* still → loading → on, or failed */
-  const [paused, setPaused] = useState(false);
   const canvas = useRef(null), overlay = useRef(null), api = useRef(null);
 
   useEffect(() => {
@@ -24,6 +23,8 @@ export default function Cell3D() {
       labels = l.createSanguiLabels({ root: overlay.current, scene });
       /* the cell sits in the middle of the card, where the prototype keeps it to the left of the text */
       scene.setLayout({ model: { x: .5, y: .5, rw: .2, rh: .3 } });
+      /* nothing here moves by itself: the cell turns only when the reader turns it, so the card needs no pause control */
+      scene.setPaused(true); labels.setPaused(true);
       scene.setScroll(6, { snap: true });
       api.current = scene; setState('on');
       /* the scene needs a frame at the last step before it lets a tube be picked */
@@ -31,8 +32,6 @@ export default function Cell3D() {
     }).catch(() => { if (!gone) { setState('failed'); } });
     return () => { gone = true; api.current = null; if (labels && labels.dispose) { labels.dispose(); } if (scene) { scene.dispose(); } };
   }, [state === 'still' || state === 'failed']);
-
-  useEffect(() => { if (api.current) { api.current.setPaused(paused); } }, [paused, state]);
 
   function onKeys(e) {
     const d = ARROWS[e.key];
@@ -49,7 +48,6 @@ export default function Cell3D() {
       </div>
       <figcaption>
         {state === 'still' && <button className="btn" onClick={() => setState('loading')}>{CELL.load}</button>}
-        {live && <button className="btn" onClick={() => setPaused(!paused)}>{paused ? CELL.play : CELL.pause}</button>}
         <span>{state === 'failed' ? CELL.failed : live ? CELL.hint : CELL.note}</span>
       </figcaption>
     </figure>
