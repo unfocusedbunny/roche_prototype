@@ -103,6 +103,17 @@ button { font: inherit; color: inherit; }
 .privacy p { background: var(--cream); border: 1px solid var(--ink); border-radius: 12px; padding: .7rem .9rem; font-size: 1rem; line-height: 1.4; }
 .rm .privacy button { transition: color .4s; }
 
+/* ---- the story text sits in the middle of the empty space each step leaves, with about the same air on every side.
+   Step 1: left of the rack. Steps 2 and 3: the band under the three tubes. Step 4: under the results sheet.
+   (Low and upright screens keep the simpler corner placing above and below.) ---- */
+@media (min-height: 561px) and (min-aspect-ratio: 9/10) {
+  .s1, .s2, .s3, .s4 { display: flex; flex-direction: column; justify-content: center; align-items: center; width: auto; }
+  .s1 { left: 3%; right: 46%; top: 18%; bottom: 10%; }
+  .s1 p { width: min(24em, 100%); }
+  .s2, .s3 { left: 6%; right: 6%; top: 77%; bottom: 8%; text-align: center; }
+  .s4 { left: 52%; right: 3%; top: 70%; bottom: 8%; text-align: center; }
+}
+
 /* ---- low screens (a laptop zoomed to 200%, say): text may sit over the 3D, so it gets a backing to stay readable ---- */
 @media (max-height: 560px) {
   .step p { width: fit-content; background: rgba(244, 241, 228, .9); border-radius: 6px; padding: 1px 6px; margin-left: -6px; }
