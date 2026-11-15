@@ -1,4 +1,4 @@
-# Builds the page and puts it on GitHub Pages every time main changes.
+# Checks the code, builds the page and puts it on GitHub Pages every time main changes.
 name: Deploy to GitHub Pages
 
 on:
@@ -25,6 +25,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # the page only goes online if the code passes its checks
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
