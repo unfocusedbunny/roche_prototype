@@ -84,6 +84,12 @@ function Hill({ v, who, value, width, glideKey, label }) {
   );
 }
 
+/* The demo line: what this is, and how many people the crowd holds. It sits under the chart; the prototype also shows it at the bottom of the page. */
+export function CrowdNote({ v, who, className }) {
+  const people = crowds.values[v.chart.data].groups[who.sex + who.age].n;
+  return <p className={className}>{CHART.demo} {fill(CHART.source.crowd, { people, sex: CHART.groups[who.sex] })}</p>;
+}
+
 /* v: one value from content.js, with its starting number and chart settings. who: the crowd, { sex: 'm' | 'w', age: 'a' | 'b' | 'c' }. */
 export default function CrowdChart({ v, who, setWho }) {
   const data = crowds.values[v.chart.data], [from, to] = v.chart.window;
@@ -127,7 +133,7 @@ export default function CrowdChart({ v, who, setWho }) {
       </div>
       {text ? <p className="note"><b>{text[0]}</b> {text[1]}</p> : SHOW_GAPS && <p className="gap mono">{RESULTS.textGap}</p>}
 
-      <p className="small mono">{CHART.demo} {fill(CHART.source.crowd, { people: data.groups[group].n, sex: CHART.groups[who.sex] })}</p>
+      <CrowdNote v={v} who={who} className="small mono demo-line" />
       {range && <p className="small mono">{CHART.source.range}</p>}
     </div>
   );

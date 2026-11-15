@@ -97,9 +97,6 @@ export const TUBES = [
 
 export const RESULTS = {
   back: 'Back to the tubes',
-  /* The texts are AI-drafted and the doctor's review is still out, so this does not say "checked by a person" yet. */
-  aiNote: 'Drafted with AI. Review pending.',
-  disclaimer: 'Sangui explains. It doesn’t diagnose, and it can’t tell you what to do. That’s what doctors are for.',
   valueGap: 'The example number is still to come.',
   textGap: 'The text for this number is still to come.',
 };

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createSanguiScene, TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 import { createSanguiLabels } from './sangui/sangui-labels.js';
 import { createSanguiBlobs, SCROLL_BUTTON_CSS, SCROLL_BUTTON_HTML } from './sangui/sangui-blobs.js';
-import CrowdChart from './crowd/CrowdChart.jsx';
+import CrowdChart, { CrowdNote } from './crowd/CrowdChart.jsx';
 import { TITLE, STEPS, TUBES, RESULTS, CHART, CONTROLS, LINKS, PRIVACY, PICTURE, PLAIN, SHOW_GAPS } from './content.js';
 import { FIGMA_URL, CV_FILE } from './links.js';
 
@@ -182,9 +182,9 @@ function Story({ onNoGL }) {
             {t.values.map((v, i) => <button key={v.key} className="pill" aria-pressed={i === valueIdx} onClick={() => setValueIdx(i)}>{v.name}</button>)}
           </div>}
           <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
-          <p className="small mono">{RESULTS.aiNote}</p>
-          <p className="small">{RESULTS.disclaimer}</p>
         </section>
+        {/* the demo line, in the middle of the page's bottom edge while a result is open (on small screens it stays under the chart) */}
+        {showResults && t.values[valueIdx].value && <CrowdNote v={t.values[valueIdx]} who={who} className="demo mono" />}
 
         <div className="privacy">
           <p id="privacy-note" hidden={!privacy}>{PRIVACY.text}</p>
@@ -207,8 +207,6 @@ function PlainPage() {
       <p><b>{STEPS[5].heading}</b> {STEPS[5].body}</p>
       <p>{STEPS[6].note}</p>
       {TUBES.map(t => t.values.map(v => <section key={v.key}><p className="mono">{t.owner}</p><Value v={v} who={who} setWho={setWho} /></section>))}
-      <p className="small mono">{RESULTS.aiNote}</p>
-      <p className="small">{RESULTS.disclaimer}</p>
       <p className="small">{PRIVACY.text}</p>
     </main>
   );
