@@ -11,43 +11,97 @@ const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], Arrow
 
 export default function Cell3D() {
   const [state, setState] = useState('still'); /* still → loading → on, or failed */
-  const canvas = useRef(null), overlay = useRef(null), api = useRef(null);
+  const canvas = useRef(null),
+    overlay = useRef(null),
+    api = useRef(null);
 
   useEffect(() => {
-    if (state !== 'loading') { return; }
-    let gone = false, scene, labels;
-    Promise.all([import('../sangui/sangui-scene.js'), import('../sangui/sangui-labels.js')]).then(([s, l]) => {
-      if (gone) { return; }
-      scene = s.createSanguiScene({ canvas: canvas.current, overlay: overlay.current,
-        onEvent(type, d) { if (type === 'frame') { labels && labels.update(d); } else if (type === 'tap') { labels.tap(d.x, d.y); } } });
-      labels = l.createSanguiLabels({ root: overlay.current, scene });
-      /* the cell sits in the middle of the card, where the prototype keeps it to the left of the text */
-      scene.setLayout({ model: { x: .5, y: .5, rw: .2, rh: .3 } });
-      /* nothing here moves by itself: the cell turns only when the reader turns it, so the card needs no pause control */
-      scene.setPaused(true); labels.setPaused(true);
-      scene.setScroll(6, { snap: true });
-      api.current = scene; setState('on');
-      /* the scene needs a frame at the last step before it lets a tube be picked */
-      const tryPick = () => { if (!gone && !scene.pick(1)) { requestAnimationFrame(tryPick); } }; tryPick();
-    }).catch(() => { if (!gone) { setState('failed'); } });
-    return () => { gone = true; api.current = null; if (labels && labels.dispose) { labels.dispose(); } if (scene) { scene.dispose(); } };
+    if (state !== 'loading') {
+      return;
+    }
+    let gone = false,
+      scene,
+      labels;
+    Promise.all([import('../sangui/sangui-scene.js'), import('../sangui/sangui-labels.js')])
+      .then(([s, l]) => {
+        if (gone) {
+          return;
+        }
+        scene = s.createSanguiScene({
+          canvas: canvas.current,
+          overlay: overlay.current,
+          onEvent(type, d) {
+            if (type === 'frame') {
+              labels && labels.update(d);
+            } else if (type === 'tap') {
+              labels.tap(d.x, d.y);
+            }
+          },
+        });
+        labels = l.createSanguiLabels({ root: overlay.current, scene });
+        /* the cell sits in the middle of the card, where the prototype keeps it to the left of the text */
+        scene.setLayout({ model: { x: 0.5, y: 0.5, rw: 0.2, rh: 0.3 } });
+        /* nothing here moves by itself: the cell turns only when the reader turns it, so the card needs no pause control */
+        scene.setPaused(true);
+        labels.setPaused(true);
+        scene.setScroll(6, { snap: true });
+        api.current = scene;
+        setState('on');
+        /* the scene needs a frame at the last step before it lets a tube be picked */
+        const tryPick = () => {
+          if (!gone && !scene.pick(1)) {
+            requestAnimationFrame(tryPick);
+          }
+        };
+        tryPick();
+      })
+      .catch(() => {
+        if (!gone) {
+          setState('failed');
+        }
+      });
+    return () => {
+      gone = true;
+      api.current = null;
+      if (labels && labels.dispose) {
+        labels.dispose();
+      }
+      if (scene) {
+        scene.dispose();
+      }
+    };
   }, [state === 'still' || state === 'failed']);
 
   function onKeys(e) {
     const d = ARROWS[e.key];
-    if (d && api.current && e.target === e.currentTarget) { e.preventDefault(); api.current.nudge(d[0] * .2, d[1] * .2); }
+    if (d && api.current && e.target === e.currentTarget) {
+      e.preventDefault();
+      api.current.nudge(d[0] * 0.2, d[1] * 0.2);
+    }
   }
 
   const live = state === 'loading' || state === 'on';
   return (
     <figure className="cell3d">
-      <div className="stage" tabIndex={live ? 0 : -1} role="group" aria-label={CELL.stage} onKeyDown={onKeys}>
-        {!live && <img src={'./' + CELL.still.file} alt={CELL.still.alt} width="1408" height="880" />}
+      <div
+        className="stage"
+        tabIndex={live ? 0 : -1}
+        role="group"
+        aria-label={CELL.stage}
+        onKeyDown={onKeys}
+      >
+        {!live && (
+          <img src={'./' + CELL.still.file} alt={CELL.still.alt} width="1408" height="880" />
+        )}
         {live && <canvas ref={canvas} role="img" aria-label={CELL.still.alt} />}
         {live && <div ref={overlay} className="overlay" />}
       </div>
       <figcaption>
-        {state === 'still' && <button className="btn" onClick={() => setState('loading')}>{CELL.load}</button>}
+        {state === 'still' && (
+          <button className="btn" onClick={() => setState('loading')}>
+            {CELL.load}
+          </button>
+        )}
         <span>{state === 'failed' ? CELL.failed : live ? CELL.hint : CELL.note}</span>
       </figcaption>
     </figure>

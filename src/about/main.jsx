@@ -12,4 +12,8 @@ import '../crowd/crowd.css';
 import './about.css';
 import About from './About.jsx';
 
-createRoot(document.getElementById('root')).render(<StrictMode><About /></StrictMode>);
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <About />
+  </StrictMode>,
+);

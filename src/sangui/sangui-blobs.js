@@ -25,38 +25,107 @@ void main(){
   float edge = 1.5 / min(res.x, res.y) * 8.;
   gl_FragColor = vec4(mix(base, blob, smoothstep(1. - edge, 1. + edge, f)), 1.);
 }`;
-const rgb = hex => [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
+const rgb = (hex) => [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
 
 /* speed: 1 was the first, lively version. Mimi slowed it twice; the default is an eighth of the first pace. */
-export function createSanguiBlobs({ canvas, base = 0xD9482F, blob = 0xC53D25, speed = .125, reducedMotion } = {}) {
-  const rm = reducedMotion != null ? !!reducedMotion : matchMedia('(prefers-reduced-motion: reduce)').matches;
+export function createSanguiBlobs({
+  canvas,
+  base = 0xd9482f,
+  blob = 0xc53d25,
+  speed = 0.125,
+  reducedMotion,
+} = {}) {
+  const rm =
+    reducedMotion != null
+      ? !!reducedMotion
+      : matchMedia('(prefers-reduced-motion: reduce)').matches;
   const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
   /* no WebGL: the page's own red background shows through, which is a fine fallback */
-  if (!gl) { canvas.style.display = 'none'; return { setPaused() {}, dispose() {}, ok: false }; }
-  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
-  const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG)); gl.linkProgram(prog);
+  if (!gl) {
+    canvas.style.display = 'none';
+    return { setPaused() {}, dispose() {}, ok: false };
+  }
+  const sh = (type, src) => {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+  gl.linkProgram(prog);
   /* the shader did not build: hide the canvas, so the page's red shows and not a black box */
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.display = 'none'; return { setPaused() {}, dispose() {}, ok: false }; }
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    canvas.style.display = 'none';
+    return { setPaused() {}, dispose() {}, ok: false };
+  }
   gl.useProgram(prog);
-  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  const U = n => gl.getUniformLocation(prog, n);
-  gl.uniform3fv(U('base'), rgb(base)); gl.uniform3fv(U('blob'), rgb(blob));
-  let paused = false, seen = true, raf = 0, last = 0, time = 40, dirty = true;
-  function size() { const dpr = Math.min(window.devicePixelRatio || 1, 1.5), w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
-    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); } gl.uniform2f(U('res'), w, h); dirty = true; }
-  const ro = new ResizeObserver(size); ro.observe(canvas); size();
-  const io = new IntersectionObserver(es => { seen = es[0].isIntersecting; }); io.observe(canvas);
-  function frame(now) { raf = requestAnimationFrame(frame); const dt = Math.min(.1, (now - last) / 1000); last = now;
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = (n) => gl.getUniformLocation(prog, n);
+  gl.uniform3fv(U('base'), rgb(base));
+  gl.uniform3fv(U('blob'), rgb(blob));
+  let paused = false,
+    seen = true,
+    raf = 0,
+    last = 0,
+    time = 40,
+    dirty = true;
+  function size() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5),
+      w = Math.max(1, Math.round(canvas.clientWidth * dpr)),
+      h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+    gl.uniform2f(U('res'), w, h);
+    dirty = true;
+  }
+  const ro = new ResizeObserver(size);
+  ro.observe(canvas);
+  size();
+  const io = new IntersectionObserver((es) => {
+    seen = es[0].isIntersecting;
+  });
+  io.observe(canvas);
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(0.1, (now - last) / 1000);
+    last = now;
     const moving = !rm && !paused && seen && getComputedStyle(canvas).visibility !== 'hidden';
-    if (moving) { time += dt * speed; dirty = true; }
-    if (dirty) { dirty = false; gl.uniform1f(U('t'), time); gl.drawArrays(gl.TRIANGLES, 0, 3); } }
+    if (moving) {
+      time += dt * speed;
+      dirty = true;
+    }
+    if (dirty) {
+      dirty = false;
+      gl.uniform1f(U('t'), time);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+  }
   raf = requestAnimationFrame(frame);
-  return { ok: true,
+  return {
+    ok: true,
     /** Stop or restart the drift. */
-    setPaused(b) { paused = !!b; },
+    setPaused(b) {
+      paused = !!b;
+    },
     /* frees what was made here but keeps the canvas usable, so it can be started again (React mounts twice while developing) */
-    dispose() { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); gl.deleteProgram(prog); gl.deleteBuffer(buf); } };
+    dispose() {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      io.disconnect();
+      gl.deleteProgram(prog);
+      gl.deleteBuffer(buf);
+    },
+  };
 }
 
 /* The scroll button that goes with it: a fat, blobby V in cream, pointing down. The V is the whole button.

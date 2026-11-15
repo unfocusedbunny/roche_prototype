@@ -1,0 +1,11 @@
+# built output and installed packages
+dist
+dist-single
+node_modules
+package-lock.json
+# the survey data is generated, not written by hand
+src/data/crowds.json
+# files served as they are
+public
+# the README's tables are laid out by hand
+*.md

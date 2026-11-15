@@ -1,7 +1,11 @@
 /* Sangui: colours and fonts, shared by the prototype and the "How Sangui was made" page. They are Mimi's (Figma, 12 Nov 2026). */
 :root {
-  --ink: #1E2145; --red: #D9482F; --red-deep: #C53D25; --cream: #F4F1E4; --yellow: #F0E66E;
-  --haze: linear-gradient(180deg, #F4F1E4 0%, #F7DDD3 58%, #E6D8F3 100%);
+  --ink: #1e2145;
+  --red: #d9482f;
+  --red-deep: #c53d25;
+  --cream: #f4f1e4;
+  --yellow: #f0e66e;
+  --haze: linear-gradient(180deg, #f4f1e4 0%, #f7ddd3 58%, #e6d8f3 100%);
   --sans: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Atkinson Hyperlegible Mono', ui-monospace, Menlo, monospace;
   --hand: 'Playwrite US Trad', cursive;
