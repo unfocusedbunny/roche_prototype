@@ -62,14 +62,14 @@ export const CELL = {
 
 /* How the 3D cell developed: Mimi's screenshots of early versions from the 3D chat (cropped by Claude Code), shown under the 3D card.
    The first picture is tall and sits at the left; the other two are stacked beside it.
-   DRAFT (Claude): the caption. Its facts are from the working log, entry 18; the pictures' exact order is not in the log. */
+   The caption is from Mimi's dictation (15 Nov 2026), tidied by Claude Code; its last sentence is from the working log, entry 18. */
 export const PATH = {
   title: 'How the 3D developed',
   shots: [
     { file: 'cell-styles.png', w: 680, h: 930, alt: 'Three style options drawn as small diagrams: A, exploded layers of flat planes; B, a faceted solid; C, a wireframe sphere with coloured dots.' },
     { file: 'cell-stream.png', w: 1472, h: 774, alt: 'An early flat version: pink red cells, purple white cells and small green platelets scattered over a dark background.' },
     { file: 'cell-three.png', w: 1472, h: 640, alt: 'An early 3D version titled “Your blood”: a salmon red blood cell, a turquoise white cell and three yellow platelets in flat shading with pale outlines, on dark blue.' }],
-  caption: 'Early versions: three style options, a flat stream of cells, and the first toon-shaded cells. The plan was a zoom from the body through the bloodstream to the cells. It was cut down to one cell, the one above.',
+  caption: 'I had the look in mind but not its name, so Claude drew three style options. I picked the faceted solid, and asked for it to be cartoony so it feels friendly. Of the cell versions that followed, I only liked the one with all three cell types together. It looked cute, and we went with it. The prototype later kept one of them: the red blood cell above.',
   who: 'Concept and art direction: Mimi · Technique and code: Claude in chat',
 };
 
