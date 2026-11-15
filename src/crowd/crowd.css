@@ -17,6 +17,8 @@
 .hill .label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
 .hill .name { font-family: var(--hand); font-size: 17px; }
 /* the slider: a 44 px tall hit area, a 4 px track, a 28 px knob */
+/* the invisible grip over the line: drag it sideways (touch-action stops the page scrolling under the finger) */
+.hill .grab { cursor: ew-resize; touch-action: none; }
 .hill input { -webkit-appearance: none; appearance: none; display: block; height: 44px; margin-top: 0; background: none; cursor: grab; }
 .hill input:active { cursor: grabbing; }
 .hill input::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--ink); }

@@ -50,7 +50,7 @@ function Segment({ label, options, value, onPick }) {
 }
 
 /* The picture: band, hill, line, axis. `value` is the number the line stands on; `label` is what the picture says to a screen reader. */
-function Hill({ v, who, value, width, glideKey, label }) {
+function Hill({ v, who, value, onValue, width, glideKey, label }) {
   const data = crowds.values[v.chart.data], group = who.sex + who.age, [from, to] = v.chart.window, range = v.chart.range && v.chart.range[who.sex];
   const s = clamp(width / FULL, .62, 1), base = BAND_TOP + 240 * s, perUnit = (width - 2 * PAD) / (to - from), dx = (width - 2 * PAD) / (SAMPLES - 1);
   const heights = useMemo(() => hillHeights(data, group, scaleFor(data, 215 * s), from, to, SAMPLES), [data, group, s, from, to]);
@@ -59,6 +59,10 @@ function Hill({ v, who, value, width, glideKey, label }) {
 
   const x = (val) => PAD + (val - from) * perUnit, lineX = x(value);
   const paths = hillPaths(m.heights, PAD, dx, base, lineX);
+  /* The line and its dot can be dragged, like the slider's knob. The grip keeps the distance it was picked up at, so nothing jumps. */
+  const grip = useRef(0);
+  const down = (e) => { e.currentTarget.setPointerCapture(e.pointerId); grip.current = e.clientX - lineX; };
+  const move = (e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) { onValue(from + (e.clientX - grip.current - PAD) / perUnit); } };
 
   const lo = clamp(m.lo, from, to), hi = clamp(m.hi, from, to), edges = range ? [[m.lo, range[0]], [m.hi, range[1]]].filter(([at]) => at >= from && at <= to) : [];
   /* axis numbers: whole steps, far enough apart to read, and never under one of the range's own numbers */
@@ -80,6 +84,7 @@ function Hill({ v, who, value, width, glideKey, label }) {
       <text className="tick" x={width} y={base - 14} textAnchor="end">{v.unit}</text>
       {past > 0 && <text className="label" x={width} y={base - 46} textAnchor="end">{fill(past === 1 ? CHART.pastOne : CHART.past, { n: past, edge: to })}</text>}
       <text className="name" x={clamp(lineX, 20, width - 20)} y="10" textAnchor="middle">{CHART.line}</text>
+      <rect className="grab" x={lineX - 22} y="-18" width="44" height={base + 18} fill="transparent" onPointerDown={down} onPointerMove={move} />
     </svg>
   );
 }
@@ -95,6 +100,8 @@ export default function CrowdChart({ v, who, setWho }) {
   const data = crowds.values[v.chart.data], [from, to] = v.chart.window;
   const digits = (String(data.step).split('.')[1] || '').length;
   const [value, setValue] = useState(+v.value);
+  /* any number from the slider or from dragging the line: kept inside the window and on one of the table's steps */
+  const pick = (x) => setValue(+(from + Math.round((clamp(x, from, to) - from) / data.step) * data.step).toFixed(digits));
   const box = useRef(null), [width, setWidth] = useState(0);
   useLayoutEffect(() => {
     const measure = () => setWidth(Math.min(FULL, Math.floor(box.current.clientWidth)));
@@ -119,10 +126,10 @@ export default function CrowdChart({ v, who, setWho }) {
       <p className="try">{CHART.hint}</p>
       <div ref={box} className="hill">
         {width > 0 && <>
-          <Hill v={v} who={who} value={value} width={width} glideKey={group}
+          <Hill v={v} who={who} value={value} onValue={pick} width={width} glideKey={group}
             label={fill(CHART.picture, { name: v.name, group: people, value: number, unit: v.chart.unitName, n }) + (range ? ' ' + fill(CHART.pictureRange, { lo: range[0], hi: range[1] }) : '')} />
           {/* as wide as the axis plus one knob, so the knob's centre sits exactly under the line */}
-          <input type="range" min={from} max={to} step={data.step} value={value} onChange={e => setValue(+(+e.target.value).toFixed(digits))}
+          <input type="range" min={from} max={to} step={data.step} value={value} onChange={e => pick(+e.target.value)}
             aria-label={fill(CHART.slider, { name: v.name })} aria-valuetext={number + ' ' + v.chart.unitName}
             style={{ width: width - 2 * PAD + KNOB, marginLeft: PAD - KNOB / 2 }} />
         </>}
