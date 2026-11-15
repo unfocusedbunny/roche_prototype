@@ -83,6 +83,9 @@ button { font: inherit; color: inherit; }
 .switch { display: flex; flex-wrap: wrap; gap: 8px; margin: .7rem 0 .2rem; }
 .gap { border: 1px dashed var(--ink); border-radius: 12px; padding: .8rem 1rem; margin-top: 1.6rem; width: fit-content; }
 
+/* the curved names on the 3D models: the scene's own style names the old handwriting font, so the page points it at the current one */
+.overlay .sg-edge { font-family: var(--hand); }
+
 /* ---- controls ---- */
 .controls { position: absolute; right: 20px; bottom: 18px; z-index: 7; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 .pill { font-size: .875rem; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 22px; background: rgba(244, 241, 228, .7); color: var(--ink); cursor: pointer; }

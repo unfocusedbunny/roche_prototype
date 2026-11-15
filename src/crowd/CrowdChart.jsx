@@ -112,7 +112,7 @@ export default function CrowdChart({ v, who, setWho }) {
   const group = who.sex + who.age, range = v.chart.range && v.chart.range[who.sex], number = value.toFixed(digits);
   const status = range ? rangeStatus(value, range[0], range[1]) : null, cuts = v.chart.textCuts;
   const zone = cuts ? (value < cuts[0] - 1e-9 ? 'below' : value < cuts[1] - 1e-9 ? 'in' : 'above') : status;
-  const text = v.chart.text && (Array.isArray(v.chart.text) ? v.chart.text : v.chart.text[zone]);
+  const text = (v.chart.textAt && v.chart.textAt[number]) || (v.chart.text && (Array.isArray(v.chart.text) ? v.chart.text : v.chart.text[zone]));
   const n = belowCount(data, group, value), people = CHART.groups[who.sex] + ' ' + CHART.ages[who.age];
   const lead = fill(CHART.answer[answerKind(n)], { n }), rest = fill(CHART.answer.rest, { group: people });
 

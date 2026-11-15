@@ -12,7 +12,7 @@
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "@fontsource/atkinson-hyperlegible-mono": "^5.3.0",
     "@fontsource/open-sans": "^5.3.0",
-    "@fontsource/playwrite-sk": "^5.3.0",
+    "@fontsource/playwrite-us-trad": "^5.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "three": "0.187.0"

@@ -4,5 +4,5 @@
   --haze: linear-gradient(180deg, #F4F1E4 0%, #F7DDD3 58%, #E6D8F3 100%);
   --sans: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Atkinson Hyperlegible Mono', ui-monospace, Menlo, monospace;
-  --hand: 'Playwrite SK', cursive;
+  --hand: 'Playwrite US Trad', cursive;
 }

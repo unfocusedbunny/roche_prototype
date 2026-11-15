@@ -52,6 +52,7 @@ export const STEPS = {
                        or { below, in, above } to follow where the number sits. null: nothing written yet.
              textCuts  [a, b]: the three texts change at these two numbers and not at the example range
                        (below: under a · in: from a to under b · above: b or more)
+             textAt    { '9.0': [bold start, rest] }: a text of its own for one exact number, as the chart shows it
              pastNote  true: a small note at the right edge says how many of 100 are past the window (HbA1c only) */
 export const TUBES = [
   { owner: 'Blood fats', values: [
@@ -90,8 +91,14 @@ export const TUBES = [
     { key: 'iron', name: 'Iron',
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
       body: null, value: '9.0', unit: 'µmol/L',
-      /* its only written line is the lead above, so there is no text under the slider yet */
-      chart: { data: 'iron', unitName: 'micromoles per litre', window: [0, 40], range: { m: [9, 26.9], w: [9, 26.9] }, text: null } }] },
+      /* The text only says where the number sits against the example range: no causes or symptoms for iron (Mimi, 15 Nov 2026).
+         At the starting number, which is the range's bottom edge, it says so. */
+      chart: { data: 'iron', unitName: 'micromoles per litre', window: [0, 40], range: { m: [9, 26.9], w: [9, 26.9] },
+        text: {
+          below: ['Below range:', 'under the example range, 9.0 to 26.9.'],
+          in: ['In range:', 'inside the example range, 9.0 to 26.9.'],
+          above: ['Above range:', 'over the example range, 9.0 to 26.9.'] },
+        textAt: { '9.0': ['In range:', 'It sits right at the bottom edge of the example range, 9.0 to 26.9.'] } } }] },
 ];
 
 export const RESULTS = {

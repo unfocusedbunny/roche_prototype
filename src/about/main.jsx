@@ -6,7 +6,7 @@ import '@fontsource/open-sans/800.css';
 import '@fontsource/atkinson-hyperlegible/400.css';
 import '@fontsource/atkinson-hyperlegible/700.css';
 import '@fontsource/atkinson-hyperlegible-mono/400.css';
-import '@fontsource/playwrite-sk/400.css';
+import '@fontsource/playwrite-us-trad/400.css';
 import '../tokens.css';
 import '../crowd/crowd.css';
 import './about.css';
