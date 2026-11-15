@@ -89,6 +89,12 @@ h2 + h3 { margin-top: 0; }
 .moment h3 { font-size: 1.35rem; margin: .3rem 0 .8rem; letter-spacing: -.01em; text-wrap: balance; }
 .num { font-size: .875rem; font-weight: 700; color: var(--mint-ink); font-variant-numeric: tabular-nums; }
 section p.by { margin-top: 1.2rem; font-size: .875rem; line-height: 1.45; color: var(--muted); }
+/* how the 3D developed: the tall picture at the left over two rows, the two wide ones stacked beside it, all ending level */
+.path div { display: grid; grid-template-columns: .7fr 1fr; gap: .6rem; }
+.path img { width: 100%; border-radius: 8px; border: 1px solid var(--rule); }
+.path img:first-child { grid-row: span 2; height: 100%; object-fit: cover; }
+.path figcaption { margin-top: .6rem; font-size: .8125rem; line-height: 1.45; color: var(--muted); }
+.path figcaption span { display: block; margin-top: .3rem; }
 /* a moment's pictures: one row, all the same height (each picture's share of the width is its own width-to-height ratio) */
 .shots { margin-top: 1.4rem; }
 .shots div { display: flex; gap: .6rem; align-items: flex-start; }

@@ -9,7 +9,7 @@ import { FIGMA_URL, CV_FILE } from '../links.js';
 import CrowdChart from '../crowd/CrowdChart.jsx';
 import Cell3D from './Cell3D.jsx';
 import { TUBES, CHART } from '../content.js';
-import { TOP, NAV, WHY, WHAT, MOMENTS, SYSTEM, REFLECTIONS, CREDIT, FOOTER } from './content.js';
+import { TOP, NAV, WHY, WHAT, PATH, MOMENTS, SYSTEM, REFLECTIONS, CREDIT, FOOTER } from './content.js';
 
 /* This page lives one folder below the prototype */
 const HOME = '../', CV = '../' + CV_FILE;
@@ -86,6 +86,11 @@ export default function About() {
               <img className="shot" src={'./' + WHAT.shot.file} alt={WHAT.shot.alt} width="1440" height="900" loading="lazy" />
               <List items={WHAT.points} />
               <Cell3D />
+              <h3>{PATH.title}</h3>
+              <figure className="path">
+                <div>{PATH.shots.map(s => <img key={s.file} src={'./' + s.file} alt={s.alt} width={s.w} height={s.h} loading="lazy" />)}</div>
+                <figcaption>{PATH.caption}<span>{PATH.who}</span></figcaption>
+              </figure>
             </section>
 
             <section id="moments">

@@ -60,6 +60,19 @@ export const CELL = {
   failed: 'This browser can’t show the 3D model, so here is a picture of it.',
 };
 
+/* How the 3D cell developed: Mimi's screenshots of early versions from the 3D chat (cropped by Claude Code), shown under the 3D card.
+   The first picture is tall and sits at the left; the other two are stacked beside it.
+   DRAFT (Claude): the caption. Its facts are from the working log, entry 18; the pictures' exact order is not in the log. */
+export const PATH = {
+  title: 'How the 3D developed',
+  shots: [
+    { file: 'cell-styles.png', w: 680, h: 930, alt: 'Three style options drawn as small diagrams: A, exploded layers of flat planes; B, a faceted solid; C, a wireframe sphere with coloured dots.' },
+    { file: 'cell-stream.png', w: 1472, h: 774, alt: 'An early flat version: pink red cells, purple white cells and small green platelets scattered over a dark background.' },
+    { file: 'cell-three.png', w: 1472, h: 640, alt: 'An early 3D version titled “Your blood”: a salmon red blood cell, a turquoise white cell and three yellow platelets in flat shading with pale outlines, on dark blue.' }],
+  caption: 'Early versions: three style options, a flat stream of cells, and the first toon-shaded cells. The plan was a zoom from the body through the bloodstream to the cells. It was cut down to one cell, the one above.',
+  who: 'Concept and art direction: Mimi · Technique and code: Claude in chat',
+};
+
 /*
  * Key design moments: the four Mimi picked on 15 Nov 2026. `chart: true` puts the working crowd chart under that moment.
  * `shots` are that moment's pictures, shown in one row at the same height.
