@@ -8,6 +8,7 @@ import '@fontsource/atkinson-hyperlegible-mono/700.css';
 import '@fontsource/playwrite-sk/400.css';
 import './tokens.css';
 import './app.css';
+import './crowd/crowd.css';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(<StrictMode><App /></StrictMode>);
