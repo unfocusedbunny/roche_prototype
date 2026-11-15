@@ -53,6 +53,7 @@ export const STEPS = {
              textCuts  [a, b]: the three texts change at these two numbers and not at the example range
                        (below: under a · in: from a to under b · above: b or more)
              textAt    { '9.0': [bold start, rest] }: a text of its own for one exact number, as the chart shows it
+             sources   the footnotes the texts point to with ¹ ², shown in the small print under the chart
              pastNote  true: a small note at the right edge says how many of 100 are past the window (HbA1c only) */
 export const TUBES = [
   { owner: 'Blood fats', values: [
@@ -91,14 +92,15 @@ export const TUBES = [
     { key: 'iron', name: 'Iron',
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
       body: null, value: '9.0', unit: 'µmol/L',
-      /* The text only says where the number sits against the example range: no causes or symptoms for iron (Mimi, 15 Nov 2026).
-         At the starting number, which is the range's bottom edge, it says so. */
+      /* Low and high give the usual causes, with their two sources as footnotes (Mimi's text, 15 Nov 2026).
+         At the starting number, which is the range's bottom edge, the text says so. */
       chart: { data: 'iron', unitName: 'micromoles per litre', window: [0, 40], range: { m: [9, 26.9], w: [9, 26.9] },
         text: {
-          below: ['Below range:', 'under the example range, 9.0 to 26.9.'],
+          below: ['Low:', 'blood loss (heavy periods, or slow bleeding in the gut), too little iron in food, a gut condition that absorbs iron poorly, or pregnancy. Inflammation or infection can also lower it while the body’s stores are fine.¹ ²'],
           in: ['In range:', 'inside the example range, 9.0 to 26.9.'],
-          above: ['Above range:', 'over the example range, 9.0 to 26.9.'] },
-        textAt: { '9.0': ['In range:', 'It sits right at the bottom edge of the example range, 9.0 to 26.9.'] } } }] },
+          above: ['High:', 'sometimes just timing, such as iron taken shortly before the test. Less often too much iron stored in the body (haemochromatosis), liver inflammation, red cells breaking down too fast, or many blood transfusions.¹'] },
+        textAt: { '9.0': ['In range:', 'It sits right at the bottom edge of the example range, 9.0 to 26.9.'] },
+        sources: ['¹ MedlinePlus, “Serum iron test”, US National Library of Medicine, reviewed Jan 2026.', '² Pasricha et al., “Iron deficiency”, The Lancet, 2021.'] } }] },
 ];
 
 export const RESULTS = {

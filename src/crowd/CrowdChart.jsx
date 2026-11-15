@@ -142,6 +142,7 @@ export default function CrowdChart({ v, who, setWho }) {
 
       <CrowdNote v={v} who={who} className="small mono demo-line" />
       {range && <p className="small mono">{CHART.source.range}</p>}
+      {v.chart.sources && v.chart.sources.map(line => <p key={line} className="small mono">{line}</p>)}
     </div>
   );
 }
