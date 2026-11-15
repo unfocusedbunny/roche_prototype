@@ -1,14 +1,15 @@
 /*
  * How Sangui was made: a case study. An ordinary reading page, no 3D, and nothing moves by itself.
- * It looks like Mimi's portfolio (light grey page, white cards, Bricolage Grotesque and Newsreader, a mint accent), not like Sangui.
- * The one piece in Sangui's own colours is the working crowd chart, shown as the artifact it is.
+ * It looks like Mimi's portfolio (light grey page, white cards, Open Sans headings, the system font for text, a mint accent), not like Sangui.
+ * The two pieces in Sangui's own colours are the working crowd chart and the 3D cell, shown as the artifacts they are.
  * Order: cover, title and facts, then context, the prototype, key design moments, design system, reflections, who did what.
  */
 import { useState } from 'react';
 import { FIGMA_URL, CV_FILE } from '../links.js';
 import CrowdChart from '../crowd/CrowdChart.jsx';
+import Cell3D from './Cell3D.jsx';
 import { TUBES, CHART } from '../content.js';
-import { TOP, NAV, WHY, WHAT, MOMENTS, DECISIONS, SYSTEM, REFLECTIONS, CREDIT, TESTING, FOOTER } from './content.js';
+import { TOP, NAV, WHY, WHAT, MOMENTS, SYSTEM, REFLECTIONS, CREDIT, FOOTER } from './content.js';
 
 /* This page lives one folder below the prototype */
 const HOME = '../', CV = '../' + CV_FILE;
@@ -22,9 +23,6 @@ function T({ children }) {
 }
 
 const List = ({ items }) => <ul className="list">{items.map(p => <li key={p}><T>{p}</T></li>)}</ul>;
-
-/* A section's opening: a small label, then the statement */
-const Opening = ({ label, heading }) => <><p className="label">{label}</p><h2>{heading}</h2></>;
 
 /* The Figma file is only fetched once the reader asks for it */
 function Figma() {
@@ -80,21 +78,19 @@ export default function About() {
             <p><a className="btn" href={HOME}>{TOP.links.prototype}</a></p>
 
             <section id="context">
-              <Opening label={WHY.label} heading={WHY.heading} />
+              <h2>{WHY.heading}</h2>
               <p><T>{WHY.story}</T></p>
             </section>
 
             <section id="prototype">
-              <Opening label={WHAT.label} heading={WHAT.heading} />
-              {WHAT.rows.map(r => <div className="row" key={r.file}>
-                <img src={'./' + r.file} alt={r.alt} width="1440" height="900" loading="lazy" />
-                <div><h3>{r.title}</h3><p>{r.text}</p></div>
-              </div>)}
+              <h2>{WHAT.heading}</h2>
+              <img className="shot" src={'./' + WHAT.shot.file} alt={WHAT.shot.alt} width="1440" height="900" loading="lazy" />
               <List items={WHAT.points} />
+              <Cell3D />
             </section>
 
             <section id="moments">
-              <Opening label={MOMENTS.label} heading={MOMENTS.heading} />
+              <h2>{MOMENTS.heading}</h2>
               {MOMENTS.items.map((m, i) => <article className="moment" key={m.key}>
                 <p className="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
                 <h3>{m.title}</h3>
@@ -103,42 +99,26 @@ export default function About() {
                 {m.chart && <Chart note={m.chartNote} />}
                 {m.gap && <p className="gap"><T>{m.gap}</T></p>}
               </article>)}
-              <h3>{DECISIONS.heading}</h3>
-              <List items={DECISIONS.items} />
             </section>
 
             <section id="system">
-              <Opening label={SYSTEM.label} heading={SYSTEM.heading} />
+              <h2>{SYSTEM.heading}</h2>
               <p>{SYSTEM.credit}</p>
               <ul className="swatches">
                 {SYSTEM.colours.map(c => <li key={c.name}><span className="chip" style={{ background: c.css }} />{c.name}<span className="fine">{c.value}</span></li>)}
-              </ul>
-              <ul className="fonts">
-                {SYSTEM.fonts.map(f => <li key={f.name}>
-                  <span className="specimen" style={{ fontFamily: f.css }}>{f.name}</span>
-                  <span>{f.use}. <T>{f.why}</T></span>
-                </li>)}
               </ul>
               <Figma />
             </section>
 
             <section id="reflections">
-              <Opening label={REFLECTIONS.label} heading={REFLECTIONS.heading} />
-              <h3>{REFLECTIONS.mistakesTitle}</h3>
+              <h2>{REFLECTIONS.heading}</h2>
               <List items={REFLECTIONS.mistakes} />
               <p><T>{REFLECTIONS.own}</T></p>
-              <h3>{REFLECTIONS.libertiesTitle}</h3>
-              <List items={REFLECTIONS.liberties} />
-              <h3>{REFLECTIONS.realTitle}</h3>
-              <p>{REFLECTIONS.real}</p>
-              {TESTING && <>
-                <h3>{TESTING.title}</h3>
-                <p><T>{TESTING.text}</T></p>
-              </>}
+              <p>{REFLECTIONS.limits}</p>
             </section>
 
             <section id="credit">
-              <Opening label={CREDIT.label} heading={CREDIT.heading} />
+              <h2>{CREDIT.heading}</h2>
               <div className="scroll-x">
                 <table>
                   <thead><tr><td />{CREDIT.columns.map(c => <th key={c} scope="col">{c}</th>)}</tr></thead>
