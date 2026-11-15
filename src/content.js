@@ -33,10 +33,10 @@ export const STEPS = {
   2: ['So I built this to make blood test results more informative, accessible and fun.'],
   3: ['Sangui takes one blood test and explains it against an example range, and against people of the same sex and age in a US health survey.*'],
   4: ['*Why American data? Because it is open and I could get my hands on it quickly.'],
-  5: { heading: 'These are “Robin’s” - prototype patient.',
+  5: { heading: 'These are Robin’s tubes.',
     body: 'Robin’s blood went into three tubes. The cap colour tells the lab what each one is for. Robin isn’t real, so Robin can be anyone. Slide the number, switch the crowd.' },
   6: { prompt: 'Pick one',
-    note: 'A real version would let you bring your own report, securely. This one doesn’t, on purpose. Nothing you do here is collected or stored.' },
+    note: 'A real version would let you bring your own report, securely. This one takes no uploads, on purpose. You can slide to your own number, and nothing you do here is collected or stored.' },
 };
 
 /* The three tubes, in the scene's order: 0 yellow, 1 purple, 2 rust red.
