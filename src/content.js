@@ -6,7 +6,7 @@
  *   - HbA1c and LDL: the "texts for review" document (AI-drafted, sent to a doctor friend, review pending).
  *   - Iron: one unreviewed draft line from the 3D mockup.
  *   - The crowd chart's wording, the hemoglobin texts under its slider and the starting numbers for HbA1c, LDL and iron:
- *     the chart chat's handoff (14 Nov 2026). The question's "an HbA1c", "an LDL cholesterol", "a serum iron" are DRAFT (Claude).
+ *     the chart chat's handoff (14 Nov 2026).
  *   - Anything marked DRAFT (Claude) below was written by Claude and has not been looked at by Mimi yet.
  */
 
@@ -46,10 +46,9 @@ export const STEPS = {
              15.6 is Mimi's. 5.8, 3.6 and 9.0 are suggestions from the chart chat, picked from the real data for men aged 40 to 59.
              With value: null there is no chart, only a "to come" note. Nothing is made up to fill it.
      chart   data      the value's name in src/data/crowds.json
-             asked     how the value is named inside the question ("What does a hemoglobin of …")
              unitName  the unit, read out loud
              window    the stretch of the axis that is drawn, and that the slider covers
-             range     the example range for men (m) and women (w), or null for no yellow band and no status
+             range     the example range for men (m) and women (w), or null for no yellow band
              text      the line under the slider, as [bold start, rest]. Either one pair for every number,
                        or { below, in, above } to follow where the number sits. null: nothing written yet.
              textCuts  [a, b]: the three texts change at these two numbers and not at the example range
@@ -62,14 +61,14 @@ export const TUBES = [
       body: 'LDL particles carry cholesterol to the body’s tissues. Any surplus slowly builds up in artery walls over years, hence “bad” cholesterol, though the body needs some.',
       value: '3.6', unit: 'mmol/L',
       /* no band and no status: the chart chat's recommendation, Mimi's call. The alternative is a shaded "optimal, under 2.6" zone. */
-      chart: { data: 'ldl', asked: 'an LDL cholesterol', unitName: 'millimoles per litre', window: [1, 6], range: null,
+      chart: { data: 'ldl', unitName: 'millimoles per litre', window: [1, 6], range: null,
         text: ['LDL has no single range.', 'The right number depends on your overall risk.'] } }] },
   { owner: 'Robin · Blood count and sugar', values: [
     { key: 'hemoglobin', name: 'Hemoglobin',
       lead: 'Carries oxygen from your lungs to the rest of your body.',
       body: 'It’s an iron-containing protein inside your red cells. Each cell holds about 270 million of them, picking up oxygen in the lungs and letting it go in the body.',
       value: '15.6', unit: 'g/dL',
-      chart: { data: 'hemoglobin', asked: 'a hemoglobin', unitName: 'grams per decilitre', window: [10, 19], range: { m: [14, 18], w: [12, 16] },
+      chart: { data: 'hemoglobin', unitName: 'grams per decilitre', window: [10, 19], range: { m: [14, 18], w: [12, 16] },
         /* AI-drafted, from the prototype Mimi approved in the chart chat. Review pending. */
         text: {
           below: ['Low (anaemia):', 'often too little iron, blood loss, low B12 or folate, or a long-term illness. Also lower in pregnancy.'],
@@ -82,7 +81,7 @@ export const TUBES = [
       /* lopsided, so the chart is zoomed in to 4.5–8.5 and says how many people are past the edge.
          The three texts follow Mimi's zones (under 5.7 · 5.7 to 6.4 · 6.5 or more), not the example range. They come from
          "Blood test explainer: texts for review" by way of the chart handoff (14 Nov 2026). The doctor's review is not back. */
-      chart: { data: 'hba1c', asked: 'an HbA1c', unitName: 'percent', window: [4.5, 8.5], range: { m: [4, 5.6], w: [4, 5.6] },
+      chart: { data: 'hba1c', unitName: 'percent', window: [4.5, 8.5], range: { m: [4, 5.6], w: [4, 5.6] },
         pastNote: true, textCuts: [5.7, 6.5],
         text: {
           below: ['In range:', 'a typical average blood sugar.'],
@@ -93,7 +92,7 @@ export const TUBES = [
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
       body: null, value: '9.0', unit: 'µmol/L',
       /* its only written line is the lead above, so there is no text under the slider yet */
-      chart: { data: 'iron', asked: 'a serum iron', unitName: 'micromoles per litre', window: [0, 40], range: { m: [9, 26.9], w: [9, 26.9] }, text: null } }] },
+      chart: { data: 'iron', unitName: 'micromoles per litre', window: [0, 40], range: { m: [9, 26.9], w: [9, 26.9] }, text: null } }] },
 ];
 
 export const RESULTS = {
@@ -106,31 +105,30 @@ export const RESULTS = {
 };
 
 /* The crowd chart's words. {…} parts are filled in by the chart.
-   MIMI: how Robin is framed is still open. Robin can be anyone, with any number: the line is always "Robin".
-   The name on the line, the hint under the slider and the crowd the chart starts on are together under "robin" below, so they are easy to rewrite.
    Example ranges: ABIM laboratory reference ranges, January 2026. That table says its ranges are not targets for one person, hence "example range". */
 export const CHART = {
-  robin: { name: 'Robin', hint: 'Drag to try another number.',
-    /* the crowd every chart starts on: men (m) or women (w), aged 20–39 (a), 40–59 (b) or 60+ (c) */
-    crowd: { sex: 'm', age: 'b' } },
-
-  /* the control, read as one sentence: "What does a hemoglobin of 15.6 g/dL mean for a [man] aged [40–59]?" */
-  ask: { lead: 'What does {asked} of', mid: 'mean for a', aged: 'aged', end: '?',
-    sex: 'Sex', age: 'Age band', sexes: { m: 'man', w: 'woman' }, ageBands: { a: '20–39', b: '40–59', c: '60+' } },
-  slider: '{name} value to try',
+  /* the handwritten word on the line */
+  line: 'you',
+  /* the crowd every chart starts on: men (m) or women (w), aged 20–39 (a), 40–59 (b) or 60+ (c) */
+  startCrowd: { sex: 'm', age: 'b' },
 
   /* the answer, worked out from the data every time. "none" and "all" are for the very ends of the slider. */
   answer: { some: 'Higher than {n} of 100', none: 'Lower than nearly all', all: 'Higher than nearly all', rest: '{group} in a US health survey.' },
   groups: { m: 'men', w: 'women' },
   ages: { a: 'aged 20 to 39', b: 'aged 40 to 59', c: 'aged 60 and over' },
 
-  status: { in: 'In the example range', above: 'Above the example range', below: 'Below the example range' },
-  range: 'EXAMPLE RANGE',
+  /* on the picture. The * ties the label to the footnote in source.range. */
+  range: 'EXAMPLE RANGE*',
   past: '{n} OF 100 ARE PAST {edge} →', pastOne: '1 OF 100 IS PAST {edge} →',
 
-  /* the small print under the chart */
+  /* the slider, the crowd buttons under it, and the hint under those (DRAFT (Claude): the hint's second sentence) */
+  slider: '{name} value to try',
+  who: { sex: 'Sex', age: 'Age band', sexes: { m: 'man', w: 'woman' }, ageBands: { a: '20–39', b: '40–59', c: '60+' } },
+  hint: 'Drag the slider to try another number. Switch the buttons to try another crowd.',
+
+  /* the small print at the very bottom */
   demo: 'A demo: it can’t judge a real blood test, and nothing you do here is stored.',
-  source: { crowd: 'Crowd: {people} {sex} in the CDC’s NHANES survey, 2015 to 2016.', range: 'Example range: ABIM table, Jan 2026.' },
+  source: { crowd: 'Crowd: {people} {sex} in the CDC’s NHANES survey, 2015 to 2016.', range: '* Example range: ABIM table, Jan 2026.' },
 
   /* what the chart shows, for people who can't see it */
   picture: '{name} for {group}. The line is at {value} {unit}, with {n} of 100 people below it.',

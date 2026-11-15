@@ -41,7 +41,7 @@ function Story({ onNoGL }) {
   const [paused, setPaused] = useState(false);
   const [step, setStep] = useState(0);
   const [privacy, setPrivacy] = useState(false);
-  const [who, setWho] = useState(CHART.robin.crowd); /* the crowd picked on a chart; it stays when you move to another value */
+  const [who, setWho] = useState(CHART.startCrowd); /* the crowd picked on a chart; it stays when you move to another value */
 
   useEffect(() => {
     const el = stage.current, blocks = [...el.querySelectorAll('[data-step]')];
@@ -197,7 +197,7 @@ function Story({ onNoGL }) {
 
 /* Without WebGL there is no scene to scroll through, so the same words become an ordinary page */
 function PlainPage() {
-  const [who, setWho] = useState(CHART.robin.crowd);
+  const [who, setWho] = useState(CHART.startCrowd);
   return (
     <main className="plain">
       <h1>{TITLE.name}</h1>

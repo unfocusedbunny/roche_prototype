@@ -1,7 +1,8 @@
 /*
  * Sangui crowd chart: the sums behind the hill. Nothing here touches the page, and no wording lives here (that is in content.js).
  * Ported from the chart chat's reference file, version 2 (14 Nov 2026, evening), which was checked against the prototype Mimi approved.
- * Since version 2 the number can move: the split, the counts and the status are worked out for any value on a step.
+ * Since version 2 the number can move: the split, the count and the status are worked out for any value on a step.
+ * The two counts drawn on the hill were dropped after a user test (15 Nov 2026), and their placing with them.
  *
  * Data shape (src/data/crowds.json): values[name] = { unit, axis: {min, max}, step, groups: { ma|mb|mc|wa|wb|wc: { n, p, below, density } } }
  * density has 91 evenly spaced samples from axis.min to axis.max.
@@ -64,23 +65,6 @@ export function hillPaths(heights, x0, dx, baseline, lineX) {
   for (let k = i + 1; k < heights.length; k++) { above += ' L' + r(x0 + k * dx) + ' ' + r(baseline - heights[k]); }
   above += ' L' + r(x0 + (heights.length - 1) * dx) + ' ' + r(baseline) + ' Z';
   return { below, above, lineY: r(baseline - lineH) };
-}
-
-/* Where the two counts go. Each is a bare number, 40 px bold, in a 100 px wide centred box.
-   Inside its half of the hill when that half is at least minWidth px wide where the hill is taller than the number;
-   otherwise beside the line near the top, on whichever side has room. plotWidth is the width of the plot area in px. */
-export function placeCounts(heights, x0, dx, lineX, plotWidth = 784, opts = {}) {
-  const { clearance = 72, minWidth = 76, insideTop = 204, besideTop = 40 } = opts;
-  const span = (lo, hi) => {
-    let a = -1, b = -1;
-    for (let k = 0; k < heights.length; k++) { const x = x0 + k * dx; if (x >= lo && x <= hi && heights[k] >= clearance) { if (a < 0) { a = x; } b = x; } }
-    return a < 0 ? null : [a, b];
-  };
-  const one = (s, beside) => (s && s[1] - s[0] >= minWidth) ? { left: (s[0] + s[1]) / 2 - 50, top: insideTop, inside: true } : { left: beside, top: besideTop, inside: false };
-  return {
-    below: one(span(-Infinity, lineX), lineX - 110 >= 0 ? lineX - 110 : lineX + 10),
-    above: one(span(lineX, Infinity), lineX + 110 <= plotWidth ? lineX + 10 : lineX - 110),
-  };
 }
 
 /* The morph, used when the crowd changes (dragging the slider is direct): 500 ms, this easing. */
