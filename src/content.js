@@ -29,8 +29,7 @@ export const STEPS = {
   1: ['I have chronic anemia, so my blood gets checked regularly.',
     'I’m usually told a number on the phone between appointments, and it means nothing to me: I don’t know what’s normal or where I stand.'],
   2: ['Pasting my results into an AI would explain them, but that means handing over my health data.'],
-  3: ['So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age, with nothing stored.'],
-  /* the story no longer marks this with a *, so the line stands on its own */
+  3: ['So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age in a US health survey, with nothing stored.'],
   4: ['Why American data? Because it is open and I could get my hands on it quickly.'],
   5: { heading: 'These are example tubes.',
     body: 'One blood test goes into three tubes. The cap colour tells the lab what each one is for. The numbers here are examples. Slide them to your own, and switch the crowd.' },
@@ -89,7 +88,7 @@ export const TUBES = [
           in: ['Higher-risk range:', 'not diabetes. An early signal that changes in activity, food and weight often bring down.'],
           above: ['Diabetes range:', 'one result usually isn’t a diagnosis; it’s normally confirmed with another test.'] } } }] },
   { owner: 'Iron', values: [
-    { key: 'iron', name: 'Iron',
+    { key: 'iron', name: 'Serum iron',
       lead: 'Your test doesn’t count this iron. It measures iron on the move in your blood.',
       body: null, value: '9.0', unit: 'µmol/L',
       /* Low and high give the usual causes, with their two sources as footnotes (Mimi's text, 15 Nov 2026).
