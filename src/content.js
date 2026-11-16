@@ -35,9 +35,13 @@ export const STEPS = {
     'Pasting my results into an AI would explain them, but that means handing over my health data.',
   ],
   3: [
-    'So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age in a US health survey, with nothing stored.',
+    'So I built a tool for myself: take your (or any) value and see where it sits, against an example range.',
   ],
-  4: ['Why American data? Because it is open and I could get my hands on it quickly.'],
+  4: ['A US health survey* is used as a reference to map the values against age ranges and sexes.'],
+  /* small print under a step's text, on the same page. Step 4: which data, and why this data. Mimi's wording, 16 Nov 2026. */
+  small: {
+    4: '*Data: NHANES 2015–2016 (CDC). I used American data because it is open and I could get my hands on it quickly.',
+  },
   5: {
     heading: 'These are example tubes.',
     body: 'One blood test goes into three tubes. The cap colour tells the lab what each one is for. The numbers here are examples. Slide them to your own, and switch the crowd.',

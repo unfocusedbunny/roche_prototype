@@ -253,6 +253,14 @@ button {
 .step p + p {
   margin-top: 0.9em;
 }
+/* small print under a step's text (step 4: which data, and why) */
+.step p.fine {
+  font-size: max(0.8rem, calc(var(--story) * 0.58));
+  font-weight: 400;
+  line-height: 1.45;
+  max-width: 34em;
+  margin-top: 0.8em;
+}
 .rm .step p {
   transition: opacity 0.4s;
 }

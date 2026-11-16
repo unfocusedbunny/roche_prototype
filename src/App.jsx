@@ -525,6 +525,7 @@ function Story({ onNoGL }) {
               {STEPS[n].map((l) => (
                 <p key={l}>{l}</p>
               ))}
+              {STEPS.small[n] && <p className="fine">{STEPS.small[n]}</p>}
             </div>
           ))}
           <div className="step s5" data-step="5">
@@ -611,7 +612,7 @@ function PlainPage() {
       ))}
       <p className="mono">{PLAIN.note}</p>
       {[1, 2, 3, 4]
-        .flatMap((n) => STEPS[n])
+        .flatMap((n) => [...STEPS[n], ...(STEPS.small[n] ? [STEPS.small[n]] : [])])
         .map((l) => (
           <p key={l}>{l}</p>
         ))}
