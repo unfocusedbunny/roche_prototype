@@ -174,7 +174,7 @@ export const MOMENTS = {
       key: 'range',
       title: 'The example range',
       text: [
-        'The ranges come from the ABIM laboratory reference table (January 2026), which says its ranges are not targets for one person. So the yellow band is an example range; a real lab prints its own. LDL has no single range, so its chart has no band.',
+        'The ranges come from the [ABIM laboratory reference table (January 2026)](https://www.abim.org/Media/bfijryql/laboratory-reference-ranges.pdf), which says its ranges are not targets for one person. So the yellow band is an example range; a real lab prints its own. LDL has no single range, so its chart has no band.',
       ],
       who: 'Wording: Claude in chat · LDL without a band: Mimi’s call',
     },
@@ -186,7 +186,7 @@ export const MOMENTS = {
 export const SYSTEM = {
   heading: 'Design system',
   credit:
-    'The colours, the fonts and the design of the Figma file are Mimi’s. Since 14 Nov Claude builds repetitive pieces in the file through the Figma connector; each one is labelled in the file.',
+    'The colours, the fonts and the design of the Figma file are mine. Claude built repetitive pieces in the file through the Figma connector; each one is labelled in the file.',
   colours: [
     { name: 'Morning haze', value: '#F4F1E4 → #F7DDD3 → #E6D8F3', css: 'var(--haze)' },
     { name: 'Ink', value: '#1E2145', css: 'var(--ink)' },
@@ -203,19 +203,15 @@ export const SYSTEM = {
   },
 };
 
-/* The mistakes are from the handoff's "mistakes worth keeping". */
+/* Reflections: Mimi's own text of 16 Nov 2026, tidied by Claude Code.
+   The sentence about checks names only what the working log records (entries 37 and 38, and the checks of each build). */
 export const REFLECTIONS = {
   heading: 'Reflections',
-  mistakesTitle: 'Mistakes',
-  /* Mimi's own two come first: the first in her words, the second drafted from the working log (entry 46) and approved by her, 15 Nov 2026 */
-  mistakes: [
-    'I missed the application deadline, but I finished it anyway.',
-    'My made-up patient, Robin, confused the one person who tested it. Robin is gone; the reader is the patient now.',
-    'Claude named a CDC file for iron that does not exist for 2015–2016.',
-    'Claude first proposed keeping the result fixed while the crowd changed. That is the version I found convoluted.',
+  own: [
+    'Working with an LLM like Claude made me far more productive than I expected, even in a rush. I had to stay organised: write proper handoffs, set up sensible folders and structure the work, so that different chats and agents stayed in sync and didn’t work over each other.',
+    'The LLM took over the boring, repetitive tasks, gave good tips and sometimes had brilliant ideas. It still falls short on writing good copy, on UI design and on thinking outside the box. Claude also ran a code review and an accessibility review, which matter to me, and checked the layout at desktop and phone sizes. We mostly used the Claude Opus and Claude Fable models.',
+    'My original vision was just that: a vision in my head. It had to be scaled down to what was practically possible, but it is what led to the animated flow. I missed the application deadline, but I finished the prototype anyway.',
   ],
-  /* from Mimi's dictation, 15 Nov 2026, tidied by Claude Code */
-  own: 'Working with an LLM like Claude made me far more productive than I expected, even in a rush. But it only works if you stay organised: write proper handoffs and structure the work, so that different chats and agents stay in sync and don’t work over each other. The LLM can take the boring work off you. It can’t replace your own ideas, your creativity or your critical eye.',
   limits:
     'A prototype takes liberties. Of the blood cells, only the red one is modelled. White cells and platelets are not in this version yet (a time call). The iron model is a diagram and not the real molecule, and the cap colours are adapted to the palette. A real version would need consent and secure handling of results, medical-device rules, clinician review of every text, and testing with patients.',
 };
@@ -238,6 +234,13 @@ export const CREDIT = {
       'build',
     ],
     ['Page code, this page, deploy', 'direction and feedback', 'first version', '✓ (since 12 Nov)'],
+    /* from the working log: entry 38 (the review of the 3D package) and the checks run before each push */
+    [
+      'Quality checks and accessibility',
+      'set the requirements',
+      'code and accessibility review of the 3D',
+      'build, code and layout checks before each push',
+    ],
   ],
   note: 'Explanation texts drafted with AI, reviewed by Mimi.',
 };

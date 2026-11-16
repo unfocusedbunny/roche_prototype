@@ -246,11 +246,11 @@ export default function About() {
 
             <section id="reflections">
               <h2>{REFLECTIONS.heading}</h2>
-              <p>
-                <T>{REFLECTIONS.own}</T>
-              </p>
-              <h3>{REFLECTIONS.mistakesTitle}</h3>
-              <List items={REFLECTIONS.mistakes} />
+              {REFLECTIONS.own.map((p) => (
+                <p key={p}>
+                  <T>{p}</T>
+                </p>
+              ))}
               <p>{REFLECTIONS.limits}</p>
             </section>
 
