@@ -536,7 +536,11 @@ function Story({ onNoGL }) {
             <p className="hand">{STEPS[6].prompt}</p>
           </div>
           <div className="step s6b" data-step="6">
-            <p>{STEPS[6].note}</p>
+            <p>
+              {STEPS[6].note[0]}
+              <b>{STEPS[6].note[1]}</b>
+              {STEPS[6].note[2]}
+            </p>
           </div>
         </div>
 
@@ -619,7 +623,11 @@ function PlainPage() {
       <p>
         <b>{STEPS[5].heading}</b> {STEPS[5].body}
       </p>
-      <p>{STEPS[6].note}</p>
+      <p>
+        {STEPS[6].note[0]}
+        <b>{STEPS[6].note[1]}</b>
+        {STEPS[6].note[2]}
+      </p>
       {TUBES.map((t) =>
         t.values.map((v) => (
           <section key={v.key}>

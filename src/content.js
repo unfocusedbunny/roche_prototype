@@ -44,11 +44,16 @@ export const STEPS = {
   },
   5: {
     heading: 'These are example tubes.',
-    body: 'One blood test goes into three tubes. The cap colour tells the lab what each one is for. The numbers here are examples. Slide them to your own, and switch the crowd.',
+    body: 'One blood test goes into three tubes. The cap colour tells the lab which values to test: blood count and sugar, blood fats and iron.',
   },
   6: {
     prompt: 'Pick one',
-    note: 'A real version would let you bring your own report, securely. This one takes no uploads, on purpose. You can slide to your own number, and nothing you do here is collected or stored.',
+    /* [before, bold, after]: the middle part is shown in bold */
+    note: [
+      'A real version would let you bring your own report, securely. This one takes no uploads, on purpose. You can ',
+      'slide to your own number',
+      ', and nothing you do here is collected or stored.',
+    ],
   },
 };
 
