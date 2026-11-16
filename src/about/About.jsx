@@ -174,7 +174,9 @@ export default function About() {
               <List items={WHAT.points} />
               <Cell3D />
               <h3>{PATH.title}</h3>
-              <p>{PATH.text}</p>
+              <p>
+                <T>{PATH.text}</T>
+              </p>
               <figure className="path">
                 <div>
                   {PATH.shots.map((s) => (
@@ -251,7 +253,9 @@ export default function About() {
                   <T>{p}</T>
                 </p>
               ))}
-              <p>{REFLECTIONS.limits}</p>
+              <p>
+                <T>{REFLECTIONS.limits}</T>
+              </p>
             </section>
 
             <section id="credit">

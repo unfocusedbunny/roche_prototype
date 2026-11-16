@@ -14,6 +14,7 @@ export default function Cell3D() {
   const [state, setState] = useState('still'); /* still → loading → on, or failed */
   const canvas = useRef(null),
     overlay = useRef(null),
+    stage = useRef(null),
     api = useRef(null);
 
   /* live: the reader has asked for the 3D, and it is loading or running */
@@ -50,9 +51,15 @@ export default function Cell3D() {
         scene.setScroll(6, { snap: true });
         api.current = scene;
         setState('on');
-        /* the scene needs a frame at the last step before it lets a tube be picked */
+        /* the "Load" button is gone now, so the keyboard's place moves to the cell, where the arrow keys work
+           (unless the reader has already moved on to something else) */
+        if (stage.current && document.activeElement === document.body) {
+          stage.current.focus({ preventScroll: true });
+        }
+        /* the scene needs a frame at the last step before it lets a tube be picked; give up after about ten seconds */
+        let tries = 0;
         const tryPick = () => {
-          if (!gone && !scene.pick(1)) {
+          if (!gone && !scene.pick(1) && ++tries < 600) {
             requestAnimationFrame(tryPick);
           }
         };
@@ -86,10 +93,11 @@ export default function Cell3D() {
   return (
     <figure className="cell3d" id="model">
       <div
+        ref={stage}
         className="stage"
         tabIndex={live ? 0 : -1}
-        role="group"
-        aria-label={CELL.stage}
+        role={live ? 'group' : undefined}
+        aria-label={live ? CELL.stage : undefined}
         onKeyDown={onKeys}
       >
         {!live && (
