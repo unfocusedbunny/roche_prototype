@@ -33,9 +33,16 @@ const FIGMA_EMBED =
 const HEMOGLOBIN = TUBES.flatMap((t) => t.values).find((v) => v.key === 'hemoglobin');
 
 /* Text with its [MIMI: …] gaps shown as yellow notes, so a missing line can't pass for a finished one.
-   Words between two pairs of stars (**like this**) are shown bold. */
+   Words between two pairs of stars (**like this**) are shown bold, and [words](address) become a link. */
 function T({ children }) {
-  return children.split(/(\[MIMI:[^\]]*\]|\*\*[^*]+\*\*)/).map((part, i) => {
+  return children.split(/(\[[^\]]+\]\([^)]+\)|\[MIMI:[^\]]*\]|\*\*[^*]+\*\*)/).map((part, i) => {
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link)
+      return (
+        <a key={i} href={link[2]}>
+          {link[1]}
+        </a>
+      );
     if (part.startsWith('[MIMI:')) return <mark key={i}>{part}</mark>;
     if (part.startsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
     return part;
@@ -167,6 +174,7 @@ export default function About() {
               <List items={WHAT.points} />
               <Cell3D />
               <h3>{PATH.title}</h3>
+              <p>{PATH.text}</p>
               <figure className="path">
                 <div>
                   {PATH.shots.map((s) => (
@@ -180,10 +188,7 @@ export default function About() {
                     />
                   ))}
                 </div>
-                <figcaption>
-                  {PATH.caption}
-                  <span>{PATH.who}</span>
-                </figcaption>
+                <figcaption>{PATH.who}</figcaption>
               </figure>
             </section>
 

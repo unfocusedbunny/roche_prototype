@@ -18,7 +18,7 @@ export const TITLE = {
   name: 'Sangui',
   lines: [
     'A prototype I made for my application to Roche. It shows what I can do with Figma, 3D and AI coding tools.',
-    'Inspired by my own story.',
+    'Inspired by my own story of trying to understand my blood results.',
     'Tools: Figma · React · three.js · Claude',
   ],
   tools: 'Figma · React · three.js · Claude',

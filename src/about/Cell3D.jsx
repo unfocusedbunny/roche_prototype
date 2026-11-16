@@ -84,7 +84,7 @@ export default function Cell3D() {
   }
 
   return (
-    <figure className="cell3d">
+    <figure className="cell3d" id="model">
       <div
         className="stage"
         tabIndex={live ? 0 : -1}

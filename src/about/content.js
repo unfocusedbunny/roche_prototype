@@ -59,10 +59,12 @@ export const WHAT = {
     file: 'tubes.png',
     alt: 'Three blood tubes with yellow, purple and rust red caps under the handwritten words “Pick one”.',
   },
+  /* Mimi's own text of 16 Nov 2026, with her reasons kept; tidied by Claude Code */
   points: [
-    'Pick a tube: blood fats (yellow cap), blood count and sugar (purple) or iron (rust red), with medically accurate cap colours. The camera dives in and lands on a 3D model of what the result measures.',
-    'Each result is explained in plain words and shown against an example range and against a crowd from a US health survey. You can slide to any number and switch the crowd.',
-    'Example numbers only. Nothing is uploaded, stored or sent to an AI model.',
+    'Pick a vial: blood fats (yellow cap), blood count and sugar (purple) or iron (rust red), with medically accurate cap colours. We started with vials that belonged to three different example patients. To keep the next steps simple, we made the user the patient instead.',
+    'Once a vial is picked, the camera dives in and lands on a [3D model](#model) you can turn, with labels that tell you more. It is a stylised version of what the result measures. I thought this was a fun way to engage the user.',
+    'Each result is explained in plain words and shown against an example range and against a crowd from a [US health survey](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2015). You can slide to any number and switch the crowd. Seeing data this way has always been crucial for understanding what a result actually means for me.',
+    'The beauty of entering your own numbers is that nothing has to be uploaded, stored or sent to an AI model. A real version might offer a way to upload a whole blood test result.',
   ],
 };
 
@@ -81,7 +83,8 @@ export const CELL = {
 
 /* How the 3D cell developed: Mimi's screenshots of early versions from the 3D chat (cropped by Claude Code), shown under the 3D card.
    The first picture is tall and sits at the left; the other two are stacked beside it.
-   The caption is Mimi's own wording (16 Nov 2026); its last sentence is from the working log, entry 18. */
+   `text` sits under the heading and is Mimi's own wording (16 Nov 2026); its last sentence is from the working log, entry 18.
+   `who` stays under the pictures. */
 export const PATH = {
   title: 'How the 3D developed',
   shots: [
@@ -104,8 +107,7 @@ export const PATH = {
       alt: 'An early 3D version titled “Your blood”: a salmon red blood cell, a turquoise white cell and three yellow platelets in flat shading with pale outlines, on dark blue.',
     },
   ],
-  caption:
-    'I had the look in mind but not its name, so Claude drew three style options. I picked the faceted solid, and asked for it to be cartoony so that it feels friendly. Of the cell versions that followed, I only liked the one with all three cell types together, so we went with it. The prototype later kept one of them: the red blood cell above.',
+  text: 'I had the look in mind but not its name, so Claude drew three style options. I picked the faceted solid, and asked for it to be cartoony so that it feels friendly. Of the cell versions that followed, I only liked the one with all three cell types together, so we went with it. The prototype later kept one of them: the red blood cell above.',
   who: 'Concept and art direction: Mimi · Technique and code: Claude in chat',
 };
 

@@ -408,10 +408,6 @@ section p.by {
   line-height: 1.45;
   color: var(--muted);
 }
-.path figcaption span {
-  display: block;
-  margin-top: 0.3rem;
-}
 /* a moment's pictures: one row, all the same height (each picture's share of the width is its own width-to-height ratio) */
 .shots {
   margin-top: 1.4rem;
