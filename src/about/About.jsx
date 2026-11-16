@@ -32,11 +32,14 @@ const FIGMA_EMBED =
 /* the value the chart on this page shows */
 const HEMOGLOBIN = TUBES.flatMap((t) => t.values).find((v) => v.key === 'hemoglobin');
 
-/* Text with its [MIMI: …] gaps shown as yellow notes, so a missing line can't pass for a finished one */
+/* Text with its [MIMI: …] gaps shown as yellow notes, so a missing line can't pass for a finished one.
+   Words between two pairs of stars (**like this**) are shown bold. */
 function T({ children }) {
-  return children
-    .split(/(\[MIMI:[^\]]*\])/)
-    .map((part, i) => (part.startsWith('[MIMI:') ? <mark key={i}>{part}</mark> : part));
+  return children.split(/(\[MIMI:[^\]]*\]|\*\*[^*]+\*\*)/).map((part, i) => {
+    if (part.startsWith('[MIMI:')) return <mark key={i}>{part}</mark>;
+    if (part.startsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    return part;
+  });
 }
 
 const List = ({ items }) => (

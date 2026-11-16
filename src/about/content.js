@@ -21,11 +21,11 @@ export const TOP = {
   title: 'How Sangui was made',
   /* the lead starts with the name, which links to the prototype */
   name: 'Sangui',
-  lead: ' is a scroll-driven prototype that explains a blood test in plain language. I started it on 10 Nov 2026 for the Generative AI Designer internship at Roche.',
+  lead: ' is a scroll-driven prototype that explains a blood test visually and in plain language. Seeing where I land on a chart helps me understand and remember my result better than ranges of numbers in a table. I started it on 10 Nov 2026 for the Generative AI Designer internship at Roche.',
   /* the row of facts under the title. "Role" is the wording of the project card on Mimi's portfolio. */
   facts: [
     ['Role', ['Idea, story and design', 'Built by directing AI coding tools']],
-    ['Timeline', ['10 Nov 2026, in progress']],
+    ['Timeline', ['10–15 Nov 2026']],
     ['Tools', ['Figma', 'React · three.js', 'Claude · Claude Code']],
     ['Made for', ['Generative AI Designer internship, Roche']],
   ],
@@ -49,7 +49,7 @@ export const WHY = {
   heading: 'Context',
   /* Mimi's story, dictated on 15 Nov 2026 and shortened by Claude Code. No values of her own appear. */
   story:
-    'I have chronic anemia, so my blood gets checked regularly. I’m usually told a number on the phone between appointments, and it means nothing to me: I don’t know what’s normal or where I stand. Pasting my results into an AI would explain them, but that means handing over my health data. So I built what I wanted: pick a value and see where it sits, against an example range and against people of your sex and age, with nothing stored.',
+    'I have chronic anemia, so my blood gets checked regularly. I’m usually told a number on the phone between appointments, and it means nothing to me: I don’t know what’s normal or where I stand. Pasting my results into an AI would explain them, but that means handing over my health data. So I built what I wanted: **pick a value and see where it sits**, against an example range and against people of your sex and age, with nothing stored.',
 };
 
 export const WHAT = {
