@@ -123,9 +123,9 @@ export const MOMENTS = {
       key: 'slider',
       title: 'The slider',
       text: [
-        'The first built version let the reader switch the crowd while the result stayed fixed, as Claude had proposed. I found it convoluted that one patient could be any age or sex with the same result. My fix: make the number move too, with a slider limited to where the data has support.',
-        /* from Mimi's dictation, 15 Nov 2026 */
-        'A small fun fact: the prototype used to have a made-up patient called Robin. The name works for any gender, and it was once my dog’s. After a test we dropped example patients altogether. Now the reader is the patient, and the line on the chart says “you”.',
+        'The first built version let the reader switch the crowd while the result stayed fixed, as Claude had proposed. I found it convoluted that one patient could be any age or sex with the same result. More importantly, I couldn’t check my own result, which was the original use case. So we added a slider, and made the “you” line on the chart draggable too. Both go only as far as the data we used.',
+        /* both paragraphs: Mimi's own text of 16 Nov 2026, tidied by Claude Code */
+        'Fun fact: the prototype used to have a made-up patient called Robin. The name works for any gender, and it was once my dog’s. Once the slider let people set their own value, we dropped example patients altogether. Now the reader is the patient, and the line on the chart says “you”.',
       ],
       who: 'Slider idea: Mimi · Prototype: Claude in chat · Build: Claude Code',
       chart: true,

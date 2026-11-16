@@ -438,10 +438,13 @@ section p.by {
   color: var(--ink);
   font-family: var(--sans);
 }
+/* the invitation to try the chart: centred and bold, so it is not missed */
 .sangui figcaption {
-  font-family: var(--mono);
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
+  font-family: var(--sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
 }
 .sangui .valname {
   font-family: var(--sans);

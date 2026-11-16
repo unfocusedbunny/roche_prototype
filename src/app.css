@@ -207,6 +207,10 @@ button {
   max-width: 44ch;
   margin-bottom: 0.6rem;
 }
+/* the second line ("Inspired by…") gets more room, so it stays on one line where the screen is wide enough */
+.title-text p:nth-of-type(2) {
+  max-width: 72ch;
+}
 .title-text .sg-scroll {
   position: absolute;
   left: 50%;

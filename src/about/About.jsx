@@ -205,7 +205,6 @@ export default function About() {
                       <T>{p}</T>
                     </p>
                   ))}
-                  <p className="by">{m.who}</p>
                   {m.chart && <Chart note={m.chartNote} />}
                   {m.shots && (
                     <figure className="shots">
@@ -225,6 +224,7 @@ export default function About() {
                       <figcaption>{m.caption}</figcaption>
                     </figure>
                   )}
+                  <p className="by">{m.who}</p>
                 </article>
               ))}
             </section>
