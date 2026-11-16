@@ -555,6 +555,10 @@ button {
     bottom: 8%;
     text-align: center;
   }
+  /* the note under "Pick one": a little larger where there is room for it */
+  .s6b p {
+    font-size: calc(var(--note) * 1.2);
+  }
 }
 
 /* ---- low screens (a laptop zoomed to 200%, say): text may sit over the 3D, so it gets a backing to stay readable ---- */
