@@ -81,7 +81,7 @@ export const CELL = {
 
 /* How the 3D cell developed: Mimi's screenshots of early versions from the 3D chat (cropped by Claude Code), shown under the 3D card.
    The first picture is tall and sits at the left; the other two are stacked beside it.
-   The caption is from Mimi's dictation (15 Nov 2026), tidied by Claude Code; its last sentence is from the working log, entry 18. */
+   The caption is Mimi's own wording (16 Nov 2026); its last sentence is from the working log, entry 18. */
 export const PATH = {
   title: 'How the 3D developed',
   shots: [
@@ -105,7 +105,7 @@ export const PATH = {
     },
   ],
   caption:
-    'I had the look in mind but not its name, so Claude drew three style options. I picked the faceted solid, and asked for it to be cartoony so it feels friendly. Of the cell versions that followed, I only liked the one with all three cell types together. It looked cute, and we went with it. The prototype later kept one of them: the red blood cell above.',
+    'I had the look in mind but not its name, so Claude drew three style options. I picked the faceted solid, and asked for it to be cartoony so that it feels friendly. Of the cell versions that followed, I only liked the one with all three cell types together, so we went with it. The prototype later kept one of them: the red blood cell above.',
   who: 'Concept and art direction: Mimi · Technique and code: Claude in chat',
 };
 
