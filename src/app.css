@@ -582,16 +582,17 @@ button {
   .s1 {
     top: 22%;
   }
+  /* the last step: "Pick one" and its note share a column to the right of the tubes (App.jsx keeps the tubes left of centre here) */
   .s6a {
-    top: 16%;
-  }
-  .s6a p {
-    margin: 0 auto;
+    left: 66%;
+    right: 3%;
+    top: 26%;
+    text-align: left;
   }
   .s6b {
-    left: 74%;
+    left: 66%;
     right: 3%;
-    top: 30%;
+    top: calc(26% + var(--hand-size) * 1.9);
     bottom: auto;
     text-align: left;
   }

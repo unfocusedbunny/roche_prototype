@@ -47,7 +47,12 @@ const WIDE = {
 };
 const PLACING = {
   wide: WIDE,
-  low: { ...WIDE, model: { x: 0.27, y: 0.44, rw: 0.15, rh: 0.24 } },
+  /* low screens (a laptop at 200% zoom): on the last step the tubes stay left of centre, so "Pick one" and its note fit beside them */
+  low: {
+    ...WIDE,
+    model: { x: 0.27, y: 0.44, rw: 0.15, rh: 0.24 },
+    tubeX: [...LAYOUTS.wide.tubeX.slice(0, 4), [0.2, 0.37, 0.54]],
+  },
 };
 
 /* On a phone, as on wide screens, the tubes step to the left while the results sheet arrives beside them (steps 3 and 4) */
