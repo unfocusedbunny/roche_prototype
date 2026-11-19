@@ -204,7 +204,7 @@ export const TUBES = [
 
 /* The words on the 3D, drawn by src/sangui/sangui-labels.js.
      tubes   the caption under each tube, left to right. They are the tubes' names above, so each name is written once.
-     models  for each model: its figure number, its caption, the handwritten name along its edge, and its three notes
+     models  for each model: its figure number, its caption, the handwritten name along its edge, and its notes
              as [title, text]. The notes are in the order of the scene's markers (MARKERS in sangui-scene.js).
      note    what a marker dot is called for a screen reader; {title} is the note's title. */
 export const LABELS = {
@@ -218,6 +218,11 @@ export const LABELS = {
         ['Dented on both sides', 'More surface for oxygen to pass through.'],
         ['A bendy edge', 'It folds to squeeze through vessels narrower than itself.'],
         ['No nucleus', 'It gave that up to make room for hemoglobin.'],
+        /* the fourth shows only with HbA1c, on one of the hexagons. Drafted with AI, picked by Mimi (19 Nov 2026). */
+        [
+          'Sugar',
+          'Glucose that has stuck to the hemoglobin. The more sugar in your blood, the more of it sticks.',
+        ],
       ],
     },
     ldl: {

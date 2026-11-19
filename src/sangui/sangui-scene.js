@@ -109,6 +109,8 @@ const MARKERS = {
     { a: [0, 0.115, 0], n: [0, 1, 0] },
     { a: [-0.78, 0.25, -0.45], n: [-0.47, 1, -0.27] },
     { a: [0.42, 0.29, 0.27], n: [0.25, 1, 0.16] },
+    /* the fourth sits on one of the sugar hexagons and shows only with HbA1c; its place is filled in where the sugar is built */
+    { a: [0, 0.2, 0], n: [0, 1, 0], sugar: true },
   ],
   iron: [
     { a: [0.14, 0.19, 0.14], n: [0.5, 0.7, 0.5] },
@@ -756,7 +758,7 @@ export function createSanguiScene(opts) {
       [0.5, 2.6, -1],
       [0.75, 4.2, -1],
       [0.3, 0.8, -1],
-    ].forEach((b) => {
+    ].forEach((b, bi) => {
       const r = b[0],
         th = b[1],
         sd = b[2],
@@ -768,6 +770,11 @@ export function createSanguiScene(opts) {
       g.position.set(r * Math.cos(th), sd * y, r * Math.sin(th)).addScaledVector(n, 0.012);
       g.quaternion.setFromUnitVectors(up, n);
       g.scale.setScalar(0.0001);
+      if (bi === 1) {
+        const at = g.position.clone().addScaledVector(n, 0.02);
+        MARKERS.cell[3].a = [at.x, at.y, at.z];
+        MARKERS.cell[3].n = [n.x, n.y, n.z];
+      }
     });
   }
   /* LDL particle: a slightly lumpy ball, with one ribbon round it for the single long protein that belts the real particle */
@@ -1722,7 +1729,9 @@ export function createSanguiScene(opts) {
         v2.set(mk.a[0], mk.a[1], mk.a[2]);
         host.localToWorld(v2);
         v.set(mk.n[0], mk.n[1], mk.n[2]).normalize().transformDirection(host.matrixWorld);
-        out.visible = v.dot(v2.subVectors(cam.position, v2)) > 0.05;
+        /* shown: the thing the marker points at is there at all (the sugar only with HbA1c) */
+        out.shown = !mk.sugar || SUG.w > 0.6;
+        out.visible = out.shown && v.dot(v2.subVectors(cam.position, v2)) > 0.05;
         return out;
       });
     } else {

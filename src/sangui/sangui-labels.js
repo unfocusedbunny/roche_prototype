@@ -109,7 +109,7 @@ export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
   const note = el('div', 'sg-note', null, '<b></b><p></p>');
   note.id = id + 'n';
   note.setAttribute('aria-live', 'polite');
-  const dots = [0, 1, 2].map((i) => {
+  const dots = [0, 1, 2, 3].map((i) => {
     const b = el('button', 'sg-dot', null, '<span></span>');
     b.type = 'button';
     b.setAttribute('aria-expanded', 'false');
@@ -132,9 +132,10 @@ export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
     cur = -1,
     edge = showEdgeText,
     autoTimer = 0,
+    sugarShown = false,
     marks = [];
   const TH = [
-    75, 62, 85,
+    75, 62, 85, 70,
   ]; /* where each note sits, as an angle from the model's centre (90 is straight down) */
 
   function open(i) {
@@ -184,8 +185,9 @@ export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
         cap.children[1].textContent = t.caption;
         tp.textContent = t.edge;
         et.style.fontSize = EDGE_SIZE[key] + 'px';
-        dots.forEach((b, i) =>
-          b.setAttribute('aria-label', text.note.replace('{title}', t.notes[i][0])),
+        dots.forEach(
+          (b, i) =>
+            t.notes[i] && b.setAttribute('aria-label', text.note.replace('{title}', t.notes[i][0])),
         );
       }
     }
@@ -242,6 +244,19 @@ export function createSanguiLabels({ root, scene, text, showEdgeText = true }) {
     cap.classList.toggle('sg-small', small);
     cap.style.left = (small ? 16 : cl(m.cx - m.r, 16, D.w - 220)).toFixed(1) + 'px';
     cap.style.top = cl(low + (small ? 14 : 40), 0, D.h - 40).toFixed(1) + 'px';
+    /* a model with fewer notes than there are dots leaves the spare dots hidden */
+    dots.slice(m.markers.length).forEach((b) => {
+      b.style.opacity = 0;
+      b.style.visibility = 'hidden';
+      b.tabIndex = -1;
+    });
+    /* the sugar's note opens by itself when the sugar arrives (the switch to HbA1c), so the hexagons are explained at once */
+    const sugarMark = m.markers[3],
+      sugarNow = !!(sugarMark && sugarMark.shown);
+    if (sugarNow && !sugarShown && sugarMark.visible && cur !== 3) {
+      open(3);
+    }
+    sugarShown = sugarNow && (sugarShown || sugarMark.visible);
     m.markers.forEach((mk, i) => {
       const b = dots[i];
       b.style.left = mk.x.toFixed(1) + 'px';

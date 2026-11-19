@@ -15,12 +15,12 @@ test('there is one tube of text for each tube in the scene, each with a name', (
   assert.ok(LABELS.tubes.every((name) => typeof name === 'string' && name.length > 0));
 });
 
-test('every 3D model has a caption, an edge name and three notes', () => {
+test('every 3D model has a caption, an edge name and three notes (the cell has a fourth, for the sugar)', () => {
   for (const { model } of SCENE_TUBES) {
     const text = LABELS.models[model];
     assert.ok(text, `no words for the model "${model}"`);
     assert.ok(text.fig && text.caption && text.edge, model);
-    assert.equal(text.notes.length, 3, model);
+    assert.equal(text.notes.length, model === 'cell' ? 4 : 3, model);
     assert.ok(
       text.notes.every((n) => n.length === 2 && n[0] && n[1]),
       model,
