@@ -72,7 +72,9 @@ function phonePlacing(stage) {
     H = stage.clientHeight,
     phone = W <= 640;
   const TOP_ROW = phone ? 56 : H * 0.12, // where the wordmark and the links end
-    TEXT_BOTTOM = 108, // the step text ends this far above the bottom edge
+    /* the step text ends this far above the bottom edge: 108 px for the two rows under it, plus the most the browser's
+       bars can cover (the stage is as tall as the screen without them; .svh is as tall as the screen with them) */
+    TEXT_BOTTOM = 108 + Math.max(0, H - (stage.querySelector('.svh')?.offsetHeight ?? H)),
     PICK = 48, // "Pick one", above the tubes on the last step
     CAPTIONS = 64, // the tubes' names under them, up to three lines
     GAP = 8;
@@ -160,8 +162,8 @@ function Story({ onNoGL }) {
   const [paused, setPaused] = useState(false);
   const [step, setStep] = useState(0);
   const [privacy, setPrivacy] = useState(false);
-  /* phones: the result card has been scrolled and has grown to full height */
-  const [sheetUp, setSheetUp] = useState(false);
+  /* phones: the result card is down, where it starts, and has not been pulled up yet */
+  const [sheetDown, setSheetDown] = useState(true);
   const [who, setWho] = useState(
     CHART.startCrowd,
   ); /* the crowd picked on a chart; it stays when you move to another value */
@@ -398,13 +400,12 @@ function Story({ onNoGL }) {
   const t = TUBES[tube],
     showResults = textOn && mode !== 'returning';
 
-  /* On a phone the result is a card under the model, and it scrolls like any other box. Once the reader has scrolled it a
-     little it grows up over the model, so the chart gets the whole screen; back at its top it shrinks again and the model
-     can be turned. (Only the phone rules in app.css use the class.) Each time a result opens, it starts at its top. */
+  /* On a phone the result is a card under the model that is pulled up as one piece (see .results in app.css). While it
+     is down, at the very start of its travel, the model above it can be turned; once it has moved, a drag anywhere
+     moves the card. Each time a result opens, the card starts down. */
   useEffect(() => {
     const el = results.current;
-    const onScroll = () =>
-      setSheetUp((up) => (el.scrollTop > 72 ? true : el.scrollTop < 8 ? false : up));
+    const onScroll = () => setSheetDown(el.scrollTop < 4);
     el.addEventListener('scroll', onScroll, { passive: true });
     return () => el.removeEventListener('scroll', onScroll);
   }, []);
@@ -458,9 +459,15 @@ function Story({ onNoGL }) {
     <main className="track">
       <div
         ref={stage}
-        className={'stage' + (REDUCED ? ' rm' : '') + (mode !== 'scroll' ? ' dived' : '')}
+        className={
+          'stage' +
+          (REDUCED ? ' rm' : '') +
+          (mode !== 'scroll' ? ' dived' : '') +
+          (sheetDown ? ' sheet-down' : '')
+        }
       >
         <style>{SCROLL_BUTTON_CSS}</style>
+        <div className="svh" aria-hidden="true" />
 
         <div className="controls">
           {mode === 'scroll' && step < 6 && (
@@ -551,36 +558,38 @@ function Story({ onNoGL }) {
 
         <section
           ref={results}
-          className={'results' + (showResults ? ' on' : '') + (sheetUp ? ' up' : '')}
+          className={'results' + (showResults ? ' on' : '')}
           aria-label={t.owner}
           tabIndex={showResults ? 0 : -1}
           inert={!showResults}
         >
-          <p className="mono">{t.owner}</p>
-          {t.values.length > 1 && (
-            <div className="switch" role="group" aria-label={RESULTS.values}>
-              {t.values.map((v, i) => (
-                <button
-                  key={v.key}
-                  className="pill"
-                  aria-pressed={i === valueIdx}
-                  onClick={() => setValueIdx(i)}
-                >
-                  {v.name}
-                </button>
-              ))}
-            </div>
-          )}
-          <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
-          {/* where to go next: the case study first, then the CV and the Figma file */}
-          <p className="next">
-            <a href="./how-it-was-made/">
-              {LINKS.made} <span aria-hidden="true">→</span>
-            </a>
-            <span className="more">
-              <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
-            </span>
-          </p>
+          <div className="sheet">
+            <p className="mono">{t.owner}</p>
+            {t.values.length > 1 && (
+              <div className="switch" role="group" aria-label={RESULTS.values}>
+                {t.values.map((v, i) => (
+                  <button
+                    key={v.key}
+                    className="pill"
+                    aria-pressed={i === valueIdx}
+                    onClick={() => setValueIdx(i)}
+                  >
+                    {v.name}
+                  </button>
+                ))}
+              </div>
+            )}
+            <Value v={t.values[valueIdx]} who={who} setWho={setWho} />
+            {/* where to go next: the case study first, then the CV and the Figma file */}
+            <p className="next">
+              <a href="./how-it-was-made/">
+                {LINKS.made} <span aria-hidden="true">→</span>
+              </a>
+              <span className="more">
+                <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
+              </span>
+            </p>
+          </div>
         </section>
         {/* said aloud when a result opens or the value is switched, so a screen reader user knows what is now on screen */}
         <p className="sr-only" role="status">

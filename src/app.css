@@ -93,18 +93,42 @@ button {
   outline-offset: 2px;
 }
 
+/* Phone browsers hide their bars while you scroll, and the screen gets taller. The stage is as tall as the screen at
+   its tallest (lvh), so it always fills it and never has to be resized; a strip of the page used to show under it.
+   While the bars are showing they cover the stage's bottom edge, so whatever sits at that edge is lifted clear:
+     --bar      how much the bars cover right now (0 on a desktop, and on a phone once they are hidden)
+     --bar-max  how much they cover at most */
 .track {
   height: 700vh;
-  height: 700svh;
+  height: 700lvh;
 }
 .stage {
   position: sticky;
   top: 0;
   height: 100vh;
-  height: 100svh;
+  height: 100lvh;
   overflow: hidden;
   background: var(--haze);
   --t: 1;
+  --bar: 0px;
+  --bar-max: 0px;
+}
+@supports (height: 100dvh) {
+  .stage {
+    --bar: calc(100lvh - 100dvh);
+    --bar-max: calc(100lvh - 100svh);
+  }
+}
+/* nothing to see: App.jsx measures it to learn how tall the screen is with the bars showing */
+.svh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* ---- the 3D ---- */
@@ -326,7 +350,7 @@ button {
   left: 56%;
   right: 3%;
   top: 11.5%;
-  bottom: 84px;
+  bottom: calc(84px + var(--bar));
   z-index: 3;
   overflow-y: auto;
   padding: 18px 12px 28px 4px;
@@ -405,7 +429,7 @@ button {
 .controls {
   position: absolute;
   right: 20px;
-  bottom: 18px;
+  bottom: calc(18px + var(--bar));
   z-index: 7;
   display: flex;
   flex-wrap: wrap;
@@ -471,7 +495,7 @@ button {
 .demo {
   position: absolute;
   left: 50%;
-  bottom: 20px;
+  bottom: calc(20px + var(--bar));
   transform: translateX(-50%);
   width: min(44rem, 100% - 640px);
   z-index: 6;
@@ -495,7 +519,7 @@ button {
 .privacy {
   position: absolute;
   left: 3%;
-  bottom: 2.5%;
+  bottom: calc(2.5% + var(--bar));
   z-index: 7;
   max-width: min(34ch, 60vw);
 }
@@ -622,50 +646,57 @@ button {
     right: 16px;
     width: auto;
     top: auto;
-    bottom: 108px;
+    /* the text and the 3D stay where they are when the browser's bars come and go; only the two rows under them move */
+    bottom: calc(108px + var(--bar-max));
     text-align: left;
   }
   .controls {
     right: 12px;
-    bottom: 12px;
+    bottom: calc(12px + var(--bar));
   }
   .privacy {
     left: 16px;
-    bottom: 58px;
+    bottom: calc(58px + var(--bar));
   }
   /* the title page's text sits in the room above the V, the privacy note and the buttons */
   .title {
-    padding: 64px 24px 170px;
+    padding: 64px 24px calc(170px + var(--bar-max));
   }
   /* the V stays in the middle, above the privacy note */
   .title-text .sg-scroll {
-    bottom: 108px;
+    bottom: calc(108px + var(--bar-max));
   }
-  /* A result: the model on top and, under its caption and note, a card with the text and the chart. The card scrolls
-     like any other box. Once it has been scrolled a little it grows up to the top row (.up, set in App.jsx), so the chart
-     gets the whole screen; back at its top it shrinks again and the model can be turned. --sheet-top and --sheet-gap
-     come from phonePlacing() in App.jsx. */
+  /* A result: the model on top and, under its caption and note, a card with the text and the chart. The card is one
+     piece: pull it up and the whole card moves, over the model and on, like a sheet of paper. Its text never scrolls
+     inside it. For that the scrolling box runs from the top row to the buttons and is see-through, and the card inside
+     it starts --sheet-gap further down (both numbers come from phonePlacing() in App.jsx). */
   .results {
-    left: 12px;
-    right: 12px;
-    top: calc(var(--sheet-top, 56px) + var(--sheet-gap, 300px));
-    bottom: 64px;
+    left: 0;
+    right: 0;
+    top: var(--sheet-top, 56px);
+    bottom: calc(64px + var(--bar));
+    padding: 0 12px 16px;
+    overscroll-behavior: contain;
+    -webkit-mask-image: linear-gradient(
+      transparent 0,
+      #000 12px,
+      #000 calc(100% - 28px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(transparent 0, #000 12px, #000 calc(100% - 28px), transparent 100%);
+  }
+  .results .sheet {
+    margin-top: var(--sheet-gap, 300px);
     padding: 14px 12px 24px;
     border-radius: 14px;
     /* solid, so the model does not show through once the card is over it */
     background: var(--cream);
-    transition:
-      top 0.3s ease,
-      opacity 0.35s;
-    /* only the bottom edge fades; the top is the card's own edge */
-    -webkit-mask-image: linear-gradient(#000 calc(100% - 28px), transparent 100%);
-    mask-image: linear-gradient(#000 calc(100% - 28px), transparent 100%);
   }
-  .results.up {
-    top: var(--sheet-top, 56px);
-  }
-  .rm .results {
-    transition: opacity 0.35s;
+  /* While the card is down, the model above it can still be turned and its dots tapped: its grab area sits over the
+     see-through part of the scrolling box. Once the card has moved (App.jsx drops the class) the box is on top again,
+     so the card covers the model and a drag anywhere moves the card. */
+  .sheet-down .overlay [data-sangui-grab='model'] {
+    z-index: 4;
   }
   /* while a result is open the card needs the room; its last line says the same as the privacy note */
   .dived .privacy {
