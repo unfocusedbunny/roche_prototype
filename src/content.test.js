@@ -3,6 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { TUBES, LABELS, CHART } from './content.js';
+import * as en from './content.en.js';
+import * as de from './content.de.js';
 import { TUBES as SCENE_TUBES } from './sangui/sangui-scene.js';
 
 const crowds = JSON.parse(readFileSync(new URL('./data/crowds.json', import.meta.url), 'utf8'));
@@ -61,4 +63,26 @@ test('a chart whose text follows the number has a text for below, in and above',
       assert.equal(text[zone]?.length, 2, `${v.key}: ${zone}`);
     }
   }
+});
+
+/* The German text has to have every piece the English has: the same entries, lists of the same length, the same
+   {…} gaps in each sentence, and the very same numbers and settings. */
+const gaps = (text) => (text.match(/\{\w+\}/g) || []).sort().join(' ');
+function sameShape(a, b, where) {
+  assert.equal(typeof b, typeof a, where);
+  if (typeof a === 'string') {
+    assert.equal(b.length > 0, a.length > 0, `${where}: one language has no text here`);
+    assert.equal(gaps(b), gaps(a), `${where}: the {…} gaps differ`);
+  } else if (a && typeof a === 'object') {
+    assert.ok(b, where);
+    assert.equal(Array.isArray(b), Array.isArray(a), where);
+    assert.deepEqual(Object.keys(b).sort(), Object.keys(a).sort(), `${where}: different entries`);
+    for (const key of Object.keys(a)) sameShape(a[key], b[key], `${where}.${key}`);
+  } else {
+    assert.equal(b, a, `${where}: settings must be the same in both languages`);
+  }
+}
+test('the German text has the same shape as the English text', () => {
+  assert.deepEqual(Object.keys(de).sort(), Object.keys(en).sort());
+  for (const name of Object.keys(en)) sameShape(en[name], de[name], name);
 });

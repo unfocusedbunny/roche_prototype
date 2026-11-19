@@ -20,8 +20,10 @@ import {
   PRIVACY,
   PICTURE,
   PLAIN,
+  LANGUAGE,
   SHOW_GAPS,
 } from './content.js';
+import { langHref } from './lang.js';
 import { FIGMA_URL, CV_FILE } from './links.js';
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -618,6 +620,17 @@ function Story({ onNoGL }) {
               <circle cx="15.400" cy="12.300" r="3.200" />
               <path d="M8.800 16.300h2.800v2.800a3.200 3.200 0 1 1-2.800-2.800z" />
             </svg>
+          </a>
+          {/* the same page in the other language; the two letters and the label are in that language */}
+          <a
+            className="icon lang"
+            href={langHref(LANGUAGE.other)}
+            lang={LANGUAGE.other}
+            hrefLang={LANGUAGE.other}
+            aria-label={LANGUAGE.tip}
+            data-tip={LANGUAGE.tip}
+          >
+            {LANGUAGE.label}
           </a>
         </nav>
 

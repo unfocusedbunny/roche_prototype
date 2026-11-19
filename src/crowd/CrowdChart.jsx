@@ -23,6 +23,7 @@ import {
   mix,
 } from './logic.js';
 import { CHART, RESULTS, SHOW_GAPS } from '../content.js';
+import { num } from '../lang.js';
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const FULL = 784,
@@ -179,12 +180,12 @@ function Hill({ v, who, value, onValue, width, glideKey, label }) {
       />
       {ticks.map((t) => (
         <text key={t} className="tick" x={x(t)} y={base + 26} textAnchor="middle">
-          {t}
+          {num(t)}
         </text>
       ))}
       {edges.map(([at, text]) => (
         <text key={text} className="edge" x={x(at)} y={base + 26} textAnchor="middle">
-          {text}
+          {num(text)}
         </text>
       ))}
       {range && (
@@ -202,7 +203,7 @@ function Hill({ v, who, value, onValue, width, glideKey, label }) {
       </text>
       {past > 0 && (
         <text className="label" x={width} y={base - 46} textAnchor="end">
-          {fill(past === 1 ? CHART.pastOne : CHART.past, { n: past, edge: to })}
+          {fill(past === 1 ? CHART.pastOne : CHART.past, { n: past, edge: num(to) })}
         </text>
       )}
       <text className="name" x={clamp(lineX, 20, width - 20)} y="10" textAnchor="middle">
@@ -227,7 +228,7 @@ export function CrowdNote({ v, who, className }) {
   const people = crowds.values[v.chart.data].groups[who.sex + who.age].n;
   return (
     <p className={className}>
-      {CHART.demo} {fill(CHART.source.crowd, { people, sex: CHART.groups[who.sex] })}
+      {CHART.demo} {fill(CHART.source.crowd, { people, sex: CHART.groupsCount[who.sex] })}
     </p>
   );
 }
@@ -276,7 +277,7 @@ export default function CrowdChart({ v, who, setWho }) {
   return (
     <div className="crowd">
       <p className="value">
-        <span className="big">{number}</span> <span className="mono unit">{v.unit}</span>
+        <span className="big">{num(number)}</span> <span className="mono unit">{v.unit}</span>
       </p>
       {/* role="status": said aloud after a change, so a screen reader hears what the slider or the buttons did */}
       <p className="reading" role="status">
@@ -298,10 +299,13 @@ export default function CrowdChart({ v, who, setWho }) {
                 fill(CHART.picture, {
                   name: v.name,
                   group: people,
-                  value: number,
+                  value: num(number),
                   unit: v.chart.unitName,
                   n,
-                }) + (range ? ' ' + fill(CHART.pictureRange, { lo: range[0], hi: range[1] }) : '')
+                }) +
+                (range
+                  ? ' ' + fill(CHART.pictureRange, { lo: num(range[0]), hi: num(range[1]) })
+                  : '')
               }
             />
             {/* as wide as the axis plus one knob, so the knob's centre sits exactly under the line */}
@@ -313,7 +317,7 @@ export default function CrowdChart({ v, who, setWho }) {
               value={value}
               onChange={(e) => pick(+e.target.value)}
               aria-label={fill(CHART.slider, { name: v.name })}
-              aria-valuetext={number + ' ' + v.chart.unitName}
+              aria-valuetext={num(number) + ' ' + v.chart.unitName}
               style={{ width: width - 2 * PAD + KNOB, marginLeft: PAD - KNOB / 2 }}
             />
           </>

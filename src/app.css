@@ -511,6 +511,17 @@ button {
 .links .icon {
   display: block;
 }
+/* the switch to the other language: two chunky letters in an icon's place */
+.links .lang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
 /* up here the hover label opens under the icon */
 .links .icon::after {
   top: calc(100% + 4px);
@@ -632,6 +643,14 @@ button {
   /* the note under "Pick one": a little larger where there is room for it */
   .s6b p {
     font-size: calc(var(--note) * 1.2);
+  }
+  /* the German note is longer: a wider column and the plain size keep it on two lines, clear of the tubes' names */
+  :lang(de) .s6b {
+    left: 5%;
+    right: 5%;
+  }
+  :lang(de) .s6b p {
+    font-size: var(--note);
   }
 }
 
