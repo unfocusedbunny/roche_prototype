@@ -142,6 +142,22 @@ function Value({ v, who, setWho }) {
   );
 }
 
+/* One tube in a single colour: the cap, the glass and the blood. The air between cap and blood shows the page through. */
+function TubeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="6" y="1.5" width="12" height="5" rx="1.8" fill="currentColor" />
+      <path
+        d="M8.4 6.5v11a3.6 3.6 0 0 0 7.2 0v-11"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path d="M8.4 11.5h7.2v6a3.6 3.6 0 0 1-7.2 0z" fill="currentColor" />
+    </svg>
+  );
+}
+
 function Story({ onNoGL }) {
   const stage = useRef(null),
     canvas = useRef(null),
@@ -470,18 +486,50 @@ function Story({ onNoGL }) {
         <div className="svh" aria-hidden="true" />
 
         <div className="controls">
+          {/* icons only: each button keeps its words as its name for screen readers, and shows them in a small label on hover and on keyboard focus */}
           {mode === 'scroll' && step < 6 && (
-            <button className="pill" onClick={skip}>
-              {CONTROLS.skip}
+            <button
+              className="icon"
+              aria-label={CONTROLS.skip}
+              data-tip={CONTROLS.skip}
+              onClick={skip}
+            >
+              <TubeIcon />
             </button>
           )}
           {mode === 'model' && (
-            <button ref={back} className="pill" onClick={() => api.current.scene.back()}>
-              {RESULTS.back}
+            <button
+              ref={back}
+              className="icon"
+              aria-label={RESULTS.back}
+              data-tip={RESULTS.back}
+              onClick={() => api.current.scene.back()}
+            >
+              <TubeIcon />
             </button>
           )}
-          <button className="pill" onClick={() => setPaused(!paused)}>
-            {paused ? CONTROLS.play : CONTROLS.pause}
+          <button
+            className="icon"
+            aria-label={paused ? CONTROLS.play : CONTROLS.pause}
+            data-tip={paused ? CONTROLS.play : CONTROLS.pause}
+            onClick={() => setPaused(!paused)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              {paused ? (
+                <path
+                  d="M8 5.5 19 12 8 18.5Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinejoin="round"
+                />
+              ) : (
+                <path
+                  d="M3.5 5.5a2.5 2.5 0 0 1 2.5-2.5h2a2.5 2.5 0 0 1 2.5 2.5v13a2.5 2.5 0 0 1-2.5 2.5h-2a2.5 2.5 0 0 1-2.5-2.5zm10 0a2.5 2.5 0 0 1 2.5-2.5h2a2.5 2.5 0 0 1 2.5 2.5v13a2.5 2.5 0 0 1-2.5 2.5h-2a2.5 2.5 0 0 1-2.5-2.5z"
+                  fill="currentColor"
+                />
+              )}
+            </svg>
           </button>
         </div>
 
