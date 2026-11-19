@@ -504,18 +504,17 @@ button {
   right: 20px;
   top: 18px;
   z-index: 7;
-  padding: 0 18px;
-  border-radius: 22px;
-  background: rgba(244, 241, 228, 0.9);
-  /* the way to the case study and the CV: larger than the other small print */
-  font-size: 1rem;
-  letter-spacing: 0.02em;
+  /* the way to the case study, the CV and the Figma file: three bare icons, like the two buttons in the bottom corner */
+  display: flex;
+  gap: 4px;
 }
-.links a {
-  display: inline-block;
-  padding: 12px 0;
-  color: var(--ink);
-  text-underline-offset: 0.15em;
+.links .icon {
+  display: block;
+}
+/* up here the hover label opens under the icon */
+.links .icon::after {
+  top: calc(100% + 4px);
+  bottom: auto;
 }
 
 /* the closing line at the end of every result: where to go next */

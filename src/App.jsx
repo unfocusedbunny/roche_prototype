@@ -584,12 +584,41 @@ function Story({ onNoGL }) {
           </button>
         </div>
 
-        <nav className="links mono" aria-label={LINKS.label}>
-          <a href="./how-it-was-made/">
-            <span className="long">{LINKS.about}</span>
-            <span className="short">{LINKS.aboutShort}</span>
-          </a>{' '}
-          · <a href={'./' + CV_FILE}>{LINKS.cv}</a> · <a href={FIGMA_URL}>{LINKS.figma}</a>
+        {/* icons only, like the two buttons below: the words are each link's name and its hover label */}
+        <nav className="links" aria-label={LINKS.label}>
+          <a
+            className="icon"
+            href="./how-it-was-made/"
+            aria-label={LINKS.about}
+            data-tip={LINKS.about}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3.6a1.900 1.900 0 1 1 0 3.800 1.900 1.900 0 0 1 0-3.800zM10.200 11h3.600v7.400h-3.600z"
+                fill="currentColor"
+                fillRule="evenodd"
+              />
+            </svg>
+          </a>
+          <a className="icon" href={'./' + CV_FILE} aria-label={LINKS.cv} data-tip={LINKS.cv}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6.5 2h11A2.500 2.500 0 0 1 20 4.500v15a2.500 2.500 0 0 1-2.500 2.500h-11A2.500 2.500 0 0 1 4 19.500v-15A2.500 2.500 0 0 1 6.500 2zM12 6a2.600 2.600 0 1 0 0 5.200A2.600 2.600 0 0 0 12 6zM7.500 17.500h9c0-2.800-2-4.500-4.500-4.500s-4.500 1.700-4.500 4.500z"
+                fill="currentColor"
+                fillRule="evenodd"
+              />
+            </svg>
+          </a>
+          <a className="icon" href={FIGMA_URL} aria-label={LINKS.figma} data-tip={LINKS.figma}>
+            {/* Figma's mark in one colour, its five shapes a hair apart */}
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M11.6 1.900H8.800a3.200 3.200 0 0 0 0 6.400h2.800z" />
+              <path d="M12.400 1.900h2.800a3.200 3.200 0 0 1 0 6.400h-2.800z" />
+              <path d="M11.600 9.100H8.800a3.200 3.200 0 0 0 0 6.400h2.800z" />
+              <circle cx="15.400" cy="12.300" r="3.200" />
+              <path d="M8.800 16.300h2.800v2.800a3.200 3.200 0 1 1-2.800-2.800z" />
+            </svg>
+          </a>
         </nav>
 
         <header className="head">
