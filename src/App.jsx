@@ -67,7 +67,39 @@ const PHONE_TUBE_X = [
    The text's height changes with the screen's width, so the 3D takes whatever room is left above it.
    The numbers are px and go with the phone rules at the end of app.css. Returns the scene's layout and, for the
    results sheet, how far below the top row the model with its caption and note ends. */
+/* How wide a step's text is at its longest line. A paragraph that runs over several lines is always as wide as the
+   room it is given, so this is measured line by line. */
+function longestLine(block) {
+  let longest = 0;
+  for (const paragraph of block.children) {
+    const range = document.createRange();
+    range.selectNodeContents(paragraph);
+    /* a line with a bold phrase in it comes back in pieces: join the pieces that share a line */
+    const lines = [];
+    for (const piece of range.getClientRects()) {
+      const line = lines.find((l) => Math.abs(l.top - piece.top) < 6);
+      if (line) {
+        line.left = Math.min(line.left, piece.left);
+        line.right = Math.max(line.right, piece.right);
+      } else {
+        lines.push({ top: piece.top, left: piece.left, right: piece.right });
+      }
+    }
+    for (const line of lines) {
+      longest = Math.max(longest, line.right - line.left);
+    }
+  }
+  return longest;
+}
+
 function phonePlacing(stage) {
+  /* each step's column is made as wide as its longest line (see the phone rules in app.css): first let the text run
+     free, then measure, then set the width */
+  const columns = [...stage.querySelectorAll('.s1, .s2, .s3, .s4, .s5, .s6b')];
+  columns.forEach((block) => block.style.removeProperty('--col'));
+  columns.forEach((block) =>
+    block.style.setProperty('--col', Math.ceil(longestLine(block)) + 1 + 'px'),
+  );
   const W = stage.clientWidth,
     H = stage.clientHeight,
     phone = W <= 640;
@@ -78,13 +110,27 @@ function phonePlacing(stage) {
     PICK = 48, // "Pick one", above the tubes on the last step
     CAPTIONS = 64, // the tubes' names under them, up to three lines
     GAP = 8;
+  /* how tall a step's text is, from its first line to its last (the block itself is as tall as the room it sits in) */
   const tallest = (selector) =>
-    Math.max(0, ...[...stage.querySelectorAll(selector)].map((block) => block.offsetHeight));
+    Math.max(
+      0,
+      ...[...stage.querySelectorAll(selector)].map((block) => {
+        const first = block.firstElementChild,
+          last = block.lastElementChild;
+        return first ? last.offsetTop + last.offsetHeight - first.offsetTop : 0;
+      }),
+    );
+  /* Under the 3D, each text gets a room of its own height plus AIR above and below, so that even with the browser's
+     bars showing it does not touch the 3D or the privacy note. With the bars hidden the room is taller and the text
+     sits in its middle. Step 1's room starts under the rack; the room of steps 2 to 6 fits the longest of them. */
+  const AIR = 14;
+  const text1Top = H - TEXT_BOTTOM - tallest('.s1') - 2 * AIR,
+    textTop = H - TEXT_BOTTOM - tallest('.s2, .s3, .s4, .s5, .s6b') - 2 * AIR;
   /* the rack: between the top row and step 1's text */
-  const rackBottom = H - TEXT_BOTTOM - tallest('.s1') - GAP;
-  /* the tubes: under "Pick one", above their captions and the longest text of steps 2 to 6 */
+  const rackBottom = text1Top - GAP;
+  /* the tubes: under "Pick one", above their captions and the text of steps 2 to 6 */
   const tubesTop = TOP_ROW + PICK,
-    tubesBottom = H - TEXT_BOTTOM - tallest('.s2, .s3, .s4, .s5, .s6b') - GAP - CAPTIONS;
+    tubesBottom = textTop - CAPTIONS;
   const tubeH = Math.min(0.34, Math.max(0.16, (tubesBottom - tubesTop) / H)),
     tubeY = (tubesTop + tubesBottom) / 2 / H;
   /* the model: just under the top row, as big as the width allows */
@@ -107,6 +153,9 @@ function phonePlacing(stage) {
       ],
       model: { x: 0.5, y: (modelTop + r) / H, rw: 0.27, rh: 0.13 },
     },
+    /* where the room for the text starts: under the rack for step 1, under the tubes' names for steps 2 to 6 */
+    text1Top,
+    textTop,
     sheetTop: TOP_ROW,
     /* 85 px under the model for its caption and its note */
     sheetGap: modelTop + 2 * r + 85 - TOP_ROW,
@@ -292,6 +341,8 @@ function Story({ onNoGL }) {
       if (el.clientWidth / el.clientHeight < 0.9) {
         const phone = phonePlacing(el);
         scene.setLayout(phone.layout);
+        el.style.setProperty('--text-top', Math.round(phone.textTop) + 'px');
+        el.style.setProperty('--text-top-1', Math.round(phone.text1Top) + 'px');
         el.style.setProperty('--sheet-top', Math.round(phone.sheetTop) + 'px');
         el.style.setProperty('--sheet-gap', Math.round(phone.sheetGap) + 'px');
       } else {
@@ -556,8 +607,9 @@ function Story({ onNoGL }) {
             {TITLE.name}
           </span>
           <div ref={titleText} className="title-text">
+            {/* a "·" stays with the word before it, so a line never starts with one */}
             {TITLE.lines.map((l) => (
-              <p key={l}>{l}</p>
+              <p key={l}>{l.replaceAll(' · ', '\u00A0· ')}</p>
             ))}
             <button
               className={'sg-scroll' + (paused ? ' paused' : '')}
