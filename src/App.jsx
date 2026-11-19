@@ -633,6 +633,8 @@ function Story({ onNoGL }) {
             {LANGUAGE.label}
           </a>
         </nav>
+        {/* on the German page: who translated it and who has not read it yet. It sits under the switch and leaves with the title page. */}
+        {LANGUAGE.code === 'de' && <p className="lang-note">{LANGUAGE.note}</p>}
 
         <header className="head">
           <h1 ref={word} className="word">

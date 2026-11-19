@@ -20,7 +20,7 @@ export const TITLE = {
   lines: [
     'Ein Prototyp für meine Bewerbung bei Roche. Er zeigt, was ich mit Figma, 3D und KI-Coding-Tools umsetzen kann.',
     'Inspiriert von meinem eigenen Versuch, meine Blutwerte zu verstehen.',
-    'Tools: Figma · React · three.js · Claude',
+    'Tools: Figma · React · three.js · Claude Code',
   ],
   tools: en.TITLE.tools,
   scroll: 'Nach unten scrollen',
@@ -302,7 +302,14 @@ export const PICTURE = {
 };
 
 /* The link to the other language, in the top corner. Its words are in that language. */
-export const LANGUAGE = { code: 'de', other: 'en', label: 'EN', tip: 'English version' };
+export const LANGUAGE = {
+  code: 'de',
+  other: 'en',
+  label: 'EN',
+  tip: 'English version',
+  /* shown under the switch on the title page. Translated from Mimi's English sentence: DRAFT. */
+  note: 'Deutsche Fassung mit KI übersetzt und geprüft.',
+};
 
 export const PLAIN = {
   note: 'Dieser Browser kann den 3D-Teil nicht anzeigen, deshalb hier die Geschichte als Text.',

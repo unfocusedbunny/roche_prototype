@@ -511,6 +511,20 @@ button {
 .links .icon {
   display: block;
 }
+/* the note under the switch on the German page: small, on the red title page only (--t is 0 there and 1 on the light pages) */
+.lang-note {
+  position: absolute;
+  right: 26px;
+  top: 64px;
+  z-index: 7;
+  max-width: 19rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  text-align: right;
+  color: var(--cream);
+  opacity: calc(1 - var(--t) * 3);
+  pointer-events: none;
+}
 /* the switch to the other language: two chunky letters in an icon's place */
 .links .lang {
   display: flex;

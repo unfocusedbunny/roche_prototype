@@ -21,9 +21,9 @@ export const TITLE = {
   lines: [
     'A prototype I made for my application to Roche. It shows what I can do with Figma, 3D and AI coding tools.',
     'Inspired by my own story of trying to understand my blood results.',
-    'Tools: Figma · React · three.js · Claude',
+    'Tools: Figma · React · three.js · Claude Code',
   ],
-  tools: 'Figma · React · three.js · Claude',
+  tools: 'Figma · React · three.js · Claude Code',
   scroll: 'Scroll down',
 };
 
@@ -348,7 +348,14 @@ export const PICTURE = {
 };
 
 /* The link to the other language, in the top corner. Its words are in that language. */
-export const LANGUAGE = { code: 'en', other: 'de', label: 'DE', tip: 'Deutsche Version' };
+export const LANGUAGE = {
+  code: 'en',
+  other: 'de',
+  label: 'DE',
+  tip: 'Deutsche Version',
+  /* the note under the switch on the German page (see content.de.js); the English page shows none. Mimi's wording, 19 Nov 2026. */
+  note: 'German version translated and checked with AI.',
+};
 
 /* Shown only where the browser can't draw the 3D scene. */
 export const PLAIN = { note: 'This browser can’t show the 3D part, so here is the story as text.' };
